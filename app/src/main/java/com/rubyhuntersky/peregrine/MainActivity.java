@@ -12,22 +12,29 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.subscriptions.Subscriptions;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
+    private EtradeApi etradeApi;
+    private Subscription refreshSubscription = Subscriptions.empty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+
+        etradeApi = new EtradeApi();
     }
 
     private void initViews() {
@@ -52,8 +59,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        refreshSubscription.unsubscribe();
+        super.onPause();
+    }
+
     private void refreshData() {
-        getNetWorth().subscribe(new Action1<BigDecimal>() {
+        refreshSubscription = getNetWorth().subscribe(new Action1<BigDecimal>() {
             @Override
             public void call(BigDecimal bigDecimal) {
                 netWorthTextView.setText(String.format("$ %s", "Fake data"));
@@ -72,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showErrorDialog(Throwable throwable) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Error")
-               .setMessage(throwable.getMessage())
+        builder.setTitle("Error").setMessage(throwable.toString())
                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -84,11 +96,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Observable<BigDecimal> getNetWorth() {
-        return Observable.create(new Observable.OnSubscribe<BigDecimal>() {
+        return etradeApi.getAccountList().map(new Func1<List<EtradeAccount>, BigDecimal>() {
             @Override
-            public void call(Subscriber<? super BigDecimal> subscriber) {
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+            public BigDecimal call(List<EtradeAccount> etradeAccounts) {
+                BigDecimal sum = BigDecimal.ZERO;
+                for (EtradeAccount account : etradeAccounts) {
+                    sum = sum.add(account.getNetAccountValue());
+                }
+                return sum;
             }
         });
     }
