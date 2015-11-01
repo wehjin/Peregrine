@@ -87,24 +87,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchVerifier() {
         etradeApi.getOauthRequestToken()
-                 .flatMap(new Func1<OauthRequestToken, Observable<String>>() {
+                 .flatMap(new Func1<OauthRequestToken, Observable<OauthVerifier>>() {
                      @Override
-                     public Observable<String> call(OauthRequestToken oauthRequestToken) {
+                     public Observable<OauthVerifier> call(OauthRequestToken oauthRequestToken) {
                          return getVerifier(oauthRequestToken);
                      }
                  })
-                 .subscribe(new Action1<String>() {
+                 .flatMap(new Func1<OauthVerifier, Observable<OauthAccessToken>>() {
                      @Override
-                     public void call(String s) {
-                         Log.d(TAG, "Verifier: " + s);
+                     public Observable<OauthAccessToken> call(OauthVerifier verifier) {
+                         return etradeApi.getOauthAccessToken(verifier);
+                     }
+                 })
+                 .subscribe(new Action1<OauthAccessToken>() {
+                     @Override
+                     public void call(OauthAccessToken accessToken) {
+                         Log.d(TAG, "Access: " + accessToken);
                      }
                  }, errorAction);
     }
 
-    private Observable<String> getVerifier(final OauthRequestToken oauthRequestToken) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+    private Observable<OauthVerifier> getVerifier(final OauthRequestToken oauthRequestToken) {
+        return Observable.create(new Observable.OnSubscribe<OauthVerifier>() {
             @Override
-            public void call(final Subscriber<? super String> subscriber) {
+            public void call(final Subscriber<? super OauthVerifier> subscriber) {
                 final FragmentManager fragmentManager = getFragmentManager();
                 final VerifierFragment verifierFragment = VerifierFragment.newInstance(etradeApi.oauthAppToken.appKey,
                                                                                        oauthRequestToken.requestKey);
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onVerifier(String verifier) {
                         fragmentManager.popBackStack();
-                        subscriber.onNext(verifier);
+                        subscriber.onNext(new OauthVerifier(verifier, oauthRequestToken));
                         subscriber.onCompleted();
                     }
                 });

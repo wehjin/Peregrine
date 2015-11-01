@@ -27,6 +27,7 @@ public class OauthHttpRequest {
     private String urlString;
     private String method = "GET";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
+    private String requestSecret;
 
     public String getOauthUrl() {
         final StringBuilder parametersBaseBuilder = new StringBuilder();
@@ -44,7 +45,8 @@ public class OauthHttpRequest {
         final String parametersBase = parametersBaseBuilder.toString();
         final String signatureBase = method + "&" + oauthPercentEncode(urlString) + "&" + oauthPercentEncode(
               parametersBase);
-        final String signingKey = oauthPercentEncode(appSecret) + '&';
+        final String signingKey = oauthPercentEncode(
+              appSecret) + '&' + (requestSecret == null ? "" : oauthPercentEncode(requestSecret));
         final String signature;
         try {
             signature = hmacSha1(signatureBase, signingKey);
@@ -114,6 +116,14 @@ public class OauthHttpRequest {
 
         public OauthHttpRequest build() {
             return request;
+        }
+
+
+        public Builder withVerifier(OauthVerifier verifier) {
+            request.requestSecret = verifier.requestToken.requestSecret;
+            request.parameters.add(5, new Pair<>("oauth_token", verifier.requestToken.requestKey));
+            request.parameters.add(6, new Pair<>("oauth_verifier", verifier.verifier));
+            return this;
         }
     }
 }

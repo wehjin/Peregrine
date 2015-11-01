@@ -47,6 +47,20 @@ public class EtradeApi {
         });
     }
 
+    public Observable<OauthAccessToken> getOauthAccessToken(OauthVerifier verifier) {
+        final String url = "https://etws.etrade.com/oauth/access_token";
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken)
+              .withVerifier(verifier)
+              .build();
+        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, OauthAccessToken>() {
+            @Override
+            public OauthAccessToken call(String s) {
+                Log.d(TAG, "Access response: " + s);
+                return null;
+            }
+        });
+    }
+
     public Observable<List<EtradeAccount>> getAccountList() {
 
         final Observable<List<EtradeAccount>> resumeSequence = getAccessToken().flatMap(
