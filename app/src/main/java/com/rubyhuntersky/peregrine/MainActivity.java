@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
     private EtradeApi etradeApi;
-    private Subscription refreshSubscription = Subscriptions.empty();
     private Action1<Throwable> errorAction = new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
@@ -62,13 +61,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                refreshData();
+                getNetWorth().subscribe(new Action1<BigDecimal>() {
+                    @Override
+                    public void call(BigDecimal netWorth) {
+                        final String netWorthString = NumberFormat.getCurrencyInstance().format(netWorth);
+                        netWorthTextView.setText(netWorthString);
+
+                        final String refreshTime = DateFormat.getDateTimeInstance().format(new Date());
+                        refreshTimeTextVIew.setText(refreshTime);
+                    }
+                }, errorAction);
                 return true;
-            case R.id.action_request_token:
-                fetchRequestToken();
-                return true;
-            case R.id.action_verifier:
-                fetchVerifier();
+            case R.id.action_go:
+                subscribeAccountList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,35 +90,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fetchVerifier() {
-        etradeApi.getOauthRequestToken()
-                 .flatMap(new Func1<OauthRequestToken, Observable<OauthVerifier>>() {
-                     @Override
-                     public Observable<OauthVerifier> call(OauthRequestToken oauthRequestToken) {
-                         return getVerifier(oauthRequestToken);
-                     }
-                 })
-                 .flatMap(new Func1<OauthVerifier, Observable<OauthAccessToken>>() {
-                     @Override
-                     public Observable<OauthAccessToken> call(OauthVerifier verifier) {
-                         return etradeApi.getOauthAccessToken(verifier);
-                     }
-                 })
-                 .subscribe(new Action1<OauthAccessToken>() {
-                     @Override
-                     public void call(OauthAccessToken accessToken) {
-                         Log.d(TAG, "Access: " + accessToken);
-                     }
-                 }, errorAction);
+    private void subscribeAccountList() {
+        fetchAccountList()
+              .subscribe(new Action1<List<EtradeAccount>>() {
+                  @Override
+                  public void call(List<EtradeAccount> accounts) {
+                      Log.d(TAG, "Access: " + accounts);
+
+                  }
+              }, errorAction);
     }
 
-    private Observable<OauthVerifier> getVerifier(final OauthRequestToken oauthRequestToken) {
+    private Observable<List<EtradeAccount>> fetchAccountList() {
+        return etradeApi.fetchOauthRequestToken()
+                        .flatMap(new Func1<OauthToken, Observable<OauthVerifier>>() {
+                            @Override
+                            public Observable<OauthVerifier> call(OauthToken requestToken) {
+                                return promptForVerifier(requestToken);
+                            }
+                        })
+                        .flatMap(new Func1<OauthVerifier, Observable<OauthToken>>() {
+                            @Override
+                            public Observable<OauthToken> call(OauthVerifier verifier) {
+                                return etradeApi.fetchOauthAccessToken(verifier);
+                            }
+                        })
+                        .flatMap(new Func1<OauthToken, Observable<List<EtradeAccount>>>() {
+                            @Override
+                            public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
+                                return etradeApi.fetchAccountList(oauthToken);
+                            }
+                        });
+    }
+
+    private Observable<OauthVerifier> promptForVerifier(final OauthToken oauthRequestToken) {
         return Observable.create(new Observable.OnSubscribe<OauthVerifier>() {
             @Override
             public void call(final Subscriber<? super OauthVerifier> subscriber) {
                 final FragmentManager fragmentManager = getFragmentManager();
                 final VerifierFragment verifierFragment = VerifierFragment.newInstance(etradeApi.oauthAppToken.appKey,
-                                                                                       oauthRequestToken.requestKey);
+                                                                                       oauthRequestToken.key);
                 verifierFragment.setListener(new VerifierFragment.Listener() {
 
                     @Override
@@ -140,32 +156,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchRequestToken() {
-        etradeApi.getOauthRequestToken()
-                 .subscribe(new Action1<OauthRequestToken>() {
-                     @Override
-                     public void call(OauthRequestToken oauthRequestToken) {
-                         Log.d(TAG, oauthRequestToken.toString());
-                     }
-                 }, errorAction);
-    }
+    private Observable<BigDecimal> getNetWorth() {
 
-    @Override
-    protected void onPause() {
-        refreshSubscription.unsubscribe();
-        super.onPause();
-    }
-
-    private void refreshData() {
-        refreshSubscription = getNetWorth().subscribe(new Action1<BigDecimal>() {
+        return fetchAccountList().map(new Func1<List<EtradeAccount>, BigDecimal>() {
             @Override
-            public void call(BigDecimal bigDecimal) {
-                netWorthTextView.setText(String.format("$ %s", "Fake data"));
-
-                final String refreshTime = DateFormat.getDateTimeInstance().format(new Date());
-                refreshTimeTextVIew.setText(refreshTime);
+            public BigDecimal call(List<EtradeAccount> etradeAccounts) {
+                BigDecimal sum = BigDecimal.ZERO;
+                for (EtradeAccount account : etradeAccounts) {
+                    sum = sum.add(account.getNetAccountValue());
+                }
+                return sum;
             }
-        }, errorAction);
+        });
     }
 
     private void showErrorDialog(Throwable throwable) {
@@ -178,18 +180,5 @@ public class MainActivity extends AppCompatActivity {
                    }
                })
                .show();
-    }
-
-    private Observable<BigDecimal> getNetWorth() {
-        return etradeApi.getAccountList().map(new Func1<List<EtradeAccount>, BigDecimal>() {
-            @Override
-            public BigDecimal call(List<EtradeAccount> etradeAccounts) {
-                BigDecimal sum = BigDecimal.ZERO;
-                for (EtradeAccount account : etradeAccounts) {
-                    sum = sum.add(account.getNetAccountValue());
-                }
-                return sum;
-            }
-        });
     }
 }

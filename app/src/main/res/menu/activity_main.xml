@@ -6,11 +6,7 @@
         android:title="Refresh"
         tools:ignore="HardcodedText"/>
     <item
-        android:id="@+id/action_request_token"
-        android:title="Request Token"
-        tools:ignore="HardcodedText"/>
-    <item
-        android:id="@+id/action_verifier"
-        android:title="Verifier"
+        android:id="@+id/action_go"
+        android:title="Go"
         tools:ignore="HardcodedText"/>
 </menu>

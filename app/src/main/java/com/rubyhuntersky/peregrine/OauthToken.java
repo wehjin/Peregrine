@@ -8,26 +8,24 @@ import java.util.Map;
 
 /**
  * @author wehjin
- * @since 10/31/15.
+ * @since 11/1/15.
  */
 
-public class OauthRequestToken {
+public class OauthToken {
+    public final String key;
+    public final String secret;
 
-    public static final String TAG = OauthRequestToken.class.getSimpleName();
-    public final String requestKey;
-    public final String requestSecret;
-
-    public OauthRequestToken(String formString) {
+    public OauthToken(String formString) {
         Map<String, String> formValues = getFormValues(formString);
-        this.requestKey = formValues.get("oauth_token");
-        this.requestSecret = formValues.get("oauth_token_secret");
+        this.key = formValues.get("oauth_token");
+        this.secret = formValues.get("oauth_token_secret");
     }
 
     @Override
     public String toString() {
-        return "OauthRequestToken{" +
-              "requestKey='" + requestKey + '\'' +
-              ", requestSecret='" + requestSecret + '\'' +
+        return "OauthToken{" +
+              "key='" + key + '\'' +
+              ", secret='" + secret + '\'' +
               '}';
     }
 

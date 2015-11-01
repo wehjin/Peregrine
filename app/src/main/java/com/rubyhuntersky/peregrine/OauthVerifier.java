@@ -7,9 +7,9 @@ package com.rubyhuntersky.peregrine;
 
 public class OauthVerifier {
     public final String verifier;
-    public final OauthRequestToken requestToken;
+    public final OauthToken requestToken;
 
-    public OauthVerifier(String verifier, OauthRequestToken requestToken) {
+    public OauthVerifier(String verifier, OauthToken requestToken) {
         this.verifier = verifier;
         this.requestToken = requestToken;
     }

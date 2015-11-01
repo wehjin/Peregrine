@@ -1,14 +1,19 @@
 package com.rubyhuntersky.peregrine;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,73 +40,57 @@ public class EtradeApi {
                                           context.getString(R.string.et_production_secret));
     }
 
-    public Observable<OauthRequestToken> getOauthRequestToken() {
+    public Observable<OauthToken> fetchOauthRequestToken() {
 
         final String url = "https://etws.etrade.com/oauth/request_token";
         final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken).build();
-        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, OauthRequestToken>() {
+        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, OauthToken>() {
             @Override
-            public OauthRequestToken call(String string) {
-                return new OauthRequestToken(string);
+            public OauthToken call(String string) {
+                return new OauthToken(string);
             }
         });
     }
 
-    public Observable<OauthAccessToken> getOauthAccessToken(OauthVerifier verifier) {
+    public Observable<OauthToken> fetchOauthAccessToken(OauthVerifier verifier) {
         final String url = "https://etws.etrade.com/oauth/access_token";
         final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken)
-              .withVerifier(verifier)
-              .build();
-        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, OauthAccessToken>() {
+              .withVerifier(verifier).build();
+        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, OauthToken>() {
             @Override
-            public OauthAccessToken call(String s) {
-                Log.d(TAG, "Access response: " + s);
-                return null;
+            public OauthToken call(String s) {
+                return new OauthToken(s);
             }
         });
     }
 
-    public Observable<List<EtradeAccount>> getAccountList() {
-
-        final Observable<List<EtradeAccount>> resumeSequence = getAccessToken().flatMap(
-              new Func1<OauthAccessToken, Observable<List<EtradeAccount>>>() {
-                  @Override
-                  public Observable<List<EtradeAccount>> call(OauthAccessToken oauthAccessToken) {
-                      return getJustAccountList();
-                  }
-              });
-        return getJustAccountList().onErrorResumeNext(resumeSequence);
-    }
-
-    private Observable<List<EtradeAccount>> getJustAccountList() {
-        final String spec = "https://etws.etrade.com/accounts/rest/accountlist";
-        return getHttpResponseString(spec).map(new Func1<String, List<EtradeAccount>>() {
+    public Observable<List<EtradeAccount>> fetchAccountList(OauthToken accessToken) {
+        final String url = "https://etws.etrade.com/accounts/rest/accountlist";
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken)
+              .withToken(accessToken).build();
+        return getHttpResponseString(request.getOauthUrl()).map(new Func1<String, List<EtradeAccount>>() {
             @Override
-            public List<EtradeAccount> call(String inputStream) {
-                return null;
+            public List<EtradeAccount> call(String inputResponse) {
+                List<EtradeAccount> etradeAccounts = new ArrayList<>();
+
+                Document document;
+                try {
+                    document = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder().parse(
+                          new ByteArrayInputStream(inputResponse.getBytes()));
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Throwable e) {
+                    throw (new RuntimeException(e));
+                }
+
+                final NodeList accountNodes = document.getElementsByTagName("Account");
+                final int count = accountNodes.getLength();
+                for (int i = 0; i < count; i++) {
+                    etradeAccounts.add(new EtradeAccount((Element) accountNodes.item(i)));
+                }
+                return etradeAccounts;
             }
         });
-    }
-
-    private Observable<OauthAccessToken> getAccessToken() {
-        return getJustOauthAccessToken().onErrorResumeNext(
-              getOauthRequestToken().flatMap(new Func1<OauthRequestToken, Observable<OauthAccessToken>>() {
-                  @Override
-                  public Observable<OauthAccessToken> call(OauthRequestToken oauthRequestToken) {
-                      return getJustOauthAccessToken();
-                  }
-              }));
-    }
-
-    @NonNull
-    private Observable<OauthAccessToken> getJustOauthAccessToken() {
-        return getHttpResponseString("https://etws.etrade.com/oauth/access_token").map(
-              new Func1<String, OauthAccessToken>() {
-                  @Override
-                  public OauthAccessToken call(String inputStream) {
-                      return null;
-                  }
-              });
     }
 
     private Observable<String> getHttpResponseString(final String urlString) {

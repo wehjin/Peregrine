@@ -120,9 +120,14 @@ public class OauthHttpRequest {
 
 
         public Builder withVerifier(OauthVerifier verifier) {
-            request.requestSecret = verifier.requestToken.requestSecret;
-            request.parameters.add(5, new Pair<>("oauth_token", verifier.requestToken.requestKey));
+            withToken(verifier.requestToken);
             request.parameters.add(6, new Pair<>("oauth_verifier", verifier.verifier));
+            return this;
+        }
+
+        public Builder withToken(OauthToken token) {
+            request.requestSecret = token.secret;
+            request.parameters.add(5, new Pair<>("oauth_token", token.key));
             return this;
         }
     }
