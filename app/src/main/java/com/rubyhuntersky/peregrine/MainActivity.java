@@ -27,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView refreshTimeTextVIew;
     private EtradeApi etradeApi;
     private Subscription refreshSubscription = Subscriptions.empty();
+    private Action1<Throwable> errorAction = new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+            Log.e(TAG, "refreshData", throwable);
+            showErrorDialog(throwable);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
 
-        etradeApi = new EtradeApi();
+        etradeApi = new EtradeApi(this);
     }
 
     private void initViews() {
@@ -54,9 +61,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_refresh:
                 refreshData();
                 return true;
+            case R.id.action_request_token:
+                fetchRequestToken();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void fetchRequestToken() {
+        etradeApi.getOauthRequestToken().subscribe(new Action1<OauthRequestToken>() {
+            @Override
+            public void call(OauthRequestToken oauthRequestToken) {
+                Log.d(TAG, oauthRequestToken.toString());
+            }
+        }, errorAction);
     }
 
     @Override
@@ -74,13 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 final String refreshTime = DateFormat.getDateTimeInstance().format(new Date());
                 refreshTimeTextVIew.setText(refreshTime);
             }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                Log.e(TAG, "refreshData", throwable);
-                showErrorDialog(throwable);
-            }
-        });
+        }, errorAction);
     }
 
     private void showErrorDialog(Throwable throwable) {
