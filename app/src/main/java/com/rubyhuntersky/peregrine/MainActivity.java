@@ -1,6 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
@@ -64,18 +67,81 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_request_token:
                 fetchRequestToken();
                 return true;
+            case R.id.action_verifier:
+                fetchVerifier();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void fetchRequestToken() {
-        etradeApi.getOauthRequestToken().subscribe(new Action1<OauthRequestToken>() {
+    @Override
+    public void onBackPressed() {
+        final FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() != 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void fetchVerifier() {
+        etradeApi.getOauthRequestToken()
+                 .flatMap(new Func1<OauthRequestToken, Observable<String>>() {
+                     @Override
+                     public Observable<String> call(OauthRequestToken oauthRequestToken) {
+                         return getVerifier(oauthRequestToken);
+                     }
+                 })
+                 .subscribe(new Action1<String>() {
+                     @Override
+                     public void call(String s) {
+                         Log.d(TAG, "Verifier: " + s);
+                     }
+                 }, errorAction);
+    }
+
+    private Observable<String> getVerifier(final OauthRequestToken oauthRequestToken) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void call(OauthRequestToken oauthRequestToken) {
-                Log.d(TAG, oauthRequestToken.toString());
+            public void call(final Subscriber<? super String> subscriber) {
+                final FragmentManager fragmentManager = getFragmentManager();
+                final VerifierFragment verifierFragment = VerifierFragment.newInstance(etradeApi.oauthAppToken.appKey,
+                                                                                       oauthRequestToken.requestKey);
+                verifierFragment.setListener(new VerifierFragment.Listener() {
+
+                    @Override
+                    public void onVerifier(String verifier) {
+                        fragmentManager.popBackStack();
+                        subscriber.onNext(verifier);
+                        subscriber.onCompleted();
+                    }
+                });
+                fragmentManager.beginTransaction()
+                               .add(R.id.frame_verifier, verifierFragment, "VerifierFragment")
+                               .addToBackStack(null)
+                               .commit();
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        if (fragmentManager.findFragmentByTag("VerifierFragment") == null) {
+                            return;
+                        }
+                        fragmentManager.popBackStack();
+                    }
+                }));
             }
-        }, errorAction);
+        });
+    }
+
+    private void fetchRequestToken() {
+        etradeApi.getOauthRequestToken()
+                 .subscribe(new Action1<OauthRequestToken>() {
+                     @Override
+                     public void call(OauthRequestToken oauthRequestToken) {
+                         Log.d(TAG, oauthRequestToken.toString());
+                     }
+                 }, errorAction);
     }
 
     @Override

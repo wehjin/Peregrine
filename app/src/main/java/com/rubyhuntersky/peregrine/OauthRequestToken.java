@@ -14,20 +14,20 @@ import java.util.Map;
 public class OauthRequestToken {
 
     public static final String TAG = OauthRequestToken.class.getSimpleName();
-    private final String requestTokenId;
-    private final String requestTokenSecret;
+    public final String requestKey;
+    public final String requestSecret;
 
     public OauthRequestToken(String formString) {
         Map<String, String> formValues = getFormValues(formString);
-        this.requestTokenId = formValues.get("oauth_token");
-        this.requestTokenSecret = formValues.get("oauth_token_secret");
+        this.requestKey = formValues.get("oauth_token");
+        this.requestSecret = formValues.get("oauth_token_secret");
     }
 
     @Override
     public String toString() {
         return "OauthRequestToken{" +
-              "requestTokenId='" + requestTokenId + '\'' +
-              ", requestTokenSecret='" + requestTokenSecret + '\'' +
+              "requestKey='" + requestKey + '\'' +
+              ", requestSecret='" + requestSecret + '\'' +
               '}';
     }
 

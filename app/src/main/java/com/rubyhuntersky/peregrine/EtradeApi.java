@@ -28,7 +28,7 @@ public class EtradeApi {
 
     public static final String TAG = EtradeApi.class.getSimpleName();
     public static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
-    private final OauthAppToken oauthAppToken;
+    public final OauthAppToken oauthAppToken;
 
     public EtradeApi(Context context) {
         oauthAppToken = new OauthAppToken(context.getString(R.string.et_production_key),
