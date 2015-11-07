@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
     private EtradeApi etradeApi;
+    private Storage storage;
     private Action1<Throwable> errorAction = new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
@@ -38,16 +39,22 @@ public class MainActivity extends AppCompatActivity {
             showErrorDialog(throwable);
         }
     };
-    private Storage storage;
+    private Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
+          Observable<List<EtradeAccount>>>() {
+        @Override
+        public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
+            return etradeApi.fetchAccountList(oauthToken);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initViews();
-
         etradeApi = new EtradeApi(this);
         storage = new Storage(this, "prod");
+
+        setContentView(R.layout.activity_main);
+        initViews();
     }
 
     private void initViews() {
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 }, errorAction);
                 return true;
             case R.id.action_go:
-                subscribeAccountList();
+                go();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -94,23 +101,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void subscribeAccountList() {
-        fetchAccountList()
-              .subscribe(new Action1<List<EtradeAccount>>() {
+    private void go() {
+        renewOauthAccessToken()
+              .subscribe(new Action1<OauthToken>() {
                   @Override
-                  public void call(List<EtradeAccount> accounts) {
-                      Log.d(TAG, "Access: " + accounts);
-
+                  public void call(OauthToken oauthToken) {
+                      Log.d(TAG, "Renewed token: " + oauthToken);
                   }
               }, errorAction);
     }
 
     private Observable<List<EtradeAccount>> fetchAccountList() {
         return getOauthAccessToken()
-              .flatMap(new Func1<OauthToken, Observable<List<EtradeAccount>>>() {
+              .flatMap(accessTokenToAccountList)
+              .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
                   @Override
-                  public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
-                      return etradeApi.fetchAccountList(oauthToken);
+                  public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                      if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                          return renewOauthAccessToken()
+                                .flatMap(accessTokenToAccountList);
+                      } else {
+                          return Observable.error(throwable);
+                      }
                   }
               });
     }
@@ -127,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
                               }
                           }
                       });
+    }
+
+    private Observable<OauthToken> renewOauthAccessToken() {
+        return getOauthAccessToken()
+              .flatMap(new Func1<OauthToken, Observable<OauthToken>>() {
+                  @Override
+                  public Observable<OauthToken> call(OauthToken oauthToken) {
+                      return etradeApi.renewOauthAccessToken(oauthToken);
+                  }
+              });
     }
 
     private Observable<OauthToken> fetchOauthAccessToken() {
