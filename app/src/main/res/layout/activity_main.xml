@@ -3,21 +3,28 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="16sp"
                 tools:context="com.rubyhuntersky.peregrine.MainActivity">
-
-    <TextView
-        android:id="@+id/textview_net_worth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No data"
-        tools:ignore="HardcodedText"/>
 
     <TextView
         android:id="@+id/textview_refresh_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_net_worth"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="24sp"
         android:text="No time"
+        android:textColor="#888"
+        tools:ignore="HardcodedText"/>
+
+    <TextView
+        android:id="@+id/textview_net_worth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_refresh_time"
+        android:text="No data"
+        android:textColor="#666"
+        android:textSize="24sp"
         tools:ignore="HardcodedText"/>
 
     <FrameLayout
