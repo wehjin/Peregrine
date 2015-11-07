@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.rubyhuntersky.peregrine.exception.NotStoredException;
+
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             showErrorDialog(throwable);
         }
     };
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         initViews();
 
         etradeApi = new EtradeApi(this);
+        storage = new Storage(this, "prod");
     }
 
     private void initViews() {
@@ -102,6 +106,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Observable<List<EtradeAccount>> fetchAccountList() {
+        return getOauthAccessToken()
+              .flatMap(new Func1<OauthToken, Observable<List<EtradeAccount>>>() {
+                  @Override
+                  public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
+                      return etradeApi.fetchAccountList(oauthToken);
+                  }
+              });
+    }
+
+    private Observable<OauthToken> getOauthAccessToken() {
+        return storage.readOauthAccessToken()
+                      .onErrorResumeNext(new Func1<Throwable, Observable<? extends OauthToken>>() {
+                          @Override
+                          public Observable<? extends OauthToken> call(Throwable throwable) {
+                              if (throwable instanceof NotStoredException) {
+                                  return fetchOauthAccessToken();
+                              } else {
+                                  return Observable.error(throwable);
+                              }
+                          }
+                      });
+    }
+
+    private Observable<OauthToken> fetchOauthAccessToken() {
         return etradeApi.fetchOauthRequestToken()
                         .flatMap(new Func1<OauthToken, Observable<OauthVerifier>>() {
                             @Override
@@ -115,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
                                 return etradeApi.fetchOauthAccessToken(verifier);
                             }
                         })
-                        .flatMap(new Func1<OauthToken, Observable<List<EtradeAccount>>>() {
+                        .doOnNext(new Action1<OauthToken>() {
                             @Override
-                            public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
-                                return etradeApi.fetchAccountList(oauthToken);
+                            public void call(OauthToken oauthToken) {
+                                storage.writeOauthAccessToken(oauthToken);
                             }
                         });
     }

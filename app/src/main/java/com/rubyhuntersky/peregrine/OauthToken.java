@@ -21,6 +21,11 @@ public class OauthToken {
         this.secret = formValues.get("oauth_token_secret");
     }
 
+    public OauthToken(String access_key, String access_secret) {
+        this.key = access_key;
+        this.secret = access_secret;
+    }
+
     @Override
     public String toString() {
         return "OauthToken{" +
