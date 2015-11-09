@@ -39,13 +39,6 @@ public class MainActivity extends AppCompatActivity {
             showErrorDialog(throwable);
         }
     };
-    private Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
-          Observable<List<EtradeAccount>>>() {
-        @Override
-        public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
-            return etradeApi.fetchAccountList(oauthToken);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Observable<List<EtradeAccount>> fetchAccountList() {
+        final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
+              Observable<List<EtradeAccount>>>() {
+            @Override
+            public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
+                return etradeApi.fetchAccountList(oauthToken);
+            }
+        };
         return getOauthAccessToken()
               .flatMap(accessTokenToAccountList)
               .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
@@ -120,6 +120,23 @@ public class MainActivity extends AppCompatActivity {
                       if (throwable instanceof EtradeApi.NotAuthorizedException) {
                           return renewOauthAccessToken()
                                 .flatMap(accessTokenToAccountList);
+                      } else {
+                          return Observable.error(throwable);
+                      }
+                  }
+              })
+              .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
+                  @Override
+                  public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                      if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                          return fetchOauthAccessToken()
+                                .flatMap(accessTokenToAccountList)
+                                .doOnSubscribe(new Action0() {
+                                    @Override
+                                    public void call() {
+                                        storage.eraseOauthAccessToken();
+                                    }
+                                });
                       } else {
                           return Observable.error(throwable);
                       }

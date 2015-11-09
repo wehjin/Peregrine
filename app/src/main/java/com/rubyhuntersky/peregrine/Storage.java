@@ -49,4 +49,12 @@ public class Storage {
             }
         });
     }
+
+    public void eraseOauthAccessToken() {
+        sharedPreferences.edit()
+                         .remove(PREFKEY_ACCESS_KEY)
+                         .remove(PREFKEY_ACCESS_SECRET)
+                         .apply();
+        this.oauthToken = null;
+    }
 }
