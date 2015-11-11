@@ -14,16 +14,24 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="24sp"
         android:text="No time"
-        android:textColor="#888"
+        android:textColor="@color/darkTextSecondary"
         tools:ignore="HardcodedText"/>
+
+    <com.rubyhuntersky.peregrine.CircleView
+        android:id="@+id/circle_net_worth"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/textview_refresh_time"/>
 
     <TextView
         android:id="@+id/textview_net_worth"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_refresh_time"
+        android:layout_alignBottom="@id/circle_net_worth"
+        android:layout_alignTop="@id/circle_net_worth"
+        android:gravity="center"
         android:text="No data"
-        android:textColor="#666"
+        android:textColor="@color/lightText"
         android:textSize="24sp"
         tools:ignore="HardcodedText"/>
 
