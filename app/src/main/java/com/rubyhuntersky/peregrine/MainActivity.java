@@ -39,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
             showErrorDialog(throwable);
         }
     };
+    private Action1<EtradeAccountList> updateSubviewsFromAccountList = new Action1<EtradeAccountList>() {
+        @Override
+        public void call(EtradeAccountList accountList) {
+            netWorthTextView.setText(NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts)));
+            refreshTimeTextVIew.setText(DateFormat.getDateTimeInstance().format(accountList.arrivalDate));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +54,8 @@ public class MainActivity extends AppCompatActivity {
         storage = new Storage(this, "prod");
 
         setContentView(R.layout.activity_main);
-        initViews();
-    }
-
-    private void initViews() {
-        netWorthTextView = (TextView) findViewById(R.id.textview_net_worth);
-        refreshTimeTextVIew = (TextView) findViewById(R.id.textview_refresh_time);
+        initSubviewFields();
+        storage.readAccountList().subscribe(updateSubviewsFromAccountList, errorAction);
     }
 
     @Override
@@ -65,16 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                getNetWorth().subscribe(new Action1<BigDecimal>() {
-                    @Override
-                    public void call(BigDecimal netWorth) {
-                        final String netWorthString = NumberFormat.getCurrencyInstance().format(netWorth);
-                        netWorthTextView.setText(netWorthString);
-
-                        final String refreshTime = DateFormat.getDateTimeInstance().format(new Date());
-                        refreshTimeTextVIew.setText(refreshTime);
-                    }
-                }, errorAction);
+                fetchAccountList().subscribe(updateSubviewsFromAccountList, errorAction);
                 return true;
             case R.id.action_go:
                 go();
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
               }, errorAction);
     }
 
-    private Observable<List<EtradeAccount>> fetchAccountList() {
+    private Observable<EtradeAccountList> fetchAccountList() {
         final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
               Observable<List<EtradeAccount>>>() {
             @Override
@@ -140,6 +134,18 @@ public class MainActivity extends AppCompatActivity {
                       } else {
                           return Observable.error(throwable);
                       }
+                  }
+              })
+              .map(new Func1<List<EtradeAccount>, EtradeAccountList>() {
+                  @Override
+                  public EtradeAccountList call(List<EtradeAccount> etradeAccounts) {
+                      return new EtradeAccountList(etradeAccounts, new Date());
+                  }
+              })
+              .doOnNext(new Action1<EtradeAccountList>() {
+                  @Override
+                  public void call(EtradeAccountList accountList) {
+                      storage.writeAccountList(accountList);
                   }
               });
     }
@@ -223,18 +229,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private Observable<BigDecimal> getNetWorth() {
+    private static BigDecimal getNetWorth(List<EtradeAccount> etradeAccounts) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (EtradeAccount account : etradeAccounts) {
+            sum = sum.add(account.getNetAccountValue());
+        }
+        return sum;
+    }
 
-        return fetchAccountList().map(new Func1<List<EtradeAccount>, BigDecimal>() {
-            @Override
-            public BigDecimal call(List<EtradeAccount> etradeAccounts) {
-                BigDecimal sum = BigDecimal.ZERO;
-                for (EtradeAccount account : etradeAccounts) {
-                    sum = sum.add(account.getNetAccountValue());
-                }
-                return sum;
-            }
-        });
+    private void initSubviewFields() {
+        netWorthTextView = (TextView) findViewById(R.id.textview_net_worth);
+        refreshTimeTextVIew = (TextView) findViewById(R.id.textview_refresh_time);
     }
 
     private void showErrorDialog(Throwable throwable) {

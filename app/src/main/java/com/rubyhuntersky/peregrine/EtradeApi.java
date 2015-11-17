@@ -155,6 +155,7 @@ public class EtradeApi {
         return buffer.toByteArray();
     }
 
+    @SuppressWarnings("unused")
     static public class NotAuthorizedException extends RuntimeException {
         public NotAuthorizedException() {
         }

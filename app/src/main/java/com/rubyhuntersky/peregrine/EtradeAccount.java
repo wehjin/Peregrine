@@ -1,5 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,6 +15,10 @@ import java.math.BigDecimal;
 
 public class EtradeAccount {
 
+    public static final String JSONKEY_DESCRIPTION = "description";
+    public static final String JSONKEY_ACCOUNT_ID = "accountId";
+    public static final String JSONKEY_REGISTRATION_TYPE = "registrationType";
+    public static final String JSONKEY_NET_ACCOUNT_VALUE = "netAccountValue";
     public String description;
     public String accountId;
     public String registrationType;
@@ -38,6 +44,22 @@ public class EtradeAccount {
                 registrationType = element.getTextContent();
             }
         }
+    }
+
+    public EtradeAccount(JSONObject jsonObject) throws JSONException {
+        description = jsonObject.getString(JSONKEY_DESCRIPTION);
+        accountId = jsonObject.getString(JSONKEY_ACCOUNT_ID);
+        registrationType = jsonObject.getString(JSONKEY_REGISTRATION_TYPE);
+        netAccountValue = new BigDecimal(jsonObject.getString(JSONKEY_NET_ACCOUNT_VALUE));
+    }
+
+    public JSONObject toJSONObject() throws JSONException {
+        final JSONObject jsonObject = new JSONObject();
+        jsonObject.put(JSONKEY_DESCRIPTION, this.description);
+        jsonObject.put(JSONKEY_ACCOUNT_ID, this.accountId);
+        jsonObject.put(JSONKEY_REGISTRATION_TYPE, this.registrationType);
+        jsonObject.put(JSONKEY_NET_ACCOUNT_VALUE, this.netAccountValue.toString());
+        return jsonObject;
     }
 
     public BigDecimal getNetAccountValue() {
