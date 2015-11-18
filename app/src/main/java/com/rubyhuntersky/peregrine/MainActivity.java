@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void call(EtradeAccountList accountList) {
             netWorthTextView.setText(NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts)));
-            refreshTimeTextVIew.setText(DateFormat.getDateTimeInstance().format(accountList.arrivalDate));
+            refreshTimeTextVIew.setText(getRelativeTimeString(accountList.arrivalDate.getTime()));
         }
     };
 
@@ -260,5 +260,14 @@ public class MainActivity extends AppCompatActivity {
                    }
                })
                .show();
+    }
+
+    private CharSequence getRelativeTimeString(long time) {
+        final long elapsed = new Date().getTime() - time;
+        if (elapsed >= 0 && elapsed < 60000) {
+            return "moments ago";
+        } else {
+            return DateUtils.getRelativeTimeSpanString(time);
+        }
     }
 }
