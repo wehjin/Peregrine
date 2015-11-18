@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence getRelativeTimeString(long time) {
         final long elapsed = new Date().getTime() - time;
         if (elapsed >= 0 && elapsed < 60000) {
-            return "moments ago";
+            return "seconds ago";
         } else {
             return DateUtils.getRelativeTimeSpanString(time);
         }
