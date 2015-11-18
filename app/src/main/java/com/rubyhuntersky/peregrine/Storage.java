@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * @author wehjin
@@ -63,11 +62,6 @@ public class Storage {
                 }
                 subscriber.onNext(etradeAccounts);
                 subscriber.onCompleted();
-            }
-        }).onErrorResumeNext(new Func1<Throwable, Observable<? extends EtradeAccountList>>() {
-            @Override
-            public Observable<? extends EtradeAccountList> call(Throwable throwable) {
-                return null;
             }
         });
     }

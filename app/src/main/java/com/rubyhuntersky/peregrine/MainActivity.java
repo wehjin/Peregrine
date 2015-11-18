@@ -55,7 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         initSubviewFields();
-        storage.readAccountList().subscribe(updateSubviewsFromAccountList, errorAction);
+        storage.readAccountList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                if (throwable instanceof NotStoredException) {
+                    return;
+                }
+                errorAction.call(throwable);
+            }
+        });
     }
 
     @Override
