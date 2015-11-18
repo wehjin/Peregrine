@@ -1,5 +1,6 @@
 package com.rubyhuntersky.peregrine;
 
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Pair;
 
@@ -29,21 +30,34 @@ public class OauthHttpRequest {
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private String requestSecret;
 
-    public String getOauthUrl() {
+    public String getAuthorizationHeader() {
+        return "OAuth realm=\"\"," + getQueryParametersWithSignature().replace('&', ',');
+    }
+
+    public String getOauthUrlWithParameters() {
+        return urlString + "?" + getQueryParametersWithSignature();
+    }
+
+    public String getOauthUrlWithoutParameters() {
+        return urlString;
+    }
+
+    @NonNull
+    private String getQueryParametersWithSignature() {
         final StringBuilder parametersBaseBuilder = new StringBuilder();
         boolean firstPair = true;
         for (Pair<String, String> pair : parameters) {
             if (firstPair) {
                 firstPair = false;
             } else {
-                parametersBaseBuilder.append('&');
+                parametersBaseBuilder.append("&");
             }
             parametersBaseBuilder.append(pair.first);
             parametersBaseBuilder.append('=');
             parametersBaseBuilder.append(oauthPercentEncode(pair.second));
         }
         final String parametersBase = parametersBaseBuilder.toString();
-        final String signatureBase = method + "&" + oauthPercentEncode(urlString) + "&" + oauthPercentEncode(
+        final String signatureBase = method + '&' + oauthPercentEncode(urlString) + '&' + oauthPercentEncode(
               parametersBase);
         final String signingKey = oauthPercentEncode(
               appSecret) + '&' + (requestSecret == null ? "" : oauthPercentEncode(requestSecret));
@@ -53,7 +67,7 @@ public class OauthHttpRequest {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
-        return urlString + "?" + parametersBase + "&oauth_signature=" + oauthPercentEncode(signature);
+        return parametersBase + "&oauth_signature=" + oauthPercentEncode(signature);
     }
 
     public String getMethod() {
