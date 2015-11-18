@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.OkUrlFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -120,7 +123,7 @@ public class EtradeApi {
             public void call(Subscriber<? super String> subscriber) {
                 try {
                     final URL url = new URL(urlString);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    HttpURLConnection connection = new OkUrlFactory(new OkHttpClient()).open(url);
                     for (Pair<String, String> headerField : headers) {
                         Log.d(TAG, "Header: " + headerField.first + " " + headerField.second);
                         connection.setRequestProperty(headerField.first, headerField.second);
