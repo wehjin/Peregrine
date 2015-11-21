@@ -6,6 +6,10 @@
         android:title="Refresh"
         tools:ignore="HardcodedText"/>
     <item
+        android:id="@+id/action_view_assets"
+        android:title="View Assets"
+        tools:ignore="HardcodedText"/>
+    <item
         android:id="@+id/action_go"
         android:title="Go"
         tools:ignore="HardcodedText"/>

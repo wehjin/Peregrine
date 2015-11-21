@@ -7,6 +7,8 @@ import android.util.Pair;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -82,6 +84,24 @@ public class EtradeApi {
         });
     }
 
+    public Observable<JSONObject> fetchAccountPositionsResponse(String accountId, OauthToken accessToken) {
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(
+              "https://etws.etrade.com/accounts/rest/accountpositions/" + accountId + ".json", oauthAppToken)
+              .withToken(accessToken)
+              .build();
+        return getOauthHttpResponseString(request).map(new Func1<String, JSONObject>() {
+            @Override
+            public JSONObject call(String inputResponse) {
+                Log.d(TAG, inputResponse);
+                try {
+                    return new JSONObject(inputResponse).getJSONObject("json.accountPositionsResponse");
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
     public Observable<List<EtradeAccount>> fetchAccountList(OauthToken accessToken) {
         final OauthHttpRequest request = new OauthHttpRequest.Builder(
               "https://etws.etrade.com/accounts/rest/accountlist", oauthAppToken)
@@ -139,7 +159,8 @@ public class EtradeApi {
                                 error = new NotAuthorizedException(urlString + "\n" + responseMessage);
                                 break;
                             default:
-                                final String message = String.format("%d %s", responseCode, responseMessage);
+                                final String message = String.format("%s %d %s", urlString, responseCode,
+                                                                     responseMessage);
                                 error = new RuntimeException(message);
                                 break;
                         }

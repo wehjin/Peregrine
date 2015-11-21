@@ -1,10 +1,8 @@
 package com.rubyhuntersky.peregrine;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -25,20 +23,11 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
-    private EtradeApi etradeApi;
-    private Storage storage;
-    private Action1<Throwable> errorAction = new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-            Log.e(TAG, "refreshData", throwable);
-            showErrorDialog(throwable);
-        }
-    };
     private Action1<EtradeAccountList> updateSubviewsFromAccountList = new Action1<EtradeAccountList>() {
         @Override
         public void call(EtradeAccountList accountList) {
@@ -50,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        etradeApi = new EtradeApi(this);
-        storage = new Storage(this, "prod");
-
         setContentView(R.layout.activity_main);
         initSubviewFields();
     }
@@ -72,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
@@ -86,9 +66,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_go:
                 go();
                 return true;
+            case R.id.action_view_assets:
+                startActivity(new Intent(this, AssetsActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
     }
 
     @Override
@@ -253,18 +242,6 @@ public class MainActivity extends AppCompatActivity {
     private void initSubviewFields() {
         netWorthTextView = (TextView) findViewById(R.id.textview_net_worth);
         refreshTimeTextVIew = (TextView) findViewById(R.id.textview_refresh_time);
-    }
-
-    private void showErrorDialog(Throwable throwable) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Error").setMessage(throwable.toString())
-               .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       dialog.dismiss();
-                   }
-               })
-               .show();
     }
 
     private CharSequence getRelativeTimeString(long time) {
