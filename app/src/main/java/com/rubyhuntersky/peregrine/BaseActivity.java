@@ -1,6 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,5 +47,15 @@ public class BaseActivity extends AppCompatActivity {
                    }
                })
                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        final FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() != 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

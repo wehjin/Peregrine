@@ -2,7 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/action_settings"
-        android:title="Settings"
+        android:id="@+id/action_refresh"
+        android:title="Refresh"
+        tools:ignore="HardcodedText"/>
+    <item
+        android:id="@+id/action_view_assets"
+        android:title="View Assets"
         tools:ignore="HardcodedText"/>
 </menu>
