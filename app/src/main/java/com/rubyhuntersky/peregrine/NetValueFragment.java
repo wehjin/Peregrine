@@ -2,7 +2,6 @@ package com.rubyhuntersky.peregrine;
 
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -78,9 +77,6 @@ public class NetValueFragment extends BaseFragment {
             case R.id.action_refresh:
                 fetchAccountList().subscribe(updateSubviewsFromAccountList, errorAction);
                 return true;
-            case R.id.action_view_assets:
-                startActivity(new Intent(getActivity(), AssetsActivity.class));
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -88,7 +84,7 @@ public class NetValueFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_net_value, menu);
+        inflater.inflate(R.menu.net_value, menu);
     }
 
 

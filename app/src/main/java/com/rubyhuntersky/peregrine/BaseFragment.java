@@ -46,6 +46,12 @@ public class BaseFragment extends Fragment {
         storage = new ProductionStorage(getActivity());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
     protected void showErrorDialog(String title, Throwable throwable) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title).setMessage(throwable.toString())

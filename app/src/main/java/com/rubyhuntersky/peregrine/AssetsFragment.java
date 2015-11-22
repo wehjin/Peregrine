@@ -1,6 +1,13 @@
 package com.rubyhuntersky.peregrine;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -11,18 +18,32 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-public class AssetsActivity extends BaseActivity {
+public class AssetsFragment extends BaseFragment {
+
+    private TextView textView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assets);
+        setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_assets, container, false);
+        textView = (TextView) view.findViewById(R.id.text);
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
+        refresh();
+    }
 
+    private void refresh() {
+        textView.setText("");
         final StringBuilder stringBuilder = new StringBuilder();
         storage.readAccountList().flatMap(new Func1<EtradeAccountList, Observable<JSONObject>>() {
             @Override
@@ -46,11 +67,27 @@ public class AssetsActivity extends BaseActivity {
         }, errorAction, new Action0() {
             @Override
             public void call() {
-                final TextView textView = (TextView) findViewById(R.id.text);
                 textView.setText(stringBuilder.toString());
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                refresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.assets, menu);
+    }
+
 
     private Observable<JSONObject> fetchAccountPositionsResponses(EtradeAccountList accountList) {
         return Observable.from(accountList.accounts)

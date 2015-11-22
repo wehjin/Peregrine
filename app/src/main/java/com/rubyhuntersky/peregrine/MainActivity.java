@@ -29,12 +29,12 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public Fragment getItem(int position) {
-                return new NetValueFragment();
+                return position == 0 ? new NetValueFragment() : new AssetsFragment();
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return "Net Value";
+                return position == 0 ? "Net Value" : "Assets";
             }
         };
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 }
