@@ -24,6 +24,13 @@ public class BaseActivity extends AppCompatActivity {
         storage = new ProductionStorage(this);
     }
 
+    public EtradeApi getEtradeApi() {
+        return etradeApi;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
 
     @Override
     public void onBackPressed() {
@@ -34,4 +41,5 @@ public class BaseActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }

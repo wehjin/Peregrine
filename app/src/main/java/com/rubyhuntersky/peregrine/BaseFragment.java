@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
-import com.rubyhuntersky.peregrine.exception.ProductionStorage;
 
 import java.util.Date;
 import java.util.List;
@@ -36,20 +34,28 @@ public class BaseFragment extends Fragment {
             showErrorDialog(title, throwable);
         }
     };
-    protected EtradeApi etradeApi;
-    protected Storage storage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        etradeApi = new EtradeApi(getActivity());
-        storage = new ProductionStorage(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+    }
+
+    protected Storage getStorage() {
+        return getBaseActivity().getStorage();
+    }
+
+    protected EtradeApi getEtradeApi() {
+        return getBaseActivity().getEtradeApi();
+    }
+
+    protected BaseActivity getBaseActivity() {
+        return (BaseActivity) getActivity();
     }
 
     protected void showErrorDialog(String title, Throwable throwable) {
@@ -64,12 +70,13 @@ public class BaseFragment extends Fragment {
                .show();
     }
 
+
     protected Observable<EtradeAccountList> fetchAccountList() {
         final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
               Observable<List<EtradeAccount>>>() {
             @Override
             public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
-                return etradeApi.fetchAccountList(oauthToken);
+                return getEtradeApi().fetchAccountList(oauthToken);
             }
         };
         return getOauthAccessToken()
@@ -94,7 +101,7 @@ public class BaseFragment extends Fragment {
                                 .doOnSubscribe(new Action0() {
                                     @Override
                                     public void call() {
-                                        storage.eraseOauthAccessToken();
+                                        getStorage().eraseOauthAccessToken();
                                     }
                                 });
                       } else {
@@ -111,23 +118,23 @@ public class BaseFragment extends Fragment {
               .doOnNext(new Action1<EtradeAccountList>() {
                   @Override
                   public void call(EtradeAccountList accountList) {
-                      storage.writeAccountList(accountList);
+                      getStorage().writeAccountList(accountList);
                   }
               });
     }
 
     private Observable<OauthToken> getOauthAccessToken() {
-        return storage.readOauthAccessToken()
-                      .onErrorResumeNext(new Func1<Throwable, Observable<? extends OauthToken>>() {
-                          @Override
-                          public Observable<? extends OauthToken> call(Throwable throwable) {
-                              if (throwable instanceof NotStoredException) {
-                                  return fetchOauthAccessToken();
-                              } else {
-                                  return Observable.error(throwable);
-                              }
-                          }
-                      });
+        return getStorage().readOauthAccessToken()
+                           .onErrorResumeNext(new Func1<Throwable, Observable<? extends OauthToken>>() {
+                               @Override
+                               public Observable<? extends OauthToken> call(Throwable throwable) {
+                                   if (throwable instanceof NotStoredException) {
+                                       return fetchOauthAccessToken();
+                                   } else {
+                                       return Observable.error(throwable);
+                                   }
+                               }
+                           });
     }
 
     private Observable<OauthToken> renewOauthAccessToken() {
@@ -135,40 +142,41 @@ public class BaseFragment extends Fragment {
               .flatMap(new Func1<OauthToken, Observable<OauthToken>>() {
                   @Override
                   public Observable<OauthToken> call(OauthToken oauthToken) {
-                      return etradeApi.renewOauthAccessToken(oauthToken);
+                      return getEtradeApi().renewOauthAccessToken(oauthToken);
                   }
               });
     }
 
     private Observable<OauthToken> fetchOauthAccessToken() {
-        return etradeApi.fetchOauthRequestToken()
-                        .flatMap(new Func1<OauthToken, Observable<OauthVerifier>>() {
-                            @Override
-                            public Observable<OauthVerifier> call(OauthToken requestToken) {
-                                return promptForVerifier(requestToken);
-                            }
-                        })
-                        .flatMap(new Func1<OauthVerifier, Observable<OauthToken>>() {
-                            @Override
-                            public Observable<OauthToken> call(OauthVerifier verifier) {
-                                return etradeApi.fetchOauthAccessToken(verifier);
-                            }
-                        })
-                        .doOnNext(new Action1<OauthToken>() {
-                            @Override
-                            public void call(OauthToken oauthToken) {
-                                storage.writeOauthAccessToken(oauthToken);
-                            }
-                        });
+        return getEtradeApi().fetchOauthRequestToken()
+                             .flatMap(new Func1<OauthToken, Observable<OauthVerifier>>() {
+                                 @Override
+                                 public Observable<OauthVerifier> call(OauthToken requestToken) {
+                                     return promptForVerifier(requestToken);
+                                 }
+                             })
+                             .flatMap(new Func1<OauthVerifier, Observable<OauthToken>>() {
+                                 @Override
+                                 public Observable<OauthToken> call(OauthVerifier verifier) {
+                                     return getEtradeApi().fetchOauthAccessToken(verifier);
+                                 }
+                             })
+                             .doOnNext(new Action1<OauthToken>() {
+                                 @Override
+                                 public void call(OauthToken oauthToken) {
+                                     getStorage().writeOauthAccessToken(oauthToken);
+                                 }
+                             });
     }
 
     private Observable<OauthVerifier> promptForVerifier(final OauthToken oauthRequestToken) {
         return Observable.create(new Observable.OnSubscribe<OauthVerifier>() {
             @Override
             public void call(final Subscriber<? super OauthVerifier> subscriber) {
-                final FragmentManager fragmentManager = getChildFragmentManager();
-                final VerifierFragment verifierFragment = VerifierFragment.newInstance(etradeApi.oauthAppToken.appKey,
-                                                                                       oauthRequestToken.key);
+                final android.support.v4.app.FragmentManager fragmentManager = getChildFragmentManager();
+                final VerifierFragment verifierFragment = VerifierFragment.newInstance(
+                      getEtradeApi().oauthAppToken.appKey,
+                      oauthRequestToken.key);
                 verifierFragment.setListener(new VerifierFragment.Listener() {
 
                     @Override

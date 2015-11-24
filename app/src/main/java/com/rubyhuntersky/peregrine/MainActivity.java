@@ -2,7 +2,6 @@ package com.rubyhuntersky.peregrine;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -28,7 +27,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public Fragment getItem(int position) {
+            public BaseFragment getItem(int position) {
                 return position == 0 ? new NetValueFragment() : new AssetsFragment();
             }
 

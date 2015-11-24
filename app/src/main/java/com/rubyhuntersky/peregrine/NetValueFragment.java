@@ -1,7 +1,6 @@
 package com.rubyhuntersky.peregrine;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import rx.functions.Action1;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link android.app.Fragment} subclass.
  */
 public class NetValueFragment extends BaseFragment {
 
@@ -60,7 +59,7 @@ public class NetValueFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        storage.readAccountList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
+        getStorage().readAccountList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
                 if (throwable instanceof NotStoredException) {

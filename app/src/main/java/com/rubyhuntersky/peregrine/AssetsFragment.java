@@ -45,7 +45,7 @@ public class AssetsFragment extends BaseFragment {
     private void refresh() {
         textView.setText("");
         final StringBuilder stringBuilder = new StringBuilder();
-        storage.readAccountList().flatMap(new Func1<EtradeAccountList, Observable<JSONObject>>() {
+        getStorage().readAccountList().flatMap(new Func1<EtradeAccountList, Observable<JSONObject>>() {
             @Override
             public Observable<JSONObject> call(EtradeAccountList accountList) {
                 return fetchAccountPositionsResponses(accountList);
@@ -100,23 +100,23 @@ public class AssetsFragment extends BaseFragment {
     }
 
     private Observable<JSONObject> fetchAccountPositionsResponse(final EtradeAccount etradeAccount) {
-        return storage.readOauthAccessToken()
-                      .flatMap(new Func1<OauthToken, Observable<JSONObject>>() {
-                          @Override
-                          public Observable<JSONObject> call(OauthToken oauthToken) {
-                              return etradeApi.fetchAccountPositionsResponse(
-                                    etradeAccount.accountId, oauthToken).map(new Func1<JSONObject, JSONObject>() {
-                                  @Override
-                                  public JSONObject call(JSONObject jsonObject) {
-                                      try {
-                                          jsonObject.putOpt("accountDescription", etradeAccount.description);
-                                      } catch (JSONException e) {
-                                          throw new RuntimeException(e);
-                                      }
-                                      return jsonObject;
-                                  }
-                              });
-                          }
-                      });
+        return getStorage().readOauthAccessToken()
+                           .flatMap(new Func1<OauthToken, Observable<JSONObject>>() {
+                               @Override
+                               public Observable<JSONObject> call(OauthToken oauthToken) {
+                                   return getEtradeApi().fetchAccountPositionsResponse(
+                                         etradeAccount.accountId, oauthToken).map(new Func1<JSONObject, JSONObject>() {
+                                       @Override
+                                       public JSONObject call(JSONObject jsonObject) {
+                                           try {
+                                               jsonObject.putOpt("accountDescription", etradeAccount.description);
+                                           } catch (JSONException e) {
+                                               throw new RuntimeException(e);
+                                           }
+                                           return jsonObject;
+                                       }
+                                   });
+                               }
+                           });
     }
 }
