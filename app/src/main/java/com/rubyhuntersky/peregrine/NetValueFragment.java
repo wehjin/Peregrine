@@ -30,9 +30,9 @@ public class NetValueFragment extends BaseFragment {
 
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
-    private Action1<EtradeAccountList> updateSubviewsFromAccountList = new Action1<EtradeAccountList>() {
+    private Action1<AccountsList> updateSubviewsFromAccountList = new Action1<AccountsList>() {
         @Override
-        public void call(EtradeAccountList accountList) {
+        public void call(AccountsList accountList) {
             netWorthTextView.setText(NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts)));
             refreshTimeTextVIew.setText(getRelativeTimeString(accountList.arrivalDate.getTime()));
         }
@@ -59,7 +59,7 @@ public class NetValueFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getStorage().readAccountList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
+        getStorage().readAccountsList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
                 if (throwable instanceof NotStoredException) {

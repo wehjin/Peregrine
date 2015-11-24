@@ -71,7 +71,7 @@ public class BaseFragment extends Fragment {
     }
 
 
-    protected Observable<EtradeAccountList> fetchAccountList() {
+    protected Observable<AccountsList> fetchAccountList() {
         final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
               Observable<List<EtradeAccount>>>() {
             @Override
@@ -109,15 +109,15 @@ public class BaseFragment extends Fragment {
                       }
                   }
               })
-              .map(new Func1<List<EtradeAccount>, EtradeAccountList>() {
+              .map(new Func1<List<EtradeAccount>, AccountsList>() {
                   @Override
-                  public EtradeAccountList call(List<EtradeAccount> etradeAccounts) {
-                      return new EtradeAccountList(etradeAccounts, new Date());
+                  public AccountsList call(List<EtradeAccount> etradeAccounts) {
+                      return new AccountsList(etradeAccounts, new Date());
                   }
               })
-              .doOnNext(new Action1<EtradeAccountList>() {
+              .doOnNext(new Action1<AccountsList>() {
                   @Override
-                  public void call(EtradeAccountList accountList) {
+                  public void call(AccountsList accountList) {
                       getStorage().writeAccountList(accountList);
                   }
               });

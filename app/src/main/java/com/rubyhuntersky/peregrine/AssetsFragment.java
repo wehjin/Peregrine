@@ -1,6 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+
 import rx.Observable;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -39,37 +43,63 @@ public class AssetsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
+        getStorage()
+              .readAssetsLists()
+              .subscribe(new Action1<List<AccountAssetsList>>() {
+                  @Override
+                  public void call(List<AccountAssetsList> accountAssetsLists) {
+                      updateTextView(accountAssetsLists);
+                  }
+              }, errorAction);
     }
 
     private void refresh() {
         textView.setText("");
+        fetchEtradeAssetsLists()
+              .toList()
+              .subscribe(new Action1<List<AccountAssetsList>>() {
+                  @Override
+                  public void call(List<AccountAssetsList> assetsLists) {
+                      getStorage().writeAssetsLists(assetsLists);
+                      updateTextView(assetsLists);
+                  }
+              }, errorAction);
+    }
+
+    private void updateTextView(List<AccountAssetsList> accountAssetsLists) {
         final StringBuilder stringBuilder = new StringBuilder();
-        getStorage().readAccountList().flatMap(new Func1<EtradeAccountList, Observable<JSONObject>>() {
-            @Override
-            public Observable<JSONObject> call(EtradeAccountList accountList) {
-                return fetchAccountPositionsResponses(accountList);
-            }
-        }).subscribe(new Action1<JSONObject>() {
-            @Override
-            public void call(JSONObject jsonObject) {
-                try {
-                    final String accountDescription = jsonObject.optString("accountDescription");
-                    final String accountId = jsonObject.optString("accountId");
-                    final String positions = jsonObject.optJSONArray("response").toString(2);
-                    stringBuilder.append(accountDescription).append("\n")
-                                 .append(accountId).append("\n")
-                                 .append(positions).append("\n\n");
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }, errorAction, new Action0() {
-            @Override
-            public void call() {
-                textView.setText(stringBuilder.toString());
-            }
-        });
+        for (AccountAssetsList assetsList : accountAssetsLists) {
+            stringBuilder.append(assetsList).append("\n\n");
+        }
+        textView.setText(stringBuilder.toString());
+    }
+
+    @NonNull
+    private Observable<AccountAssetsList> fetchEtradeAssetsLists() {
+        return getStorage()
+              .readAccountsList()
+              .flatMap(new Func1<AccountsList, Observable<EtradeAccount>>() {
+                  @Override
+                  public Observable<EtradeAccount> call(AccountsList accountsList) {
+                      return Observable.from(accountsList.accounts);
+                  }
+              })
+              .flatMap(new Func1<EtradeAccount, Observable<JSONObject>>() {
+                  @Override
+                  public Observable<JSONObject> call(EtradeAccount etradeAccount) {
+                      return fetchAccountPositionsResponse(etradeAccount);
+                  }
+              })
+              .map(new Func1<JSONObject, AccountAssetsList>() {
+                  @Override
+                  public AccountAssetsList call(JSONObject jsonObject) {
+                      try {
+                          return new AccountAssetsList(jsonObject);
+                      } catch (JSONException e) {
+                          throw new RuntimeException(e);
+                      }
+                  }
+              });
     }
 
     @Override
@@ -89,34 +119,32 @@ public class AssetsFragment extends BaseFragment {
     }
 
 
-    private Observable<JSONObject> fetchAccountPositionsResponses(EtradeAccountList accountList) {
-        return Observable.from(accountList.accounts)
-                         .flatMap(new Func1<EtradeAccount, Observable<JSONObject>>() {
-                             @Override
-                             public Observable<JSONObject> call(final EtradeAccount etradeAccount) {
-                                 return fetchAccountPositionsResponse(etradeAccount);
-                             }
-                         });
-    }
-
     private Observable<JSONObject> fetchAccountPositionsResponse(final EtradeAccount etradeAccount) {
         return getStorage().readOauthAccessToken()
                            .flatMap(new Func1<OauthToken, Observable<JSONObject>>() {
                                @Override
                                public Observable<JSONObject> call(OauthToken oauthToken) {
-                                   return getEtradeApi().fetchAccountPositionsResponse(
-                                         etradeAccount.accountId, oauthToken).map(new Func1<JSONObject, JSONObject>() {
-                                       @Override
-                                       public JSONObject call(JSONObject jsonObject) {
-                                           try {
-                                               jsonObject.putOpt("accountDescription", etradeAccount.description);
-                                           } catch (JSONException e) {
-                                               throw new RuntimeException(e);
-                                           }
-                                           return jsonObject;
-                                       }
-                                   });
+                                   return AssetsFragment.this.fetchAccountPositionsResponse(oauthToken, etradeAccount);
                                }
                            });
+    }
+
+    @NonNull
+    private Observable<JSONObject> fetchAccountPositionsResponse(OauthToken oauthToken,
+          final EtradeAccount etradeAccount) {
+        return getEtradeApi().fetchAccountPositionsResponse(etradeAccount.accountId, oauthToken)
+                             .map(new Func1<JSONObject, JSONObject>() {
+                                 @Override
+                                 public JSONObject call(JSONObject jsonObject) {
+                                     try {
+                                         jsonObject.putOpt("accountDescription", etradeAccount.description);
+                                         jsonObject.putOpt("responseArrivalTime",
+                                                           DateFormat.getInstance().format(new Date()));
+                                     } catch (JSONException e) {
+                                         throw new RuntimeException(e);
+                                     }
+                                     return jsonObject;
+                                 }
+                             });
     }
 }
