@@ -30,6 +30,12 @@ public class AssetsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        errorAction = new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                textView.setText(throwable.getLocalizedMessage());
+            }
+        };
     }
 
     @Nullable

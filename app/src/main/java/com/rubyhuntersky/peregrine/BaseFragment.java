@@ -26,7 +26,7 @@ import rx.subscriptions.Subscriptions;
 public class BaseFragment extends Fragment {
 
     protected final String TAG = this.getClass().getSimpleName();
-    protected final Action1<Throwable> errorAction = new Action1<Throwable>() {
+    protected Action1<Throwable> errorAction = new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
             final String title = "ERROR";
