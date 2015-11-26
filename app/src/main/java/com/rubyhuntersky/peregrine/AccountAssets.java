@@ -12,7 +12,7 @@ import java.util.Date;
  * @since 11/24/15.
  */
 
-public class AccountAssetsList {
+public class AccountAssets {
 
     private final JSONObject jsonObject;
     private final String accountDescription;
@@ -20,7 +20,7 @@ public class AccountAssetsList {
     private final String positions;
     private final Date arrivalTime;
 
-    public AccountAssetsList(JSONObject jsonObject) throws JSONException {
+    public AccountAssets(JSONObject jsonObject) throws JSONException {
         this.jsonObject = jsonObject;
         this.accountDescription = jsonObject.optString("accountDescription");
         this.accountId = jsonObject.optString("accountId");
@@ -36,7 +36,7 @@ public class AccountAssetsList {
 
     @Override
     public String toString() {
-        return "AccountAssetsList{" +
+        return "AccountAssets{" +
               "accountDescription='" + accountDescription + '\'' +
               ", accountId='" + accountId + '\'' +
               ", positions='" + positions + '\'' +

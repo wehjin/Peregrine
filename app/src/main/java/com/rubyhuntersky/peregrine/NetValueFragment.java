@@ -2,11 +2,11 @@ package com.rubyhuntersky.peregrine;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +18,8 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscription;
 import rx.functions.Action1;
 
 
@@ -33,10 +35,20 @@ public class NetValueFragment extends BaseFragment {
     private Action1<AccountsList> updateSubviewsFromAccountList = new Action1<AccountsList>() {
         @Override
         public void call(AccountsList accountList) {
-            netWorthTextView.setText(NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts)));
-            refreshTimeTextVIew.setText(getRelativeTimeString(accountList.arrivalDate.getTime()));
+            final String centerString = accountList == null ? "No data" : getFormattedNetWorth(accountList);
+            final CharSequence cornerString = getRelativeTimeString(
+                  (accountList == null ? new Date() : accountList.arrivalDate).getTime());
+            netWorthTextView.setText(centerString);
+            refreshTimeTextVIew.setText(cornerString);
         }
     };
+
+    @NonNull
+    private String getFormattedNetWorth(AccountsList accountList) {
+        return NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts));
+    }
+
+    private Subscription accountsListSubscription;
 
     public NetValueFragment() {
         // Required empty public constructor
@@ -59,33 +71,30 @@ public class NetValueFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getStorage().readAccountsList().subscribe(updateSubviewsFromAccountList, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                if (throwable instanceof NotStoredException) {
-                    return;
-                }
-                errorAction.call(throwable);
-            }
-        });
+        accountsListSubscription = getAccountsListStream()
+              .subscribe(updateSubviewsFromAccountList,
+                         new Action1<Throwable>() {
+                             @Override
+                             public void call(Throwable throwable) {
+                                 if (throwable instanceof
+                                       NotStoredException) {
+                                     return;
+                                 }
+                                 getErrorAction().call(throwable);
+                             }
+                         });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                fetchAccountList().subscribe(updateSubviewsFromAccountList, errorAction);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void onPause() {
+        accountsListSubscription.unsubscribe();
+        super.onPause();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.net_value, menu);
     }
-
 
     private static BigDecimal getNetWorth(List<EtradeAccount> etradeAccounts) {
         BigDecimal sum = BigDecimal.ZERO;
@@ -94,6 +103,7 @@ public class NetValueFragment extends BaseFragment {
         }
         return sum;
     }
+
 
     private CharSequence getRelativeTimeString(long time) {
         final long elapsed = new Date().getTime() - time;
@@ -107,5 +117,9 @@ public class NetValueFragment extends BaseFragment {
     private void initSubviewFields(View view) {
         netWorthTextView = (TextView) view.findViewById(R.id.textview_net_worth);
         refreshTimeTextVIew = (TextView) view.findViewById(R.id.textview_refresh_time);
+    }
+
+    private Observable<AccountsList> getAccountsListStream() {
+        return getBaseActivity().getAccountsListStream();
     }
 }

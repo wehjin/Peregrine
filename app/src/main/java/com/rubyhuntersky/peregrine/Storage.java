@@ -31,7 +31,7 @@ public class Storage {
     private final SharedPreferences sharedPreferences;
     private OauthToken oauthToken;
     private Savelet<AccountsList> accountsList;
-    private Savelet<List<AccountAssetsList>> assetsLists;
+    private Savelet<List<AccountAssets>> assetsLists;
 
     public Storage(Context context, String name) {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
@@ -46,24 +46,24 @@ public class Storage {
                 return object.toJSONObject().toString();
             }
         });
-        assetsLists = new Savelet<>(PREFKEY_ASSETS_LISTS, "assets lists", new Builder<List<AccountAssetsList>>() {
+        assetsLists = new Savelet<>(PREFKEY_ASSETS_LISTS, "assets lists", new Builder<List<AccountAssets>>() {
             @Override
-            public List<AccountAssetsList> build(String jsonString) throws JSONException {
+            public List<AccountAssets> build(String jsonString) throws JSONException {
                 final JSONArray jsonArray = new JSONArray(jsonString);
 
-                List<AccountAssetsList> list = new ArrayList<>(jsonArray.length());
+                List<AccountAssets> list = new ArrayList<>(jsonArray.length());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    list.add(new AccountAssetsList(jsonObject));
+                    list.add(new AccountAssets(jsonObject));
                 }
                 return list;
             }
 
             @Override
-            public String stringify(List<AccountAssetsList> object) throws JSONException {
+            public String stringify(List<AccountAssets> object) throws JSONException {
                 final JSONArray jsonArray = new JSONArray();
                 int i = 0;
-                for (AccountAssetsList assetsList : object) {
+                for (AccountAssets assetsList : object) {
                     jsonArray.put(i, assetsList.getJsonObject());
                     i++;
                 }
@@ -72,11 +72,11 @@ public class Storage {
         });
     }
 
-    public void writeAssetsLists(List<AccountAssetsList> assetsLists) {
+    public void writeAssetsLists(List<AccountAssets> assetsLists) {
         this.assetsLists.write(assetsLists);
     }
 
-    public Observable<List<AccountAssetsList>> readAssetsLists() {
+    public Observable<List<AccountAssets>> readAccountAssetsList() {
         return assetsLists.read();
     }
 
