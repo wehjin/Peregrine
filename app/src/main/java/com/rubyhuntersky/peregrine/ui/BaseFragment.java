@@ -1,10 +1,14 @@
 package com.rubyhuntersky.peregrine.ui;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.Storage;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import rx.functions.Action1;
 
@@ -16,6 +20,11 @@ import rx.functions.Action1;
 public class BaseFragment extends Fragment {
 
     protected final String TAG = this.getClass().getSimpleName();
+
+    @NonNull
+    protected String getCurrencyDisplayString(BigDecimal value) {
+        return NumberFormat.getCurrencyInstance().format(value);
+    }
 
     public void onResume() {
         super.onResume();

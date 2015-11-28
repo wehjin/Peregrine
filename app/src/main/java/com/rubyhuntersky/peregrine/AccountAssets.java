@@ -1,12 +1,16 @@
 package com.rubyhuntersky.peregrine;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wehjin
@@ -15,6 +19,7 @@ import java.util.Date;
 
 public class AccountAssets {
 
+    public static final String TAG = AccountAssets.class.getSimpleName();
     private final JSONObject jsonObject;
     private final String accountDescription;
     private final String accountId;
@@ -51,5 +56,18 @@ public class AccountAssets {
 
     public JSONObject getJsonObject() {
         return jsonObject;
+    }
+
+    public List<Asset> toAssetList() {
+        List<Asset> assets = new ArrayList<>();
+        try {
+            final JSONArray jsonArray = new JSONArray(this.positions);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                assets.add(new Asset(jsonArray.getJSONObject(i), accountId, accountDescription, arrivalTime));
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "toAssetList", e);
+        }
+        return assets;
     }
 }

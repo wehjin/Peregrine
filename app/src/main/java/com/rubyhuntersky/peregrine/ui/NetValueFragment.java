@@ -17,7 +17,6 @@ import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class NetValueFragment extends BaseFragment {
 
     @NonNull
     private String getFormattedNetWorth(AccountsList accountList) {
-        return NumberFormat.getCurrencyInstance().format(getNetWorth(accountList.accounts));
+        return getCurrencyDisplayString(getNetWorth(accountList.accounts));
     }
 
     private Subscription accountsListSubscription;
