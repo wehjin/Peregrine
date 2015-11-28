@@ -14,6 +14,7 @@ import com.rubyhuntersky.peregrine.EtradeAccount;
 import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.OauthToken;
 import com.rubyhuntersky.peregrine.OauthVerifier;
+import com.rubyhuntersky.peregrine.PartitionList;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.Storage;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
@@ -22,6 +23,10 @@ import com.rubyhuntersky.peregrine.exception.ProductionStorage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -56,24 +61,48 @@ public class BaseActivity extends AppCompatActivity {
     private Storage storage;
     private BehaviorSubject<AccountsList> accountsListStream;
     private BehaviorSubject<List<AccountAssets>> accountAssetsListStream;
+    private BehaviorSubject<PartitionList> partitionListStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         etradeApi = new EtradeApi(this);
         storage = new ProductionStorage(this);
+
+        try {
+            final InputStream inputStream = getResources().openRawResource(R.raw.starting_partitions);
+            partitionListStream = BehaviorSubject.create(new PartitionList(new JSONObject(getString(inputStream))));
+        } catch (JSONException | IOException e) {
+            Log.e(TAG, "onCreate", e);
+            throw new RuntimeException(e);
+        }
+
         accountsListStream = BehaviorSubject.create((AccountsList) null);
         try {
             accountsListStream.onNext(storage.readAccountsList().toBlocking().single());
         } catch (Throwable throwable) {
             // Do nothing.
         }
+
         accountAssetsListStream = BehaviorSubject.create((List<AccountAssets>) null);
         try {
             accountAssetsListStream.onNext(storage.readAccountAssetsList().toBlocking().single());
         } catch (Throwable throwable) {
             // Do nothing.
         }
+    }
+
+    @NonNull
+    private String getString(InputStream inputStream) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        for (String s = br.readLine(); s != null; s = br.readLine()) stringBuilder.append(s);
+        for (int c = br.read(); c != -1; c = br.read()) stringBuilder.append((char) c);
+        return stringBuilder.toString();
+    }
+
+    public Observable<PartitionList> getPartitionListStream() {
+        return partitionListStream;
     }
 
     public Observable<AccountsList> getAccountsListStream() {

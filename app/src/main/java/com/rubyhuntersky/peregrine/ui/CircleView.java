@@ -3,6 +3,7 @@ package com.rubyhuntersky.peregrine.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -33,13 +34,13 @@ public class CircleView extends View {
     }
 
     public CircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
         paint = new Paint();
-        paint.setColor(context.getResources().getColor(R.color.colorAccent));
+        paint.setColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
         paint.setAntiAlias(true);
     }
 

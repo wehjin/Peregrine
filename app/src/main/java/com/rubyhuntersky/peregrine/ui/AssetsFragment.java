@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,15 +19,28 @@ import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.AccountAssets;
 import com.rubyhuntersky.peregrine.Asset;
+import com.rubyhuntersky.peregrine.PartitionList;
 import com.rubyhuntersky.peregrine.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func2;
 
 public class AssetsFragment extends BaseFragment {
 
+    public static final Func2<PartitionList, List<AccountAssets>, Pair<PartitionList, List<AccountAssets>>>
+          COMBINE_PARITION_LIST_AND_ACCOUNT_ASSETS_LIST = new Func2<PartitionList, List<AccountAssets>,
+          Pair<PartitionList,
+                List<AccountAssets>>>() {
+        @Override
+        public Pair<PartitionList, List<AccountAssets>> call(PartitionList partitionList,
+              List<AccountAssets> accountAssetsList) {
+            return new Pair<>(partitionList, accountAssetsList);
+        }
+    };
     private TextView textView;
     private ListView listView;
 
@@ -47,13 +62,16 @@ public class AssetsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getBaseActivity().getAccountAssetsListStream()
-                         .subscribe(new Action1<List<AccountAssets>>() {
-                             @Override
-                             public void call(List<AccountAssets> accountAssetses) {
-                                 updateViews(accountAssetses);
-                             }
-                         }, getErrorAction());
+        Observable.combineLatest(getBaseActivity().getPartitionListStream(),
+                                 getBaseActivity().getAccountAssetsListStream(),
+                                 COMBINE_PARITION_LIST_AND_ACCOUNT_ASSETS_LIST)
+                  .subscribe(new Action1<Pair<PartitionList, List<AccountAssets>>>() {
+                                 @Override
+                                 public void call(Pair<PartitionList, List<AccountAssets>> pair) {
+                                     updateViews(pair.first, pair.second);
+                                 }
+                             },
+                             getErrorAction());
     }
 
     @Override
@@ -67,12 +85,12 @@ public class AssetsFragment extends BaseFragment {
         };
     }
 
-    private void updateViews(List<AccountAssets> accountAssetsList) {
+    private void updateViews(PartitionList partitionList, List<AccountAssets> accountAssetsList) {
         final List<Asset> assets = getAssets(accountAssetsList);
         if (assets.isEmpty()) {
             showText("No data");
         } else {
-            showList(getAssetsBaseAdapter(getActivity(), assets));
+            showList(getAssetsBaseAdapter(getActivity(), partitionList, assets));
         }
     }
 
@@ -98,7 +116,8 @@ public class AssetsFragment extends BaseFragment {
     }
 
     @NonNull
-    private BaseAdapter getAssetsBaseAdapter(final Context context, final List<Asset> assets) {
+    private BaseAdapter getAssetsBaseAdapter(final Context context, final PartitionList partitionList,
+          final List<Asset> assets) {
         return new BaseAdapter() {
 
             @Override
@@ -121,8 +140,11 @@ public class AssetsFragment extends BaseFragment {
                 final View view = convertView == null ? View.inflate(context, R.layout.cell_asset, null) : convertView;
                 final Asset asset = assets.get(position);
                 final TextView startText = (TextView) view.findViewById(R.id.startText);
+                final TextView startDetailText = (TextView) view.findViewById(R.id.startDetailText);
                 final TextView endText = (TextView) view.findViewById(R.id.endText);
                 startText.setText(asset.symbol);
+                startDetailText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+                startDetailText.setText(getString(R.string.unassigned));
                 endText.setText(getCurrencyDisplayString(asset.marketValue));
                 return view;
             }
