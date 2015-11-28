@@ -1,7 +1,10 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.ui;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import com.rubyhuntersky.peregrine.EtradeApi;
+import com.rubyhuntersky.peregrine.Storage;
 
 import rx.functions.Action1;
 

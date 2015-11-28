@@ -1,10 +1,12 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.rubyhuntersky.peregrine.R;
 
 /**
  * @author wehjin

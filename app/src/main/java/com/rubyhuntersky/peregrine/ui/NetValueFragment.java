@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.ui;
 
 
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rubyhuntersky.peregrine.AccountsList;
+import com.rubyhuntersky.peregrine.EtradeAccount;
+import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 
 import java.math.BigDecimal;

@@ -4,7 +4,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            tools:context=".AssetsFragment">
+            tools:context=".ui.AssetsFragment">
 
     <TextView
         android:id="@+id/text"

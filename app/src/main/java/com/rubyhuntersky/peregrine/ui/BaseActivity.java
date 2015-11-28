@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.ui;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -8,6 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.rubyhuntersky.peregrine.AccountAssets;
+import com.rubyhuntersky.peregrine.AccountsList;
+import com.rubyhuntersky.peregrine.EtradeAccount;
+import com.rubyhuntersky.peregrine.EtradeApi;
+import com.rubyhuntersky.peregrine.OauthToken;
+import com.rubyhuntersky.peregrine.OauthVerifier;
+import com.rubyhuntersky.peregrine.R;
+import com.rubyhuntersky.peregrine.Storage;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 import com.rubyhuntersky.peregrine.exception.ProductionStorage;
 

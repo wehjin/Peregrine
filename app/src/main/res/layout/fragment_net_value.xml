@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16sp"
-                tools:context="com.rubyhuntersky.peregrine.NetValueFragment">
+                tools:context=".ui.NetValueFragment">
 
     <TextView
         android:id="@+id/textview_refresh_time"
@@ -16,7 +16,7 @@
         android:textColor="@color/darkTextSecondary"
         tools:ignore="HardcodedText"/>
 
-    <com.rubyhuntersky.peregrine.CircleView
+    <com.rubyhuntersky.peregrine.ui.CircleView
         android:id="@+id/circle_net_worth"
         android:layout_width="match_parent"
         android:layout_height="300dp"
