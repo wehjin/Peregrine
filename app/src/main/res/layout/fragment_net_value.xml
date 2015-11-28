@@ -33,11 +33,4 @@
         android:textColor="@color/darkText"
         android:textSize="24sp"
         tools:ignore="HardcodedText"/>
-
-    <FrameLayout
-        android:id="@+id/frame_verifier"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"/>
-
 </RelativeLayout>

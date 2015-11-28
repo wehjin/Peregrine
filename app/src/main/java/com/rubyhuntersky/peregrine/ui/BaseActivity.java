@@ -335,7 +335,7 @@ public class BaseActivity extends AppCompatActivity {
                     }
                 });
                 fragmentManager.beginTransaction()
-                               .add(R.id.frame_verifier, verifierFragment, "VerifierFragment")
+                               .add(R.id.verifier_frame, verifierFragment, "VerifierFragment")
                                .addToBackStack(null)
                                .commit();
                 subscriber.add(Subscriptions.create(new Action0() {

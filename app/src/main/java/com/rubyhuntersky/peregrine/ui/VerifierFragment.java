@@ -66,6 +66,12 @@ public class VerifierFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        verifierEditText.requestFocus();
+    }
+
     public void setListener(Listener listener) {
         this.listener = listener;
     }
