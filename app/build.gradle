@@ -11,6 +11,13 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    productFlavors {
+        sandbox {
+            applicationIdSuffix ".sandbox"
+        }
+        production {
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

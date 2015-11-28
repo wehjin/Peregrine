@@ -1,5 +1,6 @@
 package com.rubyhuntersky.peregrine;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +23,10 @@ public class AccountAssets {
 
     public AccountAssets(JSONObject jsonObject) throws JSONException {
         this.jsonObject = jsonObject;
+
+        final String responseAccountId = jsonObject.optString("accountId");
+        this.accountId = responseAccountId.isEmpty() ? jsonObject.optString("requestAccountId") : responseAccountId;
         this.accountDescription = jsonObject.optString("accountDescription");
-        this.accountId = jsonObject.optString("accountId");
         Date arrivalTime;
         try {
             arrivalTime = DateFormat.getInstance().parse(jsonObject.optString("responseArrivalTime"));
@@ -31,7 +34,9 @@ public class AccountAssets {
             arrivalTime = new Date();
         }
         this.arrivalTime = arrivalTime;
-        this.positions = jsonObject.optJSONArray("response").toString(2);
+
+        final JSONArray response = jsonObject.optJSONArray("response");
+        this.positions = response == null ? "[]" : response.toString(2);
     }
 
     @Override

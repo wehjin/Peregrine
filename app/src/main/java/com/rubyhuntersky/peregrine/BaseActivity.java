@@ -221,6 +221,7 @@ public class BaseActivity extends AppCompatActivity {
                                  @Override
                                  public JSONObject call(JSONObject jsonObject) {
                                      try {
+                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
                                          jsonObject.putOpt("accountDescription", etradeAccount.description);
                                          jsonObject.putOpt("responseArrivalTime",
                                                            DateFormat.getInstance().format(new Date()));
@@ -286,6 +287,7 @@ public class BaseActivity extends AppCompatActivity {
                 final VerifierFragment verifierFragment = VerifierFragment.newInstance(
                       getEtradeApi().oauthAppToken.appKey,
                       oauthRequestToken.key);
+
                 verifierFragment.setListener(new VerifierFragment.Listener() {
 
                     @Override

@@ -71,7 +71,7 @@ public class VerifierFragment extends Fragment {
     private void launchVerifierEntryPageInBrowser() {
         final String appKey = getArguments().getString(ARG_APP_KEY);
         final String requestKey = getArguments().getString(ARG_REQUEST_KEY);
-        String format = "https://us.etrade.com/e/t/etws/authorize?key=%s&token=%s";
+        final String format = "https://us.etrade.com/e/t/etws/authorize?key=%s&token=%s";
         final String url = String.format(format, Uri.encode(appKey), Uri.encode(requestKey));
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }

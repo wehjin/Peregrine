@@ -40,28 +40,31 @@ public class EtradeApi {
 
     public static final String TAG = EtradeApi.class.getSimpleName();
     public static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    public static final String ET_OAUTH_URL = "https://etws.etrade.com/oauth/";
     public final OauthAppToken oauthAppToken;
+    private final String etRestUrlTemplate;
 
     public EtradeApi(Context context) {
-        oauthAppToken = new OauthAppToken(context.getString(R.string.et_production_key),
-                                          context.getString(R.string.et_production_secret));
+        oauthAppToken = new OauthAppToken(context.getString(R.string.et_api_key),
+                                          context.getString(R.string.et_api_secret));
+        etRestUrlTemplate = context.getString(R.string.et_rest_url);
     }
 
     public Observable<OauthToken> fetchOauthRequestToken() {
-
-        final OauthHttpRequest request = new OauthHttpRequest.Builder("https://etws.etrade.com/oauth/request_token",
-                                                                      oauthAppToken).build();
-        return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
-            @Override
-            public OauthToken call(String string) {
-                return new OauthToken(string);
-            }
-        });
+        final String urlString = ET_OAUTH_URL + "request_token";
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken).build();
+        return getOauthHttpResponseString(request)
+              .map(new Func1<String, OauthToken>() {
+                  @Override
+                  public OauthToken call(String string) {
+                      return new OauthToken(string);
+                  }
+              });
     }
 
     public Observable<OauthToken> fetchOauthAccessToken(OauthVerifier verifier) {
-        final OauthHttpRequest request = new OauthHttpRequest.Builder("https://etws.etrade.com/oauth/access_token",
-                                                                      oauthAppToken)
+        final String urlString = ET_OAUTH_URL + "access_token";
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken)
               .withVerifier(verifier).build();
         return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
             @Override
@@ -72,8 +75,8 @@ public class EtradeApi {
     }
 
     public Observable<OauthToken> renewOauthAccessToken(final OauthToken oauthToken) {
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(
-              "https://etws.etrade.com/oauth/renew_access_token", oauthAppToken)
+        final String urlString = ET_OAUTH_URL + "renew_access_token";
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken)
               .withToken(oauthToken).build();
         return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
             @Override
@@ -84,15 +87,16 @@ public class EtradeApi {
         });
     }
 
-    public Observable<JSONObject> fetchAccountPositionsResponse(String accountId, OauthToken accessToken) {
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(
-              "https://etws.etrade.com/accounts/rest/accountpositions/" + accountId + ".json", oauthAppToken)
+    public Observable<JSONObject> fetchAccountPositionsResponse(final String accountId, OauthToken accessToken) {
+        Log.d(TAG, "fetchAccountPositionsResponse: " + accountId);
+        final String urlString = getEtradeRestUrl("accounts", "accountpositions/" + accountId + ".json");
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken)
               .withToken(accessToken)
               .build();
         return getOauthHttpResponseString(request).map(new Func1<String, JSONObject>() {
             @Override
             public JSONObject call(String inputResponse) {
-                Log.d(TAG, inputResponse);
+                Log.d(TAG, accountId + " " + inputResponse);
                 try {
                     return new JSONObject(inputResponse).getJSONObject("json.accountPositionsResponse");
                 } catch (JSONException e) {
@@ -103,8 +107,8 @@ public class EtradeApi {
     }
 
     public Observable<List<EtradeAccount>> fetchAccountList(OauthToken accessToken) {
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(
-              "https://etws.etrade.com/accounts/rest/accountlist", oauthAppToken)
+        final String url = getEtradeRestUrl("accounts", "accountlist");
+        final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken)
               .withToken(accessToken)
               .build();
         return getOauthHttpResponseString(request).map(new Func1<String, List<EtradeAccount>>() {
@@ -182,6 +186,10 @@ public class EtradeApi {
 
     private Observable<String> getHttpResponseString(String url, Pair<String, String> headerField) {
         return getHttpResponseString(url, Collections.singletonList(headerField));
+    }
+
+    private String getEtradeRestUrl(String module, String api) {
+        return String.format(etRestUrlTemplate, module, api);
     }
 
     private byte[] getBytes(InputStream is) throws IOException {
