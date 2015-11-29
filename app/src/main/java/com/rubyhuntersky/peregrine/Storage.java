@@ -15,6 +15,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import rx.subjects.BehaviorSubject;
 
 /**
  * @author wehjin
@@ -27,15 +28,30 @@ public class Storage {
     public static final String PREFKEY_ACCESS_SECRET = "prefkey-access-secret";
     public static final String PREFKEY_ACCOUNT_LIST = "prefkey-account-list";
     public static final String PREFKEY_ASSETS_LISTS = "prefkey-assets-lists";
+    public static final String PREFKEY_ASSIGNMENTS = "prefkey-assignments";
 
     private final SharedPreferences sharedPreferences;
     private OauthToken oauthToken;
     private Savelet<AccountsList> accountsList;
     private Savelet<List<AccountAssets>> assetsLists;
+    private Savelet<Assignments> assignments;
 
     public Storage(Context context, String name) {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
-        accountsList = new Savelet<>(PREFKEY_ACCOUNT_LIST, "accounts list", new Builder<AccountsList>() {
+        assignments = new Savelet<>("assignments", new Assignments(), PREFKEY_ASSIGNMENTS,
+                                    new Builder<Assignments>() {
+                                        @Override
+                                        public Assignments build(String jsonString) throws JSONException {
+                                            return new Assignments(jsonString);
+                                        }
+
+                                        @Override
+                                        public String stringify(Assignments object) throws JSONException {
+                                            JSONObject jsonObject = object.toJSONObject();
+                                            return jsonObject.toString();
+                                        }
+                                    });
+        accountsList = new Savelet<>("accounts list", null, PREFKEY_ACCOUNT_LIST, new Builder<AccountsList>() {
             @Override
             public AccountsList build(String jsonString) throws JSONException {
                 return new AccountsList(jsonString);
@@ -46,7 +62,7 @@ public class Storage {
                 return object.toJSONObject().toString();
             }
         });
-        assetsLists = new Savelet<>(PREFKEY_ASSETS_LISTS, "assets lists", new Builder<List<AccountAssets>>() {
+        assetsLists = new Savelet<>("assets lists", null, PREFKEY_ASSETS_LISTS, new Builder<List<AccountAssets>>() {
             @Override
             public List<AccountAssets> build(String jsonString) throws JSONException {
                 final JSONArray jsonArray = new JSONArray(jsonString);
@@ -72,29 +88,32 @@ public class Storage {
         });
     }
 
-    public void writeAssetsLists(List<AccountAssets> assetsLists) {
-        this.assetsLists.write(assetsLists);
+
+    public Observable<Assignments> streamAssignments() {
+        return assignments.stream();
+    }
+
+    public void writeAssignments(Assignments assignments) {
+        this.assignments.write(assignments);
     }
 
     public Observable<List<AccountAssets>> readAccountAssetsList() {
         return assetsLists.read();
     }
 
-    public void writeAccountList(AccountsList accountsList) {
-        this.accountsList.write(accountsList);
+    public void writeAccountAssetsLists(List<AccountAssets> assetsLists) {
+        this.assetsLists.write(assetsLists);
     }
+
 
     public Observable<AccountsList> readAccountsList() {
         return accountsList.read();
     }
 
-    public void writeOauthAccessToken(OauthToken oauthToken) {
-        sharedPreferences.edit()
-                         .putString(PREFKEY_ACCESS_KEY, oauthToken.key)
-                         .putString(PREFKEY_ACCESS_SECRET, oauthToken.secret)
-                         .apply();
-        this.oauthToken = oauthToken;
+    public void writeAccountList(AccountsList accountsList) {
+        this.accountsList.write(accountsList);
     }
+
 
     public Observable<OauthToken> readOauthAccessToken() {
         return Observable.create(new Observable.OnSubscribe<OauthToken>() {
@@ -114,6 +133,14 @@ public class Storage {
         });
     }
 
+    public void writeOauthAccessToken(OauthToken oauthToken) {
+        sharedPreferences.edit()
+                         .putString(PREFKEY_ACCESS_KEY, oauthToken.key)
+                         .putString(PREFKEY_ACCESS_SECRET, oauthToken.secret)
+                         .apply();
+        this.oauthToken = oauthToken;
+    }
+
     public void eraseOauthAccessToken() {
         sharedPreferences.edit()
                          .remove(PREFKEY_ACCESS_KEY)
@@ -122,34 +149,18 @@ public class Storage {
         this.oauthToken = null;
     }
 
-    public <T> Observable<T> readObject(final String preferenceKey, final String name, final Builder<T> builder) {
-        return Observable.create(new Observable.OnSubscribe<T>() {
-            @Override
-            public void call(Subscriber<? super T> subscriber) {
-                final String string = sharedPreferences.getString(preferenceKey, null);
-                if (string == null) {
-                    subscriber.onError(new NotStoredException(String.format("No %s in storage", name)));
-                    return;
-                }
-                try {
-                    subscriber.onNext(builder.build(string));
-                    subscriber.onCompleted();
-                } catch (JSONException e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
-    }
-
     public class Savelet<T> {
         private final String preferenceKey;
         private final String name;
+        private final T fallback;
         private final Builder<T> builder;
         private T object;
+        private BehaviorSubject<T> subject;
 
-        public Savelet(String preferenceKey, String name, final Builder<T> builder) {
+        public Savelet(String name, T fallback, String preferenceKey, final Builder<T> builder) {
             this.preferenceKey = preferenceKey;
             this.name = name;
+            this.fallback = fallback;
             this.builder = new Builder<T>() {
                 @Override
                 public T build(String jsonString) throws JSONException {
@@ -161,6 +172,17 @@ public class Storage {
                     return builder.stringify(object);
                 }
             };
+        }
+
+        public Observable<T> stream() {
+            return subject == null ? read()
+                  .flatMap(new Func1<T, Observable<T>>() {
+                      @Override
+                      public Observable<T> call(T t) {
+                          subject = BehaviorSubject.create(t);
+                          return subject;
+                      }
+                  }) : subject;
         }
 
         public Observable<T> read() {
@@ -183,6 +205,28 @@ public class Storage {
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
+            if (subject != null) {
+                subject.onNext(object);
+            }
+        }
+
+        public Observable<T> readObject(final String preferenceKey, final String name, final Builder<T> builder) {
+            return Observable.create(new Observable.OnSubscribe<T>() {
+                @Override
+                public void call(Subscriber<? super T> subscriber) {
+                    final String string = sharedPreferences.getString(preferenceKey, null);
+                    if (string == null && fallback == null) {
+                        subscriber.onError(new NotStoredException(String.format("No %s in storage", name)));
+                        return;
+                    }
+                    try {
+                        subscriber.onNext(string == null ? fallback : builder.build(string));
+                        subscriber.onCompleted();
+                    } catch (JSONException e) {
+                        subscriber.onError(e);
+                    }
+                }
+            });
         }
     }
 

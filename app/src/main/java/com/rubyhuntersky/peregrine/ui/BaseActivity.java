@@ -56,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
             showErrorDialog(title, throwable);
         }
     };
-    private Subscription refreshSUbscription = Subscriptions.empty();
+    private Subscription refreshSubscription = Subscriptions.empty();
     private EtradeApi etradeApi;
     private Storage storage;
     private BehaviorSubject<AccountsList> accountsListStream;
@@ -114,8 +114,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void refresh() {
-        refreshSUbscription.unsubscribe();
-        refreshSUbscription = fetchAndStoreAccountsList()
+        refreshSubscription.unsubscribe();
+        refreshSubscription = fetchAndStoreAccountsList()
               .doOnNext(new Action1<AccountsList>() {
                   @Override
                   public void call(AccountsList accountsList) {
@@ -161,7 +161,7 @@ public class BaseActivity extends AppCompatActivity {
               .doOnNext(new Action1<List<AccountAssets>>() {
                   @Override
                   public void call(List<AccountAssets> accountAssetsList) {
-                      getStorage().writeAssetsLists(accountAssetsList);
+                      getStorage().writeAccountAssetsLists(accountAssetsList);
                   }
               });
     }

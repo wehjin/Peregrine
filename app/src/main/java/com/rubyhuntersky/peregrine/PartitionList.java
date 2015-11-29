@@ -23,6 +23,30 @@ public class PartitionList {
         }
     }
 
+    public String getName(String partitionId) {
+        if (partitionId != null) {
+            for (Partition partition : partitions) {
+                if (partition.id.equals(partitionId)) {
+                    return partition.name;
+                }
+            }
+        }
+        return null;
+    }
+
+    public int getIndex(String partitionId) {
+        if (partitionId != null) {
+            int index = 0;
+            for (Partition partition : partitions) {
+                if (partition.id.equals(partitionId)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
+    }
+
     public String[] toNamesArray(String first) {
         final String[] names = new String[partitions.size() + 1];
         int index = 0;
