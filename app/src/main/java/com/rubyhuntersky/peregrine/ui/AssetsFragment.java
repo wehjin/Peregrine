@@ -53,7 +53,7 @@ public class AssetsFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_assets, container, false);
+        View view = inflater.inflate(R.layout.fragment_assets, container, false);
         textView = (TextView) view.findViewById(R.id.text);
         listView = (ListView) view.findViewById(R.id.list);
         return view;
