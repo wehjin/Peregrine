@@ -1,10 +1,12 @@
 package com.rubyhuntersky.peregrine.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -85,11 +88,42 @@ public class AssetsFragment extends BaseFragment {
         };
     }
 
-    private void updateViews(PartitionList partitionList, List<AccountAssets> accountAssetsList) {
+    private void updateViews(final PartitionList partitionList, List<AccountAssets> accountAssetsList) {
         final List<Asset> assets = getAssets(accountAssetsList);
         if (assets.isEmpty()) {
             showText("No data");
         } else {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final String[] partitionNames = partitionList.toNamesArray("None");
+                    final int startingIndex = 0;
+                    final int[] endingIndex = {0};
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                          .setTitle("Assign Group")
+                          .setSingleChoiceItems(partitionNames, startingIndex, new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialog, int which) {
+                                  endingIndex[0] = which;
+                              }
+                          })
+                          .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialog, int which) {
+                                  // Do nothing
+                              }
+                          })
+                          .setPositiveButton("Assign", new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialog, int which) {
+                                  if (endingIndex[0] == startingIndex) {
+                                      return;
+                                  }
+                              }
+                          });
+                    builder.show();
+                }
+            });
             showList(getAssetsBaseAdapter(getActivity(), partitionList, assets));
         }
     }
@@ -104,15 +138,6 @@ public class AssetsFragment extends BaseFragment {
         textView.setText(message);
         textView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
-    }
-
-    @NonNull
-    private String getAssetsString(List<AccountAssets> accountAssetsList) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (AccountAssets assetsList : accountAssetsList) {
-            stringBuilder.append(assetsList).append("\n\n");
-        }
-        return stringBuilder.toString();
     }
 
     @NonNull
