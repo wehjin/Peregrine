@@ -15,6 +15,7 @@ import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.OauthToken;
 import com.rubyhuntersky.peregrine.OauthVerifier;
 import com.rubyhuntersky.peregrine.PartitionList;
+import com.rubyhuntersky.peregrine.PortfolioAssets;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.Storage;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
@@ -59,8 +60,6 @@ public class BaseActivity extends AppCompatActivity {
     private Subscription refreshSubscription = Subscriptions.empty();
     private EtradeApi etradeApi;
     private Storage storage;
-    private BehaviorSubject<AccountsList> accountsListStream;
-    private BehaviorSubject<List<AccountAssets>> accountAssetsListStream;
     private BehaviorSubject<PartitionList> partitionListStream;
 
     @Override
@@ -75,20 +74,6 @@ public class BaseActivity extends AppCompatActivity {
         } catch (JSONException | IOException e) {
             Log.e(TAG, "onCreate", e);
             throw new RuntimeException(e);
-        }
-
-        accountsListStream = BehaviorSubject.create((AccountsList) null);
-        try {
-            accountsListStream.onNext(storage.readAccountsList().toBlocking().single());
-        } catch (Throwable throwable) {
-            // Do nothing.
-        }
-
-        accountAssetsListStream = BehaviorSubject.create((List<AccountAssets>) null);
-        try {
-            accountAssetsListStream.onNext(storage.readAccountAssetsList().toBlocking().single());
-        } catch (Throwable throwable) {
-            // Do nothing.
         }
     }
 
@@ -106,22 +91,22 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public Observable<AccountsList> getAccountsListStream() {
-        return accountsListStream;
+        return storage.streamAccountsList();
     }
 
-    public Observable<List<AccountAssets>> getAccountAssetsListStream() {
-        return accountAssetsListStream;
+    public Observable<PortfolioAssets> getPortfolioAssetsStream() {
+        return storage.streamAccountAssetsList()
+                      .map(new Func1<List<AccountAssets>, PortfolioAssets>() {
+                          @Override
+                          public PortfolioAssets call(List<AccountAssets> accountAssetsList) {
+                              return new PortfolioAssets(accountAssetsList);
+                          }
+                      });
     }
 
     public void refresh() {
         refreshSubscription.unsubscribe();
         refreshSubscription = fetchAndStoreAccountsList()
-              .doOnNext(new Action1<AccountsList>() {
-                  @Override
-                  public void call(AccountsList accountsList) {
-                      accountsListStream.onNext(accountsList);
-                  }
-              })
               .flatMap(new Func1<AccountsList, Observable<List<AccountAssets>>>() {
                   @Override
                   public Observable<List<AccountAssets>> call(AccountsList accountsList) {
@@ -131,7 +116,7 @@ public class BaseActivity extends AppCompatActivity {
               .subscribe(new Action1<List<AccountAssets>>() {
                   @Override
                   public void call(List<AccountAssets> accountAssetsList) {
-                      accountAssetsListStream.onNext(accountAssetsList);
+                      storage.writeAccountAssetsList(accountAssetsList);
                   }
               });
     }
@@ -161,7 +146,7 @@ public class BaseActivity extends AppCompatActivity {
               .doOnNext(new Action1<List<AccountAssets>>() {
                   @Override
                   public void call(List<AccountAssets> accountAssetsList) {
-                      getStorage().writeAccountAssetsLists(accountAssetsList);
+                      getStorage().writeAccountAssetsList(accountAssetsList);
                   }
               });
     }

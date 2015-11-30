@@ -2,6 +2,7 @@ package com.rubyhuntersky.peregrine;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
@@ -33,59 +35,14 @@ public class Storage {
     private final SharedPreferences sharedPreferences;
     private OauthToken oauthToken;
     private Savelet<AccountsList> accountsList;
-    private Savelet<List<AccountAssets>> assetsLists;
+    private Savelet<List<AccountAssets>> accountAssetsList;
     private Savelet<Assignments> assignments;
 
     public Storage(Context context, String name) {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
-        assignments = new Savelet<>("assignments", new Assignments(), PREFKEY_ASSIGNMENTS,
-                                    new Builder<Assignments>() {
-                                        @Override
-                                        public Assignments build(String jsonString) throws JSONException {
-                                            return new Assignments(jsonString);
-                                        }
-
-                                        @Override
-                                        public String stringify(Assignments object) throws JSONException {
-                                            JSONObject jsonObject = object.toJSONObject();
-                                            return jsonObject.toString();
-                                        }
-                                    });
-        accountsList = new Savelet<>("accounts list", null, PREFKEY_ACCOUNT_LIST, new Builder<AccountsList>() {
-            @Override
-            public AccountsList build(String jsonString) throws JSONException {
-                return new AccountsList(jsonString);
-            }
-
-            @Override
-            public String stringify(AccountsList object) throws JSONException {
-                return object.toJSONObject().toString();
-            }
-        });
-        assetsLists = new Savelet<>("assets lists", null, PREFKEY_ASSETS_LISTS, new Builder<List<AccountAssets>>() {
-            @Override
-            public List<AccountAssets> build(String jsonString) throws JSONException {
-                final JSONArray jsonArray = new JSONArray(jsonString);
-
-                List<AccountAssets> list = new ArrayList<>(jsonArray.length());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    list.add(new AccountAssets(jsonObject));
-                }
-                return list;
-            }
-
-            @Override
-            public String stringify(List<AccountAssets> object) throws JSONException {
-                final JSONArray jsonArray = new JSONArray();
-                int i = 0;
-                for (AccountAssets assetsList : object) {
-                    jsonArray.put(i, assetsList.getJsonObject());
-                    i++;
-                }
-                return jsonArray.toString();
-            }
-        });
+        assignments = new Savelet<>("assignments", PREFKEY_ASSIGNMENTS, new AssignmentsBuilder());
+        accountsList = new Savelet<>("accounts list", PREFKEY_ACCOUNT_LIST, new AccountsListBuilder());
+        accountAssetsList = new Savelet<>("assets lists", PREFKEY_ASSETS_LISTS, new AccountAssetsListBuilder());
     }
 
 
@@ -97,17 +54,18 @@ public class Storage {
         this.assignments.write(assignments);
     }
 
-    public Observable<List<AccountAssets>> readAccountAssetsList() {
-        return assetsLists.read();
+
+    public Observable<List<AccountAssets>> streamAccountAssetsList() {
+        return accountAssetsList.stream();
     }
 
-    public void writeAccountAssetsLists(List<AccountAssets> assetsLists) {
-        this.assetsLists.write(assetsLists);
+    public void writeAccountAssetsList(List<AccountAssets> accountAssetsList) {
+        this.accountAssetsList.write(accountAssetsList);
     }
 
 
-    public Observable<AccountsList> readAccountsList() {
-        return accountsList.read();
+    public Observable<AccountsList> streamAccountsList() {
+        return accountsList.stream();
     }
 
     public void writeAccountList(AccountsList accountsList) {
@@ -149,88 +107,133 @@ public class Storage {
         this.oauthToken = null;
     }
 
+    private static class AccountAssetsListBuilder implements Builder<List<AccountAssets>> {
+        @Override
+        public List<AccountAssets> buildFallback() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AccountAssets> build(String jsonString) throws JSONException {
+            final JSONArray jsonArray = new JSONArray(jsonString);
+
+            List<AccountAssets> list = new ArrayList<>(jsonArray.length());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                final JSONObject jsonObject = jsonArray.getJSONObject(i);
+                list.add(new AccountAssets(jsonObject));
+            }
+            return list;
+        }
+
+        @Override
+        public String stringify(List<AccountAssets> object) throws JSONException {
+            final JSONArray jsonArray = new JSONArray();
+            int i = 0;
+            for (AccountAssets assetsList : object) {
+                jsonArray.put(i, assetsList.getJsonObject());
+                i++;
+            }
+            return jsonArray.toString();
+        }
+    }
+
+    private static class AssignmentsBuilder implements Builder<Assignments> {
+
+        @Override
+        public Assignments buildFallback() {
+            return new Assignments();
+        }
+
+        @Override
+        public Assignments build(String jsonString) throws JSONException {
+            return new Assignments(jsonString);
+        }
+
+        @Override
+        public String stringify(Assignments object) throws JSONException {
+            JSONObject jsonObject = object.toJSONObject();
+            return jsonObject.toString();
+        }
+    }
+
+    private static class AccountsListBuilder implements Builder<AccountsList> {
+
+        @Override
+        public AccountsList buildFallback() {
+            return null;
+        }
+
+        @Override
+        public AccountsList build(String jsonString) throws JSONException {
+            return new AccountsList(jsonString);
+        }
+
+        @Override
+        public String stringify(AccountsList object) throws JSONException {
+            return object.toJSONObject().toString();
+        }
+    }
+
     public class Savelet<T> {
-        private final String preferenceKey;
+        final String TAG = Savelet.class.getSimpleName();
         private final String name;
-        private final T fallback;
-        private final Builder<T> builder;
-        private T object;
         private BehaviorSubject<T> subject;
 
-        public Savelet(String name, T fallback, String preferenceKey, final Builder<T> builder) {
-            this.preferenceKey = preferenceKey;
+        public Savelet(final String name, final String preferenceKey, final Builder<T> builder) {
             this.name = name;
-            this.fallback = fallback;
-            this.builder = new Builder<T>() {
+            this.subject = BehaviorSubject.create(readObjectOrNullFromPreferences(preferenceKey, builder));
+            subject.subscribe(new Action1<T>() {
                 @Override
-                public T build(String jsonString) throws JSONException {
-                    return (object = builder.build(jsonString));
+                public void call(T object) {
+                    try {
+                        sharedPreferences.edit()
+                                         .putString(preferenceKey, builder.stringify(object))
+                                         .apply();
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Write preferences", e);
+                    }
                 }
-
+            }, new Action1<Throwable>() {
                 @Override
-                public String stringify(T object) throws JSONException {
-                    return builder.stringify(object);
+                public void call(Throwable throwable) {
+                    Log.e(TAG, "BehaviorSubject for " + name, throwable);
                 }
-            };
+            });
         }
 
         public Observable<T> stream() {
-            return subject == null ? read()
-                  .flatMap(new Func1<T, Observable<T>>() {
-                      @Override
-                      public Observable<T> call(T t) {
-                          subject = BehaviorSubject.create(t);
-                          return subject;
-                      }
-                  }) : subject;
+            return subject;
         }
 
         public Observable<T> read() {
-            return Observable.just(object)
-                             .flatMap(new Func1<T, Observable<T>>() {
-                                 @Override
-                                 public Observable<T> call(final T object) {
-                                     return object == null ? readObject(preferenceKey, name, builder)
-                                           : Observable.just(object);
-                                 }
-                             });
+            return subject.first().map(new Func1<T, T>() {
+                @Override
+                public T call(T object) {
+                    if (object == null) {
+                        throw new NotStoredException(String.format("No %s in storage", name));
+                    }
+                    return object;
+                }
+            });
         }
 
         public void write(T object) {
-            this.object = object;
-            try {
-                sharedPreferences.edit()
-                                 .putString(preferenceKey, builder.stringify(object))
-                                 .apply();
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            if (subject != null) {
-                subject.onNext(object);
-            }
+            subject.onNext(object);
         }
 
-        public Observable<T> readObject(final String preferenceKey, final String name, final Builder<T> builder) {
-            return Observable.create(new Observable.OnSubscribe<T>() {
-                @Override
-                public void call(Subscriber<? super T> subscriber) {
-                    final String string = sharedPreferences.getString(preferenceKey, null);
-                    if (string == null && fallback == null) {
-                        subscriber.onError(new NotStoredException(String.format("No %s in storage", name)));
-                        return;
-                    }
-                    try {
-                        subscriber.onNext(string == null ? fallback : builder.build(string));
-                        subscriber.onCompleted();
-                    } catch (JSONException e) {
-                        subscriber.onError(e);
-                    }
-                }
-            });
+        private T readObjectOrNullFromPreferences(String preferenceKey, Builder<T> builder) {
+            try {
+                final String string = sharedPreferences.getString(preferenceKey, null);
+                return string == null ? builder.buildFallback() : builder.build(string);
+            } catch (JSONException e) {
+                Log.e(TAG, "readObjectOrNullFromPreferences", e);
+                return builder.buildFallback();
+            }
         }
     }
 
     public interface Builder<T> {
+        T buildFallback();
         T build(String jsonString) throws JSONException;
         String stringify(T object) throws JSONException;
     }

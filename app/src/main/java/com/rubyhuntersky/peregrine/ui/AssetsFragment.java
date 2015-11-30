@@ -19,14 +19,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AccountAssets;
 import com.rubyhuntersky.peregrine.Asset;
 import com.rubyhuntersky.peregrine.Assignments;
 import com.rubyhuntersky.peregrine.Partition;
 import com.rubyhuntersky.peregrine.PartitionList;
+import com.rubyhuntersky.peregrine.PortfolioAssets;
 import com.rubyhuntersky.peregrine.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -57,12 +56,13 @@ public class AssetsFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Observable.combineLatest(getBaseActivity().getPartitionListStream(),
-                                 getBaseActivity().getAccountAssetsListStream(), getStorage().streamAssignments(),
-                                 new Func3<PartitionList, List<AccountAssets>, Assignments, ViewsData>() {
+                                 getBaseActivity().getPortfolioAssetsStream(),
+                                 getStorage().streamAssignments(),
+                                 new Func3<PartitionList, PortfolioAssets, Assignments, ViewsData>() {
                                      @Override
                                      public ViewsData call(PartitionList partitionList,
-                                           List<AccountAssets> accountAssetsList, Assignments assignments) {
-                                         return new ViewsData(partitionList, accountAssetsList, assignments);
+                                           PortfolioAssets portfolioAssets, Assignments assignments) {
+                                         return new ViewsData(partitionList, portfolioAssets, assignments);
                                      }
                                  })
                   .subscribe(new Action1<ViewsData>() {
@@ -86,24 +86,24 @@ public class AssetsFragment extends BaseFragment {
 
     private void updateViews(final ViewsData viewsData) {
         final PartitionList partitionList = viewsData.partitionList;
-        final Assignments assigments = viewsData.assigments;
-        final List<Asset> assets = getAssets(viewsData.accountAssetsList);
+        final Assignments assignments = viewsData.assignments;
+        final List<Asset> assets = viewsData.portfolioAssets.getAssets();
         if (assets.isEmpty()) {
             showText("No data");
         } else {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    showAssignmentDialog(assets.get(position), partitionList, assigments);
+                    showAssignmentDialog(assets.get(position), partitionList, assignments);
                 }
             });
-            showList(getAssetsBaseAdapter(getActivity(), viewsData.partitionList, assets, viewsData.assigments));
+            showList(getAssetsBaseAdapter(getActivity(), viewsData.partitionList, assets, viewsData.assignments));
         }
     }
 
     private void showAssignmentDialog(final Asset asset, final PartitionList partitionList,
-          final Assignments assigments) {
-        final int startingIndex = 1 + getPartitionIndex(asset, partitionList, assigments);
+          final Assignments assignments) {
+        final int startingIndex = 1 + getPartitionIndex(asset, partitionList, assignments);
         final int[] endingIndex = {startingIndex};
         new AlertDialog.Builder(getActivity())
               .setTitle("Assign Group")
@@ -130,8 +130,8 @@ public class AssetsFragment extends BaseFragment {
                       final String symbol = asset.symbol;
                       final List<Partition> partitions = partitionList.partitions;
                       Assignments nextAssignments = nextIndex == 0 ?
-                            assigments.erasePartitionId(symbol) :
-                            assigments.setPartitionId(symbol, partitions.get(nextIndex - 1).id);
+                            assignments.erasePartitionId(symbol) :
+                            assignments.setPartitionId(symbol, partitions.get(nextIndex - 1).id);
                       getStorage().writeAssignments(nextAssignments);
                   }
               }).show();
@@ -198,17 +198,6 @@ public class AssetsFragment extends BaseFragment {
         return partitionList.getIndex(assignments.getPartitionId(asset.symbol));
     }
 
-    @NonNull
-    private List<Asset> getAssets(List<AccountAssets> accountAssetsList) {
-        final List<Asset> assets = new ArrayList<>();
-        if (accountAssetsList != null) {
-            for (AccountAssets accountAssets : accountAssetsList) {
-                assets.addAll(accountAssets.toAssetList());
-            }
-        }
-        return assets;
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.assets, menu);
@@ -217,14 +206,13 @@ public class AssetsFragment extends BaseFragment {
 
     private static class ViewsData {
         public final PartitionList partitionList;
-        public final List<AccountAssets> accountAssetsList;
-        public final Assignments assigments;
+        private final PortfolioAssets portfolioAssets;
+        public final Assignments assignments;
 
-        public ViewsData(PartitionList partitionList, List<AccountAssets> accountAssetsList,
-              Assignments assigments) {
+        public ViewsData(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
             this.partitionList = partitionList;
-            this.accountAssetsList = accountAssetsList;
-            this.assigments = assigments;
+            this.portfolioAssets = portfolioAssets;
+            this.assignments = assignments;
         }
     }
 }
