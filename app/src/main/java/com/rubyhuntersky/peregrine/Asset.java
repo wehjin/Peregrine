@@ -40,6 +40,11 @@ public class Asset {
         this.arrivalTime = arrivalTime;
     }
 
+    public boolean isInGroup(Group group, Assignments assignments) {
+        final String partitionId = assignments.getPartitionId(symbol);
+        return partitionId != null && partitionId.equals(group.getPartitionId());
+    }
+
     @Override
     public String toString() {
         return "Asset{" +

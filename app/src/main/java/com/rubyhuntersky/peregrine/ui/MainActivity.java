@@ -26,17 +26,35 @@ public class MainActivity extends BaseActivity {
         FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Override
             public BaseFragment getItem(int position) {
-                return position == 0 ? new NetValueFragment() : new AssetsFragment();
+                switch (position) {
+                    case 0:
+                        return new NetValueFragment();
+                    case 1:
+                        return new AssetsFragment();
+                    case 2:
+                        return new GroupsFragment();
+                    default:
+                        return null;
+                }
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return position == 0 ? "Net Value" : "Assets";
+                switch (position) {
+                    case 0:
+                        return "Value";
+                    case 1:
+                        return "Assets";
+                    case 2:
+                        return "Groups";
+                    default:
+                        return null;
+                }
             }
         };
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);

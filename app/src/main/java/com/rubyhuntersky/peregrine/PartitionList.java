@@ -63,4 +63,14 @@ public class PartitionList {
               "partitions=" + partitions +
               '}';
     }
+
+    public List<Group> getGroups(PortfolioAssets portfolioAssets, Assignments assignments) {
+        final ArrayList<Group> groups = new ArrayList<>();
+        for (Partition partition : partitions) {
+            final Group group = new Group(partition, this);
+            group.setAssets(portfolioAssets, assignments);
+            groups.add(group);
+        }
+        return groups;
+    }
 }
