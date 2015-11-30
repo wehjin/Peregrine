@@ -113,12 +113,7 @@ public class BaseActivity extends AppCompatActivity {
                       return fetchAndStoreAccountAssetsList(accountsList);
                   }
               })
-              .subscribe(new Action1<List<AccountAssets>>() {
-                  @Override
-                  public void call(List<AccountAssets> accountAssetsList) {
-                      storage.writeAccountAssetsList(accountAssetsList);
-                  }
-              });
+              .subscribe();
     }
 
     public EtradeApi getEtradeApi() {
