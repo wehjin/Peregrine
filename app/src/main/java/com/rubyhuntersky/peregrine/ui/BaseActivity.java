@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Pair;
 
 import com.rubyhuntersky.peregrine.AccountAssets;
 import com.rubyhuntersky.peregrine.AccountsList;
@@ -38,6 +39,7 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.Subscriptions;
 
@@ -149,17 +151,18 @@ public class BaseActivity extends AppCompatActivity {
     @NonNull
     private Observable<AccountAssets> fetchAccountAssets(AccountsList accountsList) {
         return Observable.from(accountsList.accounts)
-                         .flatMap(new Func1<EtradeAccount, Observable<JSONObject>>() {
+                         .flatMap(new Func1<EtradeAccount, Observable<Pair<JSONObject, JSONObject>>>() {
                              @Override
-                             public Observable<JSONObject> call(EtradeAccount etradeAccount) {
-                                 return fetchAccountPositionsResponse(etradeAccount);
+                             public Observable<Pair<JSONObject, JSONObject>> call(EtradeAccount etradeAccount) {
+                                 return fetchAccountDetails(etradeAccount);
                              }
                          })
-                         .map(new Func1<JSONObject, AccountAssets>() {
+                         .map(new Func1<Pair<JSONObject, JSONObject>, AccountAssets>() {
                              @Override
-                             public AccountAssets call(JSONObject jsonObject) {
+                             public AccountAssets call(Pair<JSONObject, JSONObject> jsonPair) {
                                  try {
-                                     return new AccountAssets(jsonObject);
+                                     return new AccountAssets(
+                                           EtradeApi.addBalanceToPositions(jsonPair.first, jsonPair.second));
                                  } catch (JSONException e) {
                                      throw new RuntimeException(e);
                                  }
@@ -220,12 +223,22 @@ public class BaseActivity extends AppCompatActivity {
               });
     }
 
-    private Observable<JSONObject> fetchAccountPositionsResponse(final EtradeAccount etradeAccount) {
+    private Observable<Pair<JSONObject, JSONObject>> fetchAccountDetails(final EtradeAccount etradeAccount) {
         return getStorage().readOauthAccessToken()
-                           .flatMap(new Func1<OauthToken, Observable<JSONObject>>() {
+                           .flatMap(new Func1<OauthToken, Observable<Pair<JSONObject, JSONObject>>>() {
                                @Override
-                               public Observable<JSONObject> call(OauthToken oauthToken) {
-                                   return fetchAccountPositionsResponse(oauthToken, etradeAccount);
+                               public Observable<Pair<JSONObject, JSONObject>> call(OauthToken oauthToken) {
+                                   return Observable.zip(fetchAccountPositionsResponse(oauthToken, etradeAccount),
+                                                         fetchAccountBalanceResponse(oauthToken, etradeAccount),
+                                                         new Func2<JSONObject, JSONObject, Pair<JSONObject,
+                                                               JSONObject>>() {
+                                                             @Override
+                                                             public Pair<JSONObject, JSONObject> call(
+                                                                   JSONObject positions,
+                                                                   JSONObject balance) {
+                                                                 return new Pair<>(positions, balance);
+                                                             }
+                                                         });
                                }
                            });
     }
@@ -238,8 +251,8 @@ public class BaseActivity extends AppCompatActivity {
                                  @Override
                                  public JSONObject call(JSONObject jsonObject) {
                                      try {
-                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
                                          jsonObject.putOpt("accountDescription", etradeAccount.description);
+                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
                                          jsonObject.putOpt("responseArrivalTime",
                                                            DateFormat.getInstance().format(new Date()));
                                      } catch (JSONException e) {
@@ -249,6 +262,27 @@ public class BaseActivity extends AppCompatActivity {
                                  }
                              });
     }
+
+    @NonNull
+    private Observable<JSONObject> fetchAccountBalanceResponse(OauthToken oauthToken,
+          final EtradeAccount etradeAccount) {
+        return getEtradeApi().fetchAccountBalanceResponse(etradeAccount.accountId, oauthToken)
+                             .map(new Func1<JSONObject, JSONObject>() {
+                                 @Override
+                                 public JSONObject call(JSONObject jsonObject) {
+                                     try {
+                                         jsonObject.putOpt("accountDescription", etradeAccount.description);
+                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
+                                         jsonObject.putOpt("responseArrivalTime",
+                                                           DateFormat.getInstance().format(new Date()));
+                                     } catch (JSONException e) {
+                                         throw new RuntimeException(e);
+                                     }
+                                     return jsonObject;
+                                 }
+                             });
+    }
+
 
     private Observable<OauthToken> getOauthAccessToken() {
         return getStorage().readOauthAccessToken()

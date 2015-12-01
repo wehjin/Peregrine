@@ -185,12 +185,14 @@ public class Storage {
             subject.subscribe(new Action1<T>() {
                 @Override
                 public void call(T object) {
-                    try {
-                        sharedPreferences.edit()
-                                         .putString(preferenceKey, builder.stringify(object))
-                                         .apply();
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Write preferences", e);
+                    if (object != null) {
+                        try {
+                            sharedPreferences.edit()
+                                             .putString(preferenceKey, builder.stringify(object))
+                                             .apply();
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Write preferences", e);
+                        }
                     }
                 }
             }, new Action1<Throwable>() {
