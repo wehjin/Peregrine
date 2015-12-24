@@ -9,9 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.rubyhuntersky.peregrine.AccountsList;
 import com.rubyhuntersky.peregrine.R;
 
+import rx.Subscription;
+import rx.functions.Action1;
+
 public class MainActivity extends BaseActivity {
+
+    private Subscription titleSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,12 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         // Fix toolbar text color.  Must follow setSupportActionBar.
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.lightText));
+        titleSubscription = getAccountsListStream().subscribe(new Action1<AccountsList>() {
+            @Override
+            public void call(AccountsList accountsList) {
+                updateTitle(accountsList);
+            }
+        });
 
         FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -62,6 +74,20 @@ public class MainActivity extends BaseActivity {
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void updateTitle(AccountsList accountsList) {
+        if (accountsList == null) {
+            return;
+        }
+        CharSequence title = UiHelper.getRelativeTimeString(accountsList.arrivalDate.getTime());
+        setTitle(title);
+    }
+
+    @Override
+    protected void onDestroy() {
+        titleSubscription.unsubscribe();
+        super.onDestroy();
     }
 
     @Override

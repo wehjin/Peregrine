@@ -3,7 +3,6 @@ package com.rubyhuntersky.peregrine.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +16,6 @@ import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -36,10 +34,11 @@ public class NetValueFragment extends BaseFragment {
     private TextView refreshTimeTextVIew;
     private Action1<AccountsList> updateSubviewsFromAccountList = new Action1<AccountsList>() {
         @Override
-        public void call(AccountsList accountList) {
-            final String centerString = accountList == null ? "No data" : getFormattedNetWorth(accountList);
-            final CharSequence cornerString = getRelativeTimeString(
-                  (accountList == null ? new Date() : accountList.arrivalDate).getTime());
+        public void call(AccountsList accountsList) {
+            final String centerString = accountsList == null ? "No data" : getFormattedNetWorth(accountsList);
+
+            final long count = accountsList == null ? 0 : accountsList.accounts.size();
+            final CharSequence cornerString = String.format("%d accounts", count);
             netWorthTextView.setText(centerString);
             refreshTimeTextVIew.setText(cornerString);
         }
@@ -106,15 +105,6 @@ public class NetValueFragment extends BaseFragment {
         return sum;
     }
 
-
-    private CharSequence getRelativeTimeString(long time) {
-        final long elapsed = new Date().getTime() - time;
-        if (elapsed >= 0 && elapsed < 60000) {
-            return "seconds ago";
-        } else {
-            return DateUtils.getRelativeTimeSpanString(time);
-        }
-    }
 
     private void initSubviewFields(View view) {
         netWorthTextView = (TextView) view.findViewById(R.id.textview_net_worth);
