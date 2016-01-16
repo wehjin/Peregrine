@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">PeregrineDev</string>
     <string name="et_rest_url" translatable="false">https://etwssandbox.etrade.com/%1$s/sandbox/rest/%2$s</string>
+    <string name="activity_title">My Sandbox Accounts</string>
 </resources>

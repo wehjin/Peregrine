@@ -64,6 +64,10 @@ public class BaseActivity extends AppCompatActivity {
     private Storage storage;
     private BehaviorSubject<PartitionList> partitionListStream;
 
+    protected void logDebug(String message) {
+        Log.d(TAG, message);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +143,7 @@ public class BaseActivity extends AppCompatActivity {
     @NonNull
     private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AccountsList accountsList) {
         return (accountsList == null ? Observable.just((List<AccountAssets>) null)
-              : fetchAccountAssets(accountsList).toList())
+                                     : fetchAccountAssets(accountsList).toList())
               .doOnNext(new Action1<List<AccountAssets>>() {
                   @Override
                   public void call(List<AccountAssets> accountAssetsList) {

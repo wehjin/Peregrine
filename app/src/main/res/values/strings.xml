@@ -3,5 +3,5 @@
     <string name="et_rest_url" translatable="false">https://etws.etrade.com/%1$s/rest/%2$s</string>
     <string name="paste_verifier">Paste Verifier</string>
     <string name="unassigned">Unassigned</string>
-    <string name="my_accounts">My Accounts</string>
+    <string name="activity_title">My Accounts</string>
 </resources>
