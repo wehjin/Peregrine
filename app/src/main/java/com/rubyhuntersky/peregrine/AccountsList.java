@@ -1,5 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
+import com.rubyhuntersky.peregrine.ui.UiHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,10 @@ public class AccountsList {
             accounts.add(new EtradeAccount(jsonArray.getJSONObject(i)));
         }
         arrivalDate = new Date(jsonObject.getLong(JSONKEY_ARRIVAL_DATE));
+    }
+
+    public CharSequence getRelativeArrivalTime() {
+        return UiHelper.getRelativeTimeString(arrivalDate.getTime());
     }
 
     public JSONObject toJSONObject() throws JSONException {

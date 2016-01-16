@@ -3,7 +3,6 @@ package com.rubyhuntersky.peregrine.ui;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,20 +17,24 @@ import rx.functions.Action1;
 public class MainActivity extends BaseActivity {
 
     private Subscription titleSubscription;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setTitle(R.string.my_accounts);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Fix toolbar text color.  Must follow setSupportActionBar.
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.lightText));
         titleSubscription = getAccountsListStream().subscribe(new Action1<AccountsList>() {
             @Override
             public void call(AccountsList accountsList) {
-                updateTitle(accountsList);
+                if (accountsList == null) {
+                    return;
+                }
+
+                toolbar.setSubtitle(accountsList.getRelativeArrivalTime());
             }
         });
 
@@ -74,14 +77,6 @@ public class MainActivity extends BaseActivity {
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    private void updateTitle(AccountsList accountsList) {
-        if (accountsList == null) {
-            return;
-        }
-        CharSequence title = UiHelper.getRelativeTimeString(accountsList.arrivalDate.getTime());
-        setTitle(title);
     }
 
     @Override

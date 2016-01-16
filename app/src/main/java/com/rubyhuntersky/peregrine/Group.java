@@ -25,6 +25,10 @@ public class Group {
         return partition.id;
     }
 
+    public BigDecimal getCurrentAllocation(BigDecimal portfolioValue) {
+        return getValue().divide(portfolioValue, BigDecimal.ROUND_HALF_UP);
+    }
+
     public BigDecimal getTargetAllocation() {
         double fraction = 1;
         for (Partition partition : partitionList.partitions) {

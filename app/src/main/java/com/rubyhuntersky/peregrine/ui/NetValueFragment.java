@@ -38,7 +38,7 @@ public class NetValueFragment extends BaseFragment {
             final String centerString = accountsList == null ? "No data" : getFormattedNetWorth(accountsList);
 
             final long count = accountsList == null ? 0 : accountsList.accounts.size();
-            final CharSequence cornerString = String.format("%d accounts", count);
+            final CharSequence cornerString = String.format("%d", count);
             netWorthTextView.setText(centerString);
             refreshTimeTextVIew.setText(cornerString);
         }

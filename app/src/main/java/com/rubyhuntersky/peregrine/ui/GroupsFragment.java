@@ -139,16 +139,18 @@ public class GroupsFragment extends BaseFragment {
                 String errorLabelString = "On";
                 String errorValueString = "-";
                 if (!fullValue.equals(BigDecimal.ZERO)) {
-                    BigDecimal value = group.getValue();
-                    BigDecimal currentAllocation = value.divide(fullValue, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal currentAllocation = group.getCurrentAllocation(fullValue);
                     BigDecimal targetAllocation = group.getTargetAllocation();
-                    Log.d(TAG, name + ":" + targetAllocation.toPlainString());
+                    Log.d(TAG,
+                          name + ":" + currentAllocation.toPlainString() + " current, " + targetAllocation
+                                .toPlainString() + " target");
                     BigDecimal allocationError = currentAllocation.subtract(targetAllocation);
-                    if (!allocationError.equals(BigDecimal.ZERO)) {
+                    if (allocationError.equals(BigDecimal.ZERO)) {
+                        errorLabelString = "Even";
+                        errorValueString = "Hold";
+                    } else {
                         errorLabelString = allocationError.doubleValue() > 0 ? "Over" : "Under";
-                        boolean showDollars = true;
-                        errorValueString = showDollars ? getDollarError(allocationError, fullValue) : getPercentError(
-                              allocationError, targetAllocation);
+                        errorValueString = getDollarError(allocationError, fullValue);
                     }
                 }
                 endText.setText(errorLabelString);
@@ -158,23 +160,34 @@ public class GroupsFragment extends BaseFragment {
         };
     }
 
-    private String getPercentError(BigDecimal allocationError, BigDecimal targetAllocation) {
-        String errorValueString;
+    private BigDecimal getPercentError(BigDecimal allocationError, BigDecimal targetAllocation) {
         if (targetAllocation.equals(BigDecimal.ZERO)) {
-            errorValueString = "inf";
-        } else {
-            BigDecimal fractionalError = allocationError.divide(targetAllocation,
-                                                                BigDecimal.ROUND_HALF_UP);
-            errorValueString = String.format("%.2f %%", fractionalError.abs().doubleValue() * 100);
+            return null;
         }
-        return errorValueString;
+
+        return allocationError.divide(targetAllocation, BigDecimal.ROUND_HALF_UP);
+    }
+
+
+    private String getPercentErrorString(BigDecimal allocationError, BigDecimal targetAllocation) {
+        final BigDecimal percentError = getPercentError(allocationError, targetAllocation);
+        if (percentError == null) {
+            return "inf";
+        }
+        return String.format("%.2f %%", percentError.abs().doubleValue() * 100);
     }
 
     @NonNull
     private String getDollarError(BigDecimal allocationError, BigDecimal fullValue) {
-        String errorValueString;
-        errorValueString = getCurrencyDisplayString(allocationError.multiply(fullValue).abs());
-        return errorValueString;
+        final BigDecimal dollarError = allocationError.multiply(fullValue);
+        final int versusZero = dollarError.compareTo(BigDecimal.ZERO);
+        if (versusZero > 0) {
+            return "Sell " + getCurrencyDisplayString(dollarError);
+        } else if (versusZero < 0) {
+            return "Buy " + getCurrencyDisplayString(dollarError.abs());
+        } else {
+            return "Hold";
+        }
     }
 
     private BigDecimal getFullValue(List<Group> groups) {
