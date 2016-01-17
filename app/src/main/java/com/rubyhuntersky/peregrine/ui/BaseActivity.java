@@ -34,7 +34,6 @@ import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -42,6 +41,8 @@ import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.Subscriptions;
+
+import static com.rubyhuntersky.peregrine.ui.oauth.OauthUi.promptForVerifier;
 
 /**
  * @author wehjin
@@ -56,7 +57,7 @@ public class BaseActivity extends AppCompatActivity {
         public void call(Throwable throwable) {
             final String title = "ERROR";
             Log.e(TAG, title, throwable);
-            showErrorDialog(title, throwable);
+            alertError(title, throwable);
         }
     };
     private Subscription refreshSubscription = Subscriptions.empty();
@@ -64,15 +65,11 @@ public class BaseActivity extends AppCompatActivity {
     private Storage storage;
     private BehaviorSubject<PartitionList> partitionListStream;
 
-    protected void logDebug(String message) {
-        Log.d(TAG, message);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         etradeApi = new EtradeApi(this);
-        storage = new ProductionStorage(this);
+        storage = new ProductionStorage(this, etradeApi.oauthAppToken);
 
         try {
             final InputStream inputStream = getResources().openRawResource(R.raw.starting_partitions);
@@ -119,7 +116,17 @@ public class BaseActivity extends AppCompatActivity {
                       return fetchAndStoreAccountAssetsList(accountsList);
                   }
               })
-              .subscribe();
+              .subscribe(new Action1<List<AccountAssets>>() {
+                  @Override
+                  public void call(List<AccountAssets> accountAssetList) {
+                      logDebug("Refresh completed");
+                  }
+              }, new Action1<Throwable>() {
+                  @Override
+                  public void call(Throwable throwable) {
+                      alertError("Refresh error", throwable);
+                  }
+              });
     }
 
     public EtradeApi getEtradeApi() {
@@ -317,7 +324,7 @@ public class BaseActivity extends AppCompatActivity {
                              .flatMap(new Func1<OauthToken, Observable<OauthVerifier>>() {
                                  @Override
                                  public Observable<OauthVerifier> call(OauthToken requestToken) {
-                                     return promptForVerifier(requestToken);
+                                     return promptForVerifier(BaseActivity.this, requestToken);
                                  }
                              })
                              .flatMap(new Func1<OauthVerifier, Observable<OauthToken>>() {
@@ -334,42 +341,7 @@ public class BaseActivity extends AppCompatActivity {
                              });
     }
 
-    private Observable<OauthVerifier> promptForVerifier(final OauthToken oauthRequestToken) {
-        return Observable.create(new Observable.OnSubscribe<OauthVerifier>() {
-            @Override
-            public void call(final Subscriber<? super OauthVerifier> subscriber) {
-                final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                final VerifierFragment verifierFragment = VerifierFragment.newInstance(
-                      getEtradeApi().oauthAppToken.appKey,
-                      oauthRequestToken.key);
-
-                verifierFragment.setListener(new VerifierFragment.Listener() {
-
-                    @Override
-                    public void onVerifier(String verifier) {
-                        fragmentManager.popBackStack();
-                        subscriber.onNext(new OauthVerifier(verifier, oauthRequestToken));
-                        subscriber.onCompleted();
-                    }
-                });
-                fragmentManager.beginTransaction()
-                               .add(R.id.verifier_frame, verifierFragment, "VerifierFragment")
-                               .addToBackStack(null)
-                               .commit();
-                subscriber.add(Subscriptions.create(new Action0() {
-                    @Override
-                    public void call() {
-                        if (fragmentManager.findFragmentByTag("VerifierFragment") == null) {
-                            return;
-                        }
-                        fragmentManager.popBackStack();
-                    }
-                }));
-            }
-        });
-    }
-
-    protected void showErrorDialog(String title, Throwable throwable) {
+    protected void alertError(String title, Throwable throwable) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title).setMessage(throwable.toString())
                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
@@ -379,5 +351,14 @@ public class BaseActivity extends AppCompatActivity {
                    }
                })
                .show();
+        logError(title, throwable);
+    }
+
+    protected void logDebug(String message) {
+        Log.d(TAG, message);
+    }
+
+    protected void logError(String message, Throwable throwable) {
+        Log.e(TAG, message + "\n" + throwable.getLocalizedMessage());
     }
 }

@@ -12,16 +12,20 @@ import java.util.Map;
  */
 
 public class OauthToken {
+    public final OauthAppToken appToken;
     public final String key;
     public final String secret;
 
-    public OauthToken(String formString) {
-        Map<String, String> formValues = getFormValues(formString);
-        this.key = formValues.get("oauth_token");
-        this.secret = formValues.get("oauth_token_secret");
+    public OauthToken(String formString, OauthAppToken appToken) {
+        this(getFormValues(formString), appToken);
     }
 
-    public OauthToken(String access_key, String access_secret) {
+    private OauthToken(Map<String, String> formValues, OauthAppToken appToken) {
+        this(formValues.get("oauth_token"), formValues.get("oauth_token_secret"), appToken);
+    }
+
+    public OauthToken(String access_key, String access_secret, OauthAppToken appToken) {
+        this.appToken = appToken;
         this.key = access_key;
         this.secret = access_secret;
     }
@@ -29,7 +33,8 @@ public class OauthToken {
     @Override
     public String toString() {
         return "OauthToken{" +
-              "key='" + key + '\'' +
+              "appToken=" + appToken +
+              ", key='" + key + '\'' +
               ", secret='" + secret + '\'' +
               '}';
     }

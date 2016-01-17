@@ -67,7 +67,7 @@ public class EtradeApi {
         cashPosition.put("currentPrice", 1);
         cashPosition.put("marketValue", amount);
         JSONArray response = positions.has("response") ?
-              positions.getJSONArray("response") : new JSONArray();
+                             positions.getJSONArray("response") : new JSONArray();
         response.put(cashPosition);
         positions.put("response", response);
         positions.put("count", response.length());
@@ -120,7 +120,7 @@ public class EtradeApi {
               .map(new Func1<String, OauthToken>() {
                   @Override
                   public OauthToken call(String string) {
-                      return new OauthToken(string);
+                      return new OauthToken(string, oauthAppToken);
                   }
               });
     }
@@ -132,7 +132,7 @@ public class EtradeApi {
         return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
             @Override
             public OauthToken call(String s) {
-                return new OauthToken(s);
+                return new OauthToken(s, oauthAppToken);
             }
         });
     }

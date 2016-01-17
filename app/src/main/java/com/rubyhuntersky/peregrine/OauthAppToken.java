@@ -14,4 +14,11 @@ public class OauthAppToken {
         this.appKey = appKey;
         this.appSecret = appSecret;
     }
+
+    @Override
+    public String toString() {
+        return "OauthAppToken{" +
+              "appKey='" + appKey + '\'' +
+              '}';
+    }
 }

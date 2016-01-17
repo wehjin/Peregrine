@@ -28,17 +28,20 @@ public class Storage {
 
     public static final String PREFKEY_ACCESS_KEY = "prefkey-access-key";
     public static final String PREFKEY_ACCESS_SECRET = "prefkey-access-secret";
+    public static final String PREFKEY_ACCESS_APP_KEY = "prefkey-access-app-key";
     public static final String PREFKEY_ACCOUNT_LIST = "prefkey-account-list";
     public static final String PREFKEY_ASSETS_LISTS = "prefkey-assets-lists";
     public static final String PREFKEY_ASSIGNMENTS = "prefkey-assignments";
 
     private final SharedPreferences sharedPreferences;
+    private final OauthAppToken oauthAppToken;
     private OauthToken oauthToken;
     private Savelet<AccountsList> accountsList;
     private Savelet<List<AccountAssets>> accountAssetsList;
     private Savelet<Assignments> assignments;
 
-    public Storage(Context context, String name) {
+    public Storage(Context context, String name, OauthAppToken oauthAppToken) {
+        this.oauthAppToken = oauthAppToken;
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         assignments = new Savelet<>("assignments", PREFKEY_ASSIGNMENTS, new AssignmentsBuilder());
         accountsList = new Savelet<>("accounts list", PREFKEY_ACCOUNT_LIST, new AccountsListBuilder());
@@ -82,8 +85,17 @@ public class Storage {
                         subscriber.onError(new NotStoredException("No access token in storage"));
                         return;
                     }
+
+                    final String appKey = sharedPreferences.getString(PREFKEY_ACCESS_APP_KEY, oauthAppToken.appKey);
+                    if (!appKey.equals(oauthAppToken.appKey)) {
+                        eraseOauthAccessToken();
+                        subscriber.onError(new NotStoredException("No access token in storage"));
+                        return;
+                    }
+
                     oauthToken = new OauthToken(sharedPreferences.getString(PREFKEY_ACCESS_KEY, null),
-                                                sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null));
+                                                sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null),
+                                                oauthAppToken);
                 }
                 subscriber.onNext(oauthToken);
                 subscriber.onCompleted();
@@ -95,6 +107,7 @@ public class Storage {
         sharedPreferences.edit()
                          .putString(PREFKEY_ACCESS_KEY, oauthToken.key)
                          .putString(PREFKEY_ACCESS_SECRET, oauthToken.secret)
+                         .putString(PREFKEY_ACCESS_APP_KEY, oauthToken.appToken.appKey)
                          .apply();
         this.oauthToken = oauthToken;
     }
@@ -103,6 +116,7 @@ public class Storage {
         sharedPreferences.edit()
                          .remove(PREFKEY_ACCESS_KEY)
                          .remove(PREFKEY_ACCESS_SECRET)
+                         .remove(PREFKEY_ACCESS_APP_KEY)
                          .apply();
         this.oauthToken = null;
     }

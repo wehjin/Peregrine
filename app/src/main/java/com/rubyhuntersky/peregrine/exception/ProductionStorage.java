@@ -2,6 +2,7 @@ package com.rubyhuntersky.peregrine.exception;
 
 import android.content.Context;
 
+import com.rubyhuntersky.peregrine.OauthAppToken;
 import com.rubyhuntersky.peregrine.Storage;
 
 /**
@@ -10,7 +11,7 @@ import com.rubyhuntersky.peregrine.Storage;
  */
 
 public class ProductionStorage extends Storage {
-    public ProductionStorage(Context context) {
-        super(context, "prod");
+    public ProductionStorage(Context context, OauthAppToken oauthAppToken) {
+        super(context, "prod", oauthAppToken);
     }
 }
