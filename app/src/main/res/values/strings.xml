@@ -4,4 +4,7 @@
     <string name="paste_verifier">Paste Verifier</string>
     <string name="unassigned">Unassigned</string>
     <string name="activity_title">My Accounts</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
 </resources>
