@@ -27,16 +27,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        titleSubscription = getAccountsListStream().subscribe(new Action1<AccountsList>() {
-            @Override
-            public void call(AccountsList accountsList) {
-                if (accountsList == null) {
-                    return;
-                }
-
-                toolbar.setSubtitle(accountsList.getRelativeArrivalTime());
-            }
-        });
 
         FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -80,9 +70,24 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onResume() {
+        super.onResume();
+        titleSubscription = getAccountsListStream().subscribe(new Action1<AccountsList>() {
+            @Override
+            public void call(AccountsList accountsList) {
+                if (accountsList == null) {
+                    return;
+                }
+
+                toolbar.setSubtitle(accountsList.getRelativeArrivalTime());
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
         titleSubscription.unsubscribe();
-        super.onDestroy();
+        super.onPause();
     }
 
     @Override
