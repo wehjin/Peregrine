@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.oauth;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;

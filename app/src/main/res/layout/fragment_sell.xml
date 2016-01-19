@@ -12,43 +12,46 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/darkText"
-        android:textSize="16sp"
+        android:textSize="24sp"
         tools:text="$30000.00"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:text="\u00f7"
             android:textColor="@color/darkText"
-            android:textSize="16sp"
-            tools:text="\u00f7"/>
+            android:textSize="24sp"
+            tools:ignore="HardcodedText,RtlHardcoded"/>
 
         <Spinner
+            android:id="@+id/priceSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:entries="@string-array/asset_symbols"/>
+            tools:entries="@array/price_symbols"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:background="@color/darkTextSecondary"/>
 
     <TextView
         android:id="@+id/sharesText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:textColor="@color/darkText"
         android:textSize="24sp"

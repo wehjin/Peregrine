@@ -46,7 +46,7 @@ public class NetValueFragment extends BaseFragment {
 
     @NonNull
     private String getFormattedNetWorth(AccountsList accountList) {
-        return getCurrencyDisplayString(getNetWorth(accountList.accounts));
+        return UiHelper.getCurrencyDisplayString(getNetWorth(accountList.accounts));
     }
 
     private Subscription accountsListSubscription;

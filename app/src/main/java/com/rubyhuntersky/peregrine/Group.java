@@ -64,4 +64,10 @@ public class Group {
             }
         }
     }
+
+    public BigDecimal getAllocationError(BigDecimal fullValue) {
+        BigDecimal currentAllocation = getCurrentAllocation(fullValue);
+        BigDecimal targetAllocation = getTargetAllocation();
+        return currentAllocation.subtract(targetAllocation);
+    }
 }

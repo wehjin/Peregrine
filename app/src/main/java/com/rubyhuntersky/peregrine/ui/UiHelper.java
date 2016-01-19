@@ -1,7 +1,10 @@
 package com.rubyhuntersky.peregrine.ui;
 
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Date;
 
 /**
@@ -18,5 +21,10 @@ public class UiHelper {
         } else {
             return DateUtils.getRelativeTimeSpanString(time);
         }
+    }
+
+    @NonNull
+    public static String getCurrencyDisplayString(BigDecimal value) {
+        return NumberFormat.getCurrencyInstance().format(value);
     }
 }

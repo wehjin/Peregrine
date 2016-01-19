@@ -20,7 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.rubyhuntersky.peregrine.OauthToken;
+import com.rubyhuntersky.peregrine.oauth.OauthToken;
 import com.rubyhuntersky.peregrine.R;
 
 import org.json.JSONException;

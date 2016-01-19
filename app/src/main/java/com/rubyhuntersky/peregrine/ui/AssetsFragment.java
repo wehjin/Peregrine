@@ -183,7 +183,7 @@ public class AssetsFragment extends BaseFragment {
                 startDetailText.setTextColor(ContextCompat.getColor(getActivity(), detailColorRes));
                 startDetailText.setText(partitionName == null ? getString(R.string.unassigned) : partitionName);
 
-                endText.setText(getCurrencyDisplayString(asset.marketValue));
+                endText.setText(UiHelper.getCurrencyDisplayString(asset.marketValue));
                 return view;
             }
         };

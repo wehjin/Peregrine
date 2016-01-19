@@ -21,11 +21,6 @@ public class BaseFragment extends Fragment {
 
     protected final String TAG = this.getClass().getSimpleName();
 
-    @NonNull
-    protected String getCurrencyDisplayString(BigDecimal value) {
-        return NumberFormat.getCurrencyInstance().format(value);
-    }
-
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
