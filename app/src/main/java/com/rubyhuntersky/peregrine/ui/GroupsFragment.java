@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rubyhuntersky.peregrine.Asset;
 import com.rubyhuntersky.peregrine.Assignments;
 import com.rubyhuntersky.peregrine.Group;
 import com.rubyhuntersky.peregrine.PartitionList;
@@ -23,11 +24,16 @@ import com.rubyhuntersky.peregrine.PortfolioAssets;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func3;
+
+import static com.rubyhuntersky.peregrine.ui.SellDialogFragment.Price;
 
 public class GroupsFragment extends BaseFragment {
 
@@ -97,13 +103,31 @@ public class GroupsFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final BigDecimal allocationError = groupsAdapter.getAllocationError(position);
-                if (allocationError.compareTo(BigDecimal.ZERO) > 0) {
-                    final DialogFragment fragment = new SellDialogFragment();
+                final Group group = groupsAdapter.getItem(position);
+                final BigDecimal sellAmount = groupsAdapter.getAllocationErrorDollars(group);
+                List<Price> prices = getPrices(group);
+                Price selectedPrice = prices.get(0);
+                if (sellAmount.compareTo(BigDecimal.ZERO) > 0) {
+                    final DialogFragment fragment = SellDialogFragment.create(sellAmount, prices, selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
                 }
             }
         });
+    }
+
+    @NonNull
+    private List<Price> getPrices(Group group) {
+        final List<Asset> assets = group.getAssets();
+        List<Price> prices = new ArrayList<>();
+        Set<String> symbols = new HashSet<>();
+        for (Asset asset : assets) {
+            if (symbols.contains(asset.symbol)) {
+                continue;
+            }
+            prices.add(new Price(asset.symbol, asset.currentPrice));
+            symbols.add(asset.symbol);
+        }
+        return prices;
     }
 
     private void showText(String message) {
@@ -115,19 +139,6 @@ public class GroupsFragment extends BaseFragment {
     @NonNull
     private GroupsAdapter getGroupsAdapter(final Context context, final List<Group> groups) {
         return new GroupsAdapter(context, groups);
-    }
-
-    @NonNull
-    private String getDollarError(BigDecimal allocationError, BigDecimal fullValue) {
-        final BigDecimal dollarError = allocationError.multiply(fullValue);
-        final int versusZero = dollarError.compareTo(BigDecimal.ZERO);
-        if (versusZero > 0) {
-            return "Sell " + UiHelper.getCurrencyDisplayString(dollarError);
-        } else if (versusZero < 0) {
-            return "Buy " + UiHelper.getCurrencyDisplayString(dollarError.abs());
-        } else {
-            return "Hold";
-        }
     }
 
     private BigDecimal getFullValue(List<Group> groups) {
@@ -170,10 +181,6 @@ public class GroupsFragment extends BaseFragment {
             this.context = context;
             this.groups = groups;
             fullValue = getFullValue(groups);
-        }
-
-        public BigDecimal getAllocationError(int position) {
-            return getAllocationError(getItem(position));
         }
 
         @Override
@@ -224,6 +231,24 @@ public class GroupsFragment extends BaseFragment {
 
         private BigDecimal getAllocationError(Group group) {
             return group.getAllocationError(fullValue);
+        }
+
+        private BigDecimal getAllocationErrorDollars(Group group) {
+            final BigDecimal allocationError = getAllocationError(group);
+            return allocationError.multiply(fullValue);
+        }
+
+        @NonNull
+        private String getDollarError(BigDecimal allocationError, BigDecimal fullValue) {
+            final BigDecimal dollarError = allocationError.multiply(fullValue);
+            final int versusZero = dollarError.compareTo(BigDecimal.ZERO);
+            if (versusZero > 0) {
+                return "Sell " + UiHelper.getCurrencyDisplayString(dollarError);
+            } else if (versusZero < 0) {
+                return "Buy " + UiHelper.getCurrencyDisplayString(dollarError.abs());
+            } else {
+                return "Hold";
+            }
         }
     }
 }

@@ -70,4 +70,8 @@ public class Group {
         BigDecimal targetAllocation = getTargetAllocation();
         return currentAllocation.subtract(targetAllocation);
     }
+
+    public List<Asset> getAssets() {
+        return assets;
+    }
 }
