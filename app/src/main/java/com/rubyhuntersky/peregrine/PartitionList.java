@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +17,18 @@ public class PartitionList {
 
     public List<Partition> partitions = new ArrayList<>();
 
+    public PartitionList() {
+    }
+
     public PartitionList(JSONObject jsonObject) throws JSONException {
         final JSONArray jsonArray = jsonObject.getJSONArray("partitions");
         for (int i = 0; i < jsonArray.length(); i++) {
             partitions.add(new Partition(jsonArray.getJSONObject(i)));
         }
+    }
+
+    public int getCount() {
+        return partitions.size();
     }
 
     public String getName(String partitionId) {
@@ -32,6 +40,25 @@ public class PartitionList {
             }
         }
         return null;
+    }
+
+    public BigDecimal getPortionBigDecimal(String partitionId) {
+
+        BigDecimal cumulativePortion = BigDecimal.ONE;
+        for (Partition partition : partitions) {
+            final BigDecimal percent = BigDecimal.valueOf(partition.percent);
+            final BigDecimal portion = percent.divide(BigDecimal.valueOf(100), Values.SCALE, BigDecimal.ROUND_HALF_UP);
+            if (partition.id.equals(partitionId)) {
+                return cumulativePortion.multiply(portion);
+            } else {
+                cumulativePortion = cumulativePortion.multiply(BigDecimal.ONE.subtract(portion));
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public double getPortion(String partitionId) {
+        return getPortionBigDecimal(partitionId).doubleValue();
     }
 
     public int getIndex(String partitionId) {
@@ -72,5 +99,9 @@ public class PartitionList {
             groups.add(group);
         }
         return groups;
+    }
+
+    public void add(Partition partition) {
+        partitions.add(partition);
     }
 }

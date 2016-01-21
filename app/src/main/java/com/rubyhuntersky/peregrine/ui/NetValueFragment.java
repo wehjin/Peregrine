@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AccountsList;
+import com.rubyhuntersky.peregrine.AccountList;
 import com.rubyhuntersky.peregrine.EtradeAccount;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
@@ -32,12 +32,12 @@ public class NetValueFragment extends BaseFragment {
 
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
-    private Action1<AccountsList> updateSubviewsFromAccountList = new Action1<AccountsList>() {
+    private Action1<AccountList> updateSubviewsFromAccountList = new Action1<AccountList>() {
         @Override
-        public void call(AccountsList accountsList) {
-            final String centerString = accountsList == null ? "No data" : getFormattedNetWorth(accountsList);
+        public void call(AccountList accountList) {
+            final String centerString = accountList == null ? "No data" : getFormattedNetWorth(accountList);
 
-            final long count = accountsList == null ? 0 : accountsList.accounts.size();
+            final long count = accountList == null ? 0 : accountList.accounts.size();
             final CharSequence cornerString = String.format("%d", count);
             netWorthTextView.setText(centerString);
             refreshTimeTextVIew.setText(cornerString);
@@ -45,7 +45,7 @@ public class NetValueFragment extends BaseFragment {
     };
 
     @NonNull
-    private String getFormattedNetWorth(AccountsList accountList) {
+    private String getFormattedNetWorth(AccountList accountList) {
         return UiHelper.getCurrencyDisplayString(getNetWorth(accountList.accounts));
     }
 
@@ -111,7 +111,7 @@ public class NetValueFragment extends BaseFragment {
         refreshTimeTextVIew = (TextView) view.findViewById(R.id.textview_refresh_time);
     }
 
-    private Observable<AccountsList> getAccountsListStream() {
+    private Observable<AccountList> getAccountsListStream() {
         return getBaseActivity().getAccountsListStream();
     }
 }

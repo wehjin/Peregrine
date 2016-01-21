@@ -26,21 +26,11 @@ public class Group {
     }
 
     public BigDecimal getCurrentAllocation(BigDecimal portfolioValue) {
-        return getValue().divide(portfolioValue, BigDecimal.ROUND_HALF_UP);
+        return getValue().divide(portfolioValue, Values.SCALE, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal getTargetAllocation() {
-        double fraction = 1;
-        for (Partition partition : partitionList.partitions) {
-            final double partitionFraction = partition.relativePoints / 100;
-            if (partition.id.equals(this.partition.id)) {
-                fraction *= partitionFraction;
-                break;
-            } else {
-                fraction *= (1 - partitionFraction);
-            }
-        }
-        return new BigDecimal(fraction);
+        return partitionList.getPortionBigDecimal(partition.id);
     }
 
     public String getName() {

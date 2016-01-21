@@ -17,6 +17,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.R;
+import com.rubyhuntersky.peregrine.Values;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class SellDialogFragment extends AppCompatDialogFragment {
     public static final String AMOUNT_KEY = "amountKey";
     public static final String PRICES_KEY = "pricesKey";
     public static final String SELECTED_PRICE_KEY = "selectedPriceKey";
+    public static final int SCALE = Values.SCALE;
     private BigDecimal amount = BigDecimal.ZERO;
     private BehaviorSubject<List<Price>> prices = BehaviorSubject.create(Collections.<Price>emptyList());
     private BehaviorSubject<Price> selectedPrice = BehaviorSubject.create(new Price("-", BigDecimal.ZERO));
@@ -132,7 +134,7 @@ public class SellDialogFragment extends AppCompatDialogFragment {
         selectedPrice.subscribe(new Action1<Price>() {
             @Override
             public void call(Price price) {
-                final BigDecimal shareCount = amount.divide(price.amount, BigDecimal.ROUND_HALF_UP);
+                final BigDecimal shareCount = amount.divide(price.amount, SCALE, BigDecimal.ROUND_HALF_UP);
                 final String sharesString = shareCount.setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString();
                 sharesText.setText(String.format("%s shares", sharesString));
             }

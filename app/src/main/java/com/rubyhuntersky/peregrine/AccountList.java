@@ -15,19 +15,19 @@ import java.util.List;
  * @since 11/16/15.
  */
 
-public class AccountsList {
+public class AccountList {
     public static final String JSONKEY_ACCOUNTS = "accounts";
     public static final String JSONKEY_ARRIVAL_DATE = "arrivalDate";
 
     public List<EtradeAccount> accounts;
     public Date arrivalDate;
 
-    public AccountsList(List<EtradeAccount> accounts, Date arrivalDate) {
+    public AccountList(List<EtradeAccount> accounts, Date arrivalDate) {
         this.accounts = accounts;
         this.arrivalDate = arrivalDate;
     }
 
-    public AccountsList(String jsonAccountList) throws JSONException {
+    public AccountList(String jsonAccountList) throws JSONException {
         accounts = new ArrayList<>();
         final JSONObject jsonObject = new JSONObject(jsonAccountList);
         final JSONArray jsonArray = jsonObject.getJSONArray(JSONKEY_ACCOUNTS);

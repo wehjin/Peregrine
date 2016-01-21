@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.rubyhuntersky.peregrine.AccountsList;
+import com.rubyhuntersky.peregrine.AccountList;
 import com.rubyhuntersky.peregrine.R;
 
 import rx.Subscription;
@@ -72,14 +72,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        titleSubscription = getAccountsListStream().subscribe(new Action1<AccountsList>() {
+        titleSubscription = getAccountsListStream().subscribe(new Action1<AccountList>() {
             @Override
-            public void call(AccountsList accountsList) {
-                if (accountsList == null) {
+            public void call(AccountList accountList) {
+                if (accountList == null) {
                     return;
                 }
 
-                toolbar.setSubtitle(accountsList.getRelativeArrivalTime());
+                toolbar.setSubtitle(accountList.getRelativeArrivalTime());
             }
         });
     }

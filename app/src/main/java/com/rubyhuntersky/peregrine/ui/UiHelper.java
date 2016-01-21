@@ -14,6 +14,8 @@ import java.util.Date;
 
 public class UiHelper {
 
+    public static final NumberFormat CURRENCY_INSTANCE = NumberFormat.getCurrencyInstance();
+
     public static CharSequence getRelativeTimeString(long time) {
         final long elapsed = new Date().getTime() - time;
         if (elapsed >= 0 && elapsed < 60000) {
@@ -25,6 +27,6 @@ public class UiHelper {
 
     @NonNull
     public static String getCurrencyDisplayString(BigDecimal value) {
-        return NumberFormat.getCurrencyInstance().format(value);
+        return CURRENCY_INSTANCE.format(value);
     }
 }

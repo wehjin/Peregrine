@@ -212,15 +212,18 @@ public class GroupsFragment extends BaseFragment {
             final TextView endText = (TextView) view.findViewById(R.id.endText);
             final TextView endDetailText = (TextView) view.findViewById(R.id.endDetailText);
 
-            String errorLabelString = "On";
-            String errorValueString = "-";
-            if (!fullValue.equals(BigDecimal.ZERO)) {
-                BigDecimal allocationError = getAllocationError(group);
+            String errorLabelString;
+            String errorValueString;
+            if (fullValue.equals(BigDecimal.ZERO)) {
+                errorLabelString = "Zero";
+                errorValueString = "-";
+            } else {
+                BigDecimal allocationError = group.getAllocationError(fullValue);
                 if (allocationError.equals(BigDecimal.ZERO)) {
                     errorLabelString = "Even";
                     errorValueString = "Hold";
                 } else {
-                    errorLabelString = allocationError.doubleValue() > 0 ? "Over" : "Under";
+                    errorLabelString = allocationError.compareTo(BigDecimal.ZERO) > 0 ? "Over" : "Under";
                     errorValueString = getDollarError(allocationError, fullValue);
                 }
             }
@@ -229,13 +232,8 @@ public class GroupsFragment extends BaseFragment {
             return view;
         }
 
-        private BigDecimal getAllocationError(Group group) {
-            return group.getAllocationError(fullValue);
-        }
-
         private BigDecimal getAllocationErrorDollars(Group group) {
-            final BigDecimal allocationError = getAllocationError(group);
-            return allocationError.multiply(fullValue);
+            return group.getAllocationError(fullValue).multiply(fullValue);
         }
 
         @NonNull

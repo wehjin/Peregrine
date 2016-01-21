@@ -10,7 +10,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.rubyhuntersky.peregrine.AccountAssets;
-import com.rubyhuntersky.peregrine.AccountsList;
+import com.rubyhuntersky.peregrine.AccountList;
 import com.rubyhuntersky.peregrine.EtradeAccount;
 import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.PartitionList;
@@ -93,7 +93,7 @@ public class BaseActivity extends AppCompatActivity {
         return partitionListStream;
     }
 
-    public Observable<AccountsList> getAccountsListStream() {
+    public Observable<AccountList> getAccountsListStream() {
         return storage.streamAccountsList();
     }
 
@@ -109,10 +109,10 @@ public class BaseActivity extends AppCompatActivity {
     public void refresh() {
         refreshSubscription.unsubscribe();
         refreshSubscription = fetchAndStoreAccountsList().flatMap(
-              new Func1<AccountsList, Observable<List<AccountAssets>>>() {
+              new Func1<AccountList, Observable<List<AccountAssets>>>() {
                   @Override
-                  public Observable<List<AccountAssets>> call(AccountsList accountsList) {
-                      return fetchAndStoreAccountAssetsList(accountsList);
+                  public Observable<List<AccountAssets>> call(AccountList accountList) {
+                      return fetchAndStoreAccountAssetsList(accountList);
                   }
               }).subscribe(new Action1<List<AccountAssets>>() {
             @Override
@@ -146,10 +146,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AccountsList accountsList) {
-        return (accountsList == null
+    private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AccountList accountList) {
+        return (accountList == null
                 ? Observable.just((List<AccountAssets>) null)
-                : fetchAccountAssets(accountsList).toList()).doOnNext(new Action1<List<AccountAssets>>() {
+                : fetchAccountAssets(accountList).toList()).doOnNext(new Action1<List<AccountAssets>>() {
             @Override
             public void call(List<AccountAssets> accountAssetsList) {
                 getStorage().writeAccountAssetsList(accountAssetsList);
@@ -158,8 +158,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<AccountAssets> fetchAccountAssets(AccountsList accountsList) {
-        return Observable.from(accountsList.accounts)
+    private Observable<AccountAssets> fetchAccountAssets(AccountList accountList) {
+        return Observable.from(accountList.accounts)
                          .flatMap(new Func1<EtradeAccount, Observable<Pair<JSONObject, JSONObject>>>() {
                              @Override
                              public Observable<Pair<JSONObject, JSONObject>> call(EtradeAccount etradeAccount) {
@@ -180,7 +180,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected Observable<AccountsList> fetchAndStoreAccountsList() {
+    protected Observable<AccountList> fetchAndStoreAccountsList() {
         final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
               Observable<List<EtradeAccount>>>() {
             @Override
@@ -220,15 +220,15 @@ public class BaseActivity extends AppCompatActivity {
                                                   }
                                               }
                                           })
-                                    .map(new Func1<List<EtradeAccount>, AccountsList>() {
+                                    .map(new Func1<List<EtradeAccount>, AccountList>() {
                                         @Override
-                                        public AccountsList call(List<EtradeAccount> etradeAccounts) {
-                                            return new AccountsList(etradeAccounts, new Date());
+                                        public AccountList call(List<EtradeAccount> etradeAccounts) {
+                                            return new AccountList(etradeAccounts, new Date());
                                         }
                                     })
-                                    .doOnNext(new Action1<AccountsList>() {
+                                    .doOnNext(new Action1<AccountList>() {
                                         @Override
-                                        public void call(AccountsList accountList) {
+                                        public void call(AccountList accountList) {
                                             getStorage().writeAccountList(accountList);
                                         }
                                     });

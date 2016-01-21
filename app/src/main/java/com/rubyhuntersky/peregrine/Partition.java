@@ -12,12 +12,18 @@ public class Partition {
 
     public String name;
     public String id;
-    public double relativePoints;
+    public double percent;
+
+    public Partition(String id, String name, double percent) {
+        this.id = id;
+        this.name = name;
+        this.percent = percent;
+    }
 
     public Partition(JSONObject jsonObject) throws JSONException {
         this.name = jsonObject.getString("name");
         this.id = jsonObject.getString("id");
-        this.relativePoints = jsonObject.getDouble("relative-points");
+        this.percent = jsonObject.getDouble("relative-points");
     }
 
     @Override
@@ -25,7 +31,7 @@ public class Partition {
         return "Partition{" +
               "name='" + name + '\'' +
               ", id='" + id + '\'' +
-              ", relativePoints=" + relativePoints +
+              ", percent=" + percent +
               '}';
     }
 }

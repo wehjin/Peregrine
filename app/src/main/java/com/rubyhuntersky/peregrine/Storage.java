@@ -38,7 +38,7 @@ public class Storage {
     private final SharedPreferences sharedPreferences;
     private final OauthAppToken oauthAppToken;
     private OauthToken oauthToken;
-    private Savelet<AccountsList> accountsList;
+    private Savelet<AccountList> accountsList;
     private Savelet<List<AccountAssets>> accountAssetsList;
     private Savelet<Assignments> assignments;
 
@@ -69,12 +69,12 @@ public class Storage {
     }
 
 
-    public Observable<AccountsList> streamAccountsList() {
+    public Observable<AccountList> streamAccountsList() {
         return accountsList.stream();
     }
 
-    public void writeAccountList(AccountsList accountsList) {
-        this.accountsList.write(accountsList);
+    public void writeAccountList(AccountList accountList) {
+        this.accountsList.write(accountList);
     }
 
 
@@ -172,20 +172,20 @@ public class Storage {
         }
     }
 
-    private static class AccountsListBuilder implements Builder<AccountsList> {
+    private static class AccountsListBuilder implements Builder<AccountList> {
 
         @Override
-        public AccountsList buildFallback() {
+        public AccountList buildFallback() {
             return null;
         }
 
         @Override
-        public AccountsList build(String jsonString) throws JSONException {
-            return new AccountsList(jsonString);
+        public AccountList build(String jsonString) throws JSONException {
+            return new AccountList(jsonString);
         }
 
         @Override
-        public String stringify(AccountsList object) throws JSONException {
+        public String stringify(AccountList object) throws JSONException {
             return object.toJSONObject().toString();
         }
     }
