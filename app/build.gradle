@@ -14,8 +14,16 @@ android {
     productFlavors {
         sandbox {
             applicationIdSuffix ".sandbox"
+            def ETRADE_SANDBOX_KEY = '"' + EtradeSandboxKeyProp + '"' ?: '"Define Etrade Sandbox key"';
+            def ETRADE_SANDBOX_SECRET = '"' + EtradeSandboxSecretProp + '"' ?: '"Define Etrade Sandbox secret"';
+            buildConfigField 'String', 'ETRADE_API_KEY', ETRADE_SANDBOX_KEY
+            buildConfigField 'String', 'ETRADE_API_SECRET', ETRADE_SANDBOX_SECRET
         }
         production {
+            def ETRADE_PRODUCTION_KEY = '"' + EtradeProductionKeyProp + '"' ?: '"Define Etrade Production key"';
+            def ETRADE_PRODUCTION_SECRET = '"' + EtradeProductionSecretProp + '"' ?: '"Define Etrade Production secret"';
+            buildConfigField 'String', 'ETRADE_API_KEY', ETRADE_PRODUCTION_KEY
+            buildConfigField 'String', 'ETRADE_API_SECRET', ETRADE_PRODUCTION_SECRET
         }
     }
     buildTypes {

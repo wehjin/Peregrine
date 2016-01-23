@@ -50,8 +50,7 @@ public class EtradeApi {
     private final String etRestUrlTemplate;
 
     public EtradeApi(Context context) {
-        oauthAppToken = new OauthAppToken(context.getString(R.string.et_api_key),
-              context.getString(R.string.et_api_secret));
+        oauthAppToken = new OauthAppToken(BuildConfig.ETRADE_API_KEY, BuildConfig.ETRADE_API_SECRET);
         etRestUrlTemplate = context.getString(R.string.et_rest_url);
     }
 
