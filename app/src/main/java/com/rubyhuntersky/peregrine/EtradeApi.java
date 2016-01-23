@@ -8,8 +8,6 @@ import com.rubyhuntersky.peregrine.oauth.OauthAppToken;
 import com.rubyhuntersky.peregrine.oauth.OauthHttpRequest;
 import com.rubyhuntersky.peregrine.oauth.OauthToken;
 import com.rubyhuntersky.peregrine.oauth.OauthVerifier;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +28,8 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import okhttp3.OkHttpClient;
+import okhttp3.OkUrlFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
