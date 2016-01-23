@@ -14,16 +14,12 @@ android {
     productFlavors {
         sandbox {
             applicationIdSuffix ".sandbox"
-            def ETRADE_SANDBOX_KEY = '"' + EtradeSandboxKeyProp + '"' ?: '"Define Etrade Sandbox key"';
-            def ETRADE_SANDBOX_SECRET = '"' + EtradeSandboxSecretProp + '"' ?: '"Define Etrade Sandbox secret"';
-            buildConfigField 'String', 'ETRADE_API_KEY', ETRADE_SANDBOX_KEY
-            buildConfigField 'String', 'ETRADE_API_SECRET', ETRADE_SANDBOX_SECRET
+            buildConfigField 'String', 'ETRADE_API_KEY', hasProperty('EtradeSandboxKeyProp') ? "$EtradeSandboxKeyProp" : '"Define Etrade Sandbox key"'
+            buildConfigField 'String', 'ETRADE_API_SECRET', hasProperty('EtradeSandboxSecretProp') ? "$EtradeSandboxSecretProp" : '"Define Etrade Sandbox secret"'
         }
         production {
-            def ETRADE_PRODUCTION_KEY = '"' + EtradeProductionKeyProp + '"' ?: '"Define Etrade Production key"';
-            def ETRADE_PRODUCTION_SECRET = '"' + EtradeProductionSecretProp + '"' ?: '"Define Etrade Production secret"';
-            buildConfigField 'String', 'ETRADE_API_KEY', ETRADE_PRODUCTION_KEY
-            buildConfigField 'String', 'ETRADE_API_SECRET', ETRADE_PRODUCTION_SECRET
+            buildConfigField 'String', 'ETRADE_API_KEY', hasProperty('EtradeProductionKeyProp') ? "$EtradeProductionKeyProp" : '"Define Etrade Production key"'
+            buildConfigField 'String', 'ETRADE_API_SECRET', hasProperty('EtradeProductionSecretProp') ? "$EtradeProductionSecretProp" : '"Define Etrade Production secret"'
         }
     }
     buildTypes {
