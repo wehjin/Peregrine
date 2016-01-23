@@ -1,4 +1,5 @@
 language: android
+
 android:
   components:
       # Uncomment the lines below if you want to
@@ -21,3 +22,5 @@ android:
       # if you need to run emulator(s) during your tests
       - sys-img-armeabi-v7a-android-19
       - sys-img-x86-android-17
+
+script: ./gradlew test
