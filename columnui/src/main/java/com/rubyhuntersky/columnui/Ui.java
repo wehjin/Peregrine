@@ -14,12 +14,12 @@ import java.util.List;
 
 abstract public class Ui {
 
-    abstract Presentation present(Human human, Column column, Observer observer);
+    abstract public Presentation present(Human human, Column column, Observer observer);
 
     static Ui create(final OnPresent onPresent) {
         return new Ui() {
             @Override
-            Presentation present(final Human human, final Column column, final Observer observer) {
+            public Presentation present(final Human human, final Column column, final Observer observer) {
                 final Presenter presenter = new Presenter() {
 
                     boolean isCancelled;
@@ -41,6 +41,16 @@ abstract public class Ui {
                         } else {
                             presentations.add(presentation);
                         }
+                    }
+
+                    @Override
+                    public float getHeight() {
+                        // TODO Fix this.  Also change to getTop and getBottom.
+                        float height = 0;
+                        for (Presentation presentation : presentations) {
+                            height = Math.max(presentation.getHeight(), height);
+                        }
+                        return height;
                     }
 
                     @Override

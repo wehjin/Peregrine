@@ -113,6 +113,7 @@ public class GroupsFragment extends BaseFragment {
                     fragment.show(getFragmentManager(), "SellFragment");
                 } else if (direction < 0) {
                     final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs());
+                    fragment.setCancelable(true);
                     fragment.show(getFragmentManager(), "BuyFragment");
                 }
             }

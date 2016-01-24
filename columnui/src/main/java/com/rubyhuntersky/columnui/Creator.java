@@ -10,15 +10,16 @@ import com.rubyhuntersky.columnui.conditions.Human;
 
 public class Creator {
 
-    public Ui createPanel(final Coloret coloret, final Heightlet heightlet) {
+    static public Ui createPanel(final Coloret coloret, final Heightlet heightlet) {
         return Ui.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
                 final Human human = presenter.getHuman();
                 final Widthlet widthlet = column.widthlet;
-                final float height = heightlet.toFloat(human);
-                final Frame frame = new Frame(widthlet.toFloat(human), height);
+                final float width = widthlet.toFloat(human, 0); // TODO rethink this
+                final float height = heightlet.toFloat(human, width);
+                final Frame frame = new Frame(width, height);
                 final Patch patch = column.addPatch(frame, Shape.RECTANGLE, coloret);
                 final Presentation presentation = new BooleanPresentation() {
                     @Override

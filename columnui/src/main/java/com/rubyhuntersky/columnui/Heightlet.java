@@ -6,4 +6,9 @@ package com.rubyhuntersky.columnui;
  */
 
 public class Heightlet extends Sizelet1 {
+    public static final Heightlet HUNDRED = new Heightlet(100f);
+
+    public Heightlet(float height) {
+        super(height, 0);
+    }
 }

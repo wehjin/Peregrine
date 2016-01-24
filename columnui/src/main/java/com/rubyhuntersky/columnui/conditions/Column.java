@@ -24,7 +24,5 @@ abstract public class Column extends Condition {
     }
 
     @NonNull
-    public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-        return Patch.EMPTY;
-    }
+    abstract public Patch addPatch(Frame frame, Shape shape, Coloret color);
 }
