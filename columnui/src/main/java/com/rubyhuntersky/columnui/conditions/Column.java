@@ -3,11 +3,14 @@ package com.rubyhuntersky.columnui.conditions;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.Coloret;
+import com.rubyhuntersky.columnui.ColumnWrapper;
 import com.rubyhuntersky.columnui.Condition;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Range;
 import com.rubyhuntersky.columnui.Shape;
+import com.rubyhuntersky.columnui.TextSize;
+import com.rubyhuntersky.columnui.TextStyle;
 
 /**
  * @author wehjin
@@ -31,45 +34,19 @@ abstract public class Column extends Condition {
     @NonNull
     abstract public Patch addPatch(Frame frame, Shape shape, Coloret color);
 
-    public Column withElevation(int elevation) {
-        if (elevation == this.elevation) return this;
+    abstract public TextSize measureText(String text, TextStyle textStyle);
 
-        final Column original = this;
-        return new Column(horizontalRange, verticalRange, elevation) {
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-                return original.addPatch(frame, shape, color);
-            }
-        };
+
+    public Column withElevation(int elevation) {
+        return this.elevation == elevation ? this : new ColumnWrapper(horizontalRange, verticalRange, elevation, this);
     }
 
     public Column withHorizontalRange(Range range) {
-        final Column original = this;
-        if (original.horizontalRange == range) {
-            return this;
-        }
-        return new Column(range, verticalRange, elevation) {
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-                return original.addPatch(frame, shape, color);
-            }
-        };
+        return this.horizontalRange == range ? this : new ColumnWrapper(range, verticalRange, elevation, this);
     }
 
     public Column withVerticalRange(Range range) {
-        final Column original = this;
-        if (original.verticalRange == range) {
-            return this;
-        }
-        return new Column(horizontalRange, range, elevation) {
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-                return original.addPatch(frame, shape, color);
-            }
-        };
+        return this.verticalRange == range ? this : new ColumnWrapper(horizontalRange, range, elevation, this);
     }
 
     public VerticalShiftColumn withVerticalShift() {

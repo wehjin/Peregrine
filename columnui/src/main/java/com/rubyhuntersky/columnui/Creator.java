@@ -9,16 +9,25 @@ import com.rubyhuntersky.columnui.conditions.Column;
 
 public class Creator {
 
+
+    static public Ui createLabel(String textString, TextStyle tetStyle) {
+        return Ui.create(new OnPresent() {
+            @Override
+            public void onPresent(Presenter presenter) {
+                final Column column = presenter.getColumn();
+
+            }
+        });
+    }
+
     static public Ui createPanel(final Coloret coloret, final Sizelet heightlet) {
         return Ui.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
-                final int elevation = column.elevation;
-                final Range horizontalRange = column.horizontalRange;
-                final float height = heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength());
-                final Range verticalRange = new Range(0, height);
-                final Frame frame = new Frame(horizontalRange, verticalRange, elevation);
+                final Range verticalRange = new Range(0,
+                      heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength()));
+                final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
                 final Patch patch = column.addPatch(frame, Shape.RECTANGLE, coloret);
                 final Presentation presentation = new BooleanPresentation() {
 

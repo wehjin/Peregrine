@@ -6,6 +6,8 @@ import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
+import com.rubyhuntersky.columnui.TextSize;
+import com.rubyhuntersky.columnui.TextStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,11 @@ public class DelayColumn extends Column {
             pending.add(patch);
         }
         return patch;
+    }
+
+    @Override
+    public TextSize measureText(String text, TextStyle textStyle) {
+        return original.measureText(text, textStyle);
     }
 
     public void endDelay() {

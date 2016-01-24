@@ -98,6 +98,11 @@ public class UiView extends FrameLayout {
                 };
             }
 
+            @Override
+            public TextSize measureText(String text, TextStyle textStyle) {
+                return new TextSize();
+            }
+
             @NonNull
             private LayoutParams getLayoutParams(Frame frame) {
                 final LayoutParams layoutParams = new LayoutParams((int) frame.horizontal.toLength(),
