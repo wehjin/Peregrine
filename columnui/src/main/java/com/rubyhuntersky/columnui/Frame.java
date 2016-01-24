@@ -8,9 +8,19 @@ package com.rubyhuntersky.columnui;
 public class Frame {
     public final Range horizontal;
     public final Range vertical;
+    public final int elevation;
 
-    public Frame(Range horizontal, Range vertical) {
+    public Frame(Range horizontal, Range vertical, int elevation) {
         this.horizontal = horizontal;
         this.vertical = vertical;
+        this.elevation = elevation;
+    }
+
+    public Frame withVerticalShift(float shift) {
+        Range newVertical = vertical.shift(shift);
+        if (newVertical == vertical) {
+            return this;
+        }
+        return new Frame(horizontal, newVertical, elevation);
     }
 }

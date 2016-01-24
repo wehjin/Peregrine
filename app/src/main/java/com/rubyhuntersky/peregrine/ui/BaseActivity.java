@@ -262,6 +262,7 @@ public class BaseActivity extends AppCompatActivity {
     private Observable<JSONObject> fetchAccountPositionsResponse(OauthToken oauthToken,
           final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountPositionsResponse(etradeAccount.accountId, oauthToken)
+                             .retry(1)
                              .map(new Func1<JSONObject, JSONObject>() {
                                  @Override
                                  public JSONObject call(JSONObject jsonObject) {
@@ -282,6 +283,7 @@ public class BaseActivity extends AppCompatActivity {
     private Observable<JSONObject> fetchAccountBalanceResponse(OauthToken oauthToken,
           final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountBalanceResponse(etradeAccount.accountId, oauthToken)
+                             .retry(1)
                              .map(new Func1<JSONObject, JSONObject>() {
                                  @Override
                                  public JSONObject call(JSONObject jsonObject) {

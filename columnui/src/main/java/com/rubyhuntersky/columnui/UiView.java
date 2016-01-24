@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -17,10 +18,12 @@ import com.rubyhuntersky.columnui.conditions.Human;
 
 public class UiView extends FrameLayout {
 
+    public static final String TAG = UiView.class.getSimpleName();
     private Human human;
     private Column column;
     private Presentation presentation;
     private Ui ui;
+    private int levelPixels;
 
     public UiView(Context context) {
         super(context);
@@ -76,13 +79,16 @@ public class UiView extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         cancelPresentation();
-        column = new Column(Range.of(0, w)) {
+        column = new Column(Range.of(0, w), 0) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {
                 final View view = new View(getContext());
                 view.setBackgroundColor(coloret.toArgb());
-                ViewCompat.setElevation(view, getResources().getDimensionPixelSize(R.dimen.elevationGap));
+                final int elevation = levelPixels * frame.elevation;
+                Log.d(TAG, "Elevation: " + elevation);
+                ViewCompat.setElevation(view, elevation);
+
                 addView(view, getLayoutParams(frame));
                 return new Patch() {
                     @Override
@@ -113,5 +119,6 @@ public class UiView extends FrameLayout {
     private void init() {
         human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
               getResources().getDimensionPixelSize(R.dimen.readingText));
+        levelPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
     }
 }

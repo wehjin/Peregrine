@@ -10,6 +10,8 @@ import com.rubyhuntersky.columnui.conditions.Human;
 public class Sizelet {
     public static final Sizelet FINGER = new Sizelet(0, 1, Ruler.FINGERTIP);
     public static final Sizelet HALF_FINGER = new Sizelet(0, .5f, Ruler.FINGERTIP);
+    public static final Sizelet THIRD_FINGER = new Sizelet(0, .3333f, Ruler.FINGERTIP);
+    public static final Sizelet QUARTER_FINGER = new Sizelet(0, .25f, Ruler.FINGERTIP);
 
     public static Sizelet ZERO = new Sizelet(0, 0, Ruler.ZERO);
     public static Sizelet FULL = new Sizelet(0, 1, Ruler.CONTAINER);

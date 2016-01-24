@@ -37,13 +37,25 @@ public class Range {
         }
     }
 
-    public Range inset(float value) {
-        if (value == 0) {
+    public Range inset(float amount) {
+        if (amount == 0) {
             return this;
         }
-        float newStart = start + value;
-        float newEnd = end - value;
-        return new Range(newStart, newEnd);
+        return new Range(start + amount, end - amount);
+    }
+
+    public Range outset(float amount) {
+        if (amount == 0) {
+            return this;
+        }
+        return new Range(start - amount, end + amount);
+    }
+
+    public Range shift(float shift) {
+        if (shift == 0) {
+            return this;
+        }
+        return new Range(start + shift, end + shift);
     }
 
     private boolean isEqual(float start, float end) {
