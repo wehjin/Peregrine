@@ -1,7 +1,6 @@
 package com.rubyhuntersky.columnui;
 
 import com.rubyhuntersky.columnui.conditions.Column;
-import com.rubyhuntersky.columnui.conditions.Human;
 
 /**
  * @author wehjin
@@ -10,21 +9,21 @@ import com.rubyhuntersky.columnui.conditions.Human;
 
 public class Creator {
 
-    static public Ui createPanel(final Coloret coloret, final Heightlet heightlet) {
+    static public Ui createPanel(final Coloret coloret, final Sizelet heightlet) {
         return Ui.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
-                final Human human = presenter.getHuman();
-                final Widthlet widthlet = column.widthlet;
-                final float width = widthlet.toFloat(human, 0); // TODO rethink this
-                final float height = heightlet.toFloat(human, width);
-                final Frame frame = new Frame(width, height);
+                final Range horizontalRange = column.horizontalRange;
+                final float height = heightlet.toFloat(presenter.getHuman(), 0);
+                final Range verticalRange = new Range(0, height);
+                final Frame frame = new Frame(horizontalRange, verticalRange);
                 final Patch patch = column.addPatch(frame, Shape.RECTANGLE, coloret);
                 final Presentation presentation = new BooleanPresentation() {
+
                     @Override
-                    public float getHeight() {
-                        return height;
+                    public Range getVerticalRange() {
+                        return verticalRange;
                     }
 
                     @Override
@@ -36,50 +35,4 @@ public class Creator {
             }
         });
     }
-
-    public Ui createLabel(TextStyle textStyle, String text) {
-        return Ui.create(new OnPresent() {
-            @Override
-            public void onPresent(Presenter presenter) {
-                final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
-                final Presentation presentation = new BooleanPresentation() {
-                    @Override
-                    public float getHeight() {
-                        return 0;
-                    }
-
-                    @Override
-                    protected void onCancel() {
-                    }
-                };
-                presenter.addPresentation(presentation);
-            }
-        });
-    }
-
-    public Ui2<TextStyle, String> createLabel() {
-        return Ui2.create(new OnBind<TextStyle, Ui1<String>>() {
-            @Override
-            public Ui1<String> onBind(final TextStyle textStyle) {
-                return Ui1.create(new OnBind<String, Ui>() {
-                    @Override
-                    public Ui onBind(String text) {
-                        return createLabel(textStyle, text);
-                    }
-                });
-            }
-        }, new OnBind<String, Ui1<TextStyle>>() {
-            @Override
-            public Ui1<TextStyle> onBind(final String text) {
-                return Ui1.create(new OnBind<TextStyle, Ui>() {
-                    @Override
-                    public Ui onBind(TextStyle textStyle) {
-                        return createLabel(textStyle, text);
-                    }
-                });
-            }
-        });
-    }
-
 }

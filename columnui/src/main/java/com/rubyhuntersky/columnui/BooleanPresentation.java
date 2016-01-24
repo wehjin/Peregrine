@@ -15,7 +15,7 @@ abstract class BooleanPresentation implements Presentation {
 
     @Override
     public void cancel() {
-        if (!isCancelled) {
+        if (!isCancelled()) {
             isCancelled = true;
             onCancel();
         }

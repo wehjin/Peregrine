@@ -6,7 +6,7 @@ package com.rubyhuntersky.columnui;
  */
 
 public interface Presentation {
-    float getHeight();
+    Range getVerticalRange();
     boolean isCancelled();
     void cancel();
 }

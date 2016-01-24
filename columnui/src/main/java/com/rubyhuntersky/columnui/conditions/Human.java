@@ -1,7 +1,6 @@
 package com.rubyhuntersky.columnui.conditions;
 
 import com.rubyhuntersky.columnui.Condition;
-import com.rubyhuntersky.columnui.Sizelet1;
 
 /**
  * @author wehjin
@@ -9,10 +8,10 @@ import com.rubyhuntersky.columnui.Sizelet1;
  */
 
 public class Human extends Condition {
-    final public Sizelet1 fingerPixels;
-    final public Sizelet1 textPixels;
+    final public float fingerPixels;
+    final public float textPixels;
 
-    public Human(Sizelet1 fingerPixels, Sizelet1 textPixels) {
+    public Human(float fingerPixels, float textPixels) {
         this.fingerPixels = fingerPixels;
         this.textPixels = textPixels;
     }

@@ -44,13 +44,12 @@ abstract public class Ui {
                     }
 
                     @Override
-                    public float getHeight() {
-                        // TODO Fix this.  Also change to getTop and getBottom.
-                        float height = 0;
+                    public Range getVerticalRange() {
+                        Range range = new Range(Float.MAX_VALUE, Float.MIN_VALUE);
                         for (Presentation presentation : presentations) {
-                            height = Math.max(presentation.getHeight(), height);
+                            range = range.union(presentation.getVerticalRange());
                         }
-                        return height;
+                        return range;
                     }
 
                     @Override

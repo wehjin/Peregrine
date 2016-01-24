@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 
 import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Creator;
-import com.rubyhuntersky.columnui.Heightlet;
+import com.rubyhuntersky.columnui.Sizelet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.UiView;
-import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
+
+import static com.rubyhuntersky.columnui.Sizelet.Ruler.FINGERTIP;
 
 /**
  * @author wehjin
@@ -27,7 +28,6 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     public static final String AMOUNT_KEY = "amountKey";
     private BigDecimal buyAmount = BigDecimal.ZERO;
-    private Column column;
     private UiView uiView;
     private Ui panel;
 
@@ -51,7 +51,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         setStyle(STYLE_NO_TITLE, 0);
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
-        panel = Creator.createPanel(Coloret.BLUE, Heightlet.HUNDRED);
+        panel = Creator.createPanel(Coloret.BLUE, Sizelet.ofPortion(2, FINGERTIP));
     }
 
     @NonNull

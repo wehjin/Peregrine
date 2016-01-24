@@ -76,7 +76,7 @@ public class UiView extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         cancelPresentation();
-        column = new Column(new Widthlet(w, 0f)) {
+        column = new Column(Range.of(0, w)) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {
@@ -94,9 +94,10 @@ public class UiView extends FrameLayout {
 
             @NonNull
             private LayoutParams getLayoutParams(Frame frame) {
-                final LayoutParams layoutParams = new LayoutParams((int) frame.size.x, (int) frame.size.y);
-                layoutParams.leftMargin = (int) frame.origin.x;
-                layoutParams.topMargin = (int) frame.origin.y;
+                final LayoutParams layoutParams = new LayoutParams((int) frame.horizontal.toLength(),
+                      (int) frame.vertical.toLength());
+                layoutParams.leftMargin = (int) frame.horizontal.start;
+                layoutParams.topMargin = (int) frame.vertical.start;
                 return layoutParams;
             }
         };
@@ -110,7 +111,7 @@ public class UiView extends FrameLayout {
     }
 
     private void init() {
-        human = new Human(new Sizelet1(getResources().getDimensionPixelSize(R.dimen.fingerTip), 0),
-              new Sizelet1(getResources().getDimensionPixelSize(R.dimen.readingText), 0));
+        human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
+              getResources().getDimensionPixelSize(R.dimen.readingText));
     }
 }

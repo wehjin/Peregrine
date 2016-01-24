@@ -7,11 +7,11 @@ package com.rubyhuntersky.columnui;
 
 public class Sizelet2 {
 
-    public static final Sizelet2 ZERO = new Sizelet2(Sizelet1.ZERO, Sizelet1.ZERO);
-    private final Sizelet1 origin;
-    private final Sizelet1 size;
+    public static final Sizelet2 ZERO = new Sizelet2(Sizelet.ZERO, Sizelet.ZERO);
+    private final Sizelet origin;
+    private final Sizelet size;
 
-    public Sizelet2(Sizelet1 origin, Sizelet1 size) {
+    public Sizelet2(Sizelet origin, Sizelet size) {
         this.origin = origin;
         this.size = size;
     }

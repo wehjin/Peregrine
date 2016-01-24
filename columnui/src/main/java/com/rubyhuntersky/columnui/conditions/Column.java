@@ -6,8 +6,8 @@ import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Condition;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
+import com.rubyhuntersky.columnui.Range;
 import com.rubyhuntersky.columnui.Shape;
-import com.rubyhuntersky.columnui.Widthlet;
 
 /**
  * @author wehjin
@@ -17,10 +17,10 @@ import com.rubyhuntersky.columnui.Widthlet;
 abstract public class Column extends Condition {
 
     @NonNull
-    final public Widthlet widthlet;
+    final public Range horizontalRange;
 
-    public Column(@NonNull Widthlet widthlet) {
-        this.widthlet = widthlet;
+    public Column(@NonNull Range horizontalRange) {
+        this.horizontalRange = horizontalRange;
     }
 
     @NonNull

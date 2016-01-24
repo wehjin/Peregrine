@@ -8,11 +8,11 @@ import android.graphics.Typeface;
  */
 
 public class TextStyle {
-    public final Heightlet height;
+    public final Sizelet height;
     public final Typeface typeface;
     public final Coloret coloret;
 
-    public TextStyle(Heightlet height, Typeface typeface, Coloret coloret) {
+    public TextStyle(Sizelet height, Typeface typeface, Coloret coloret) {
         this.height = height;
         this.typeface = typeface;
         this.coloret = coloret;
