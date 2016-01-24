@@ -3,7 +3,9 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.conditions.Column;
+import com.rubyhuntersky.columnui.conditions.DelayColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.conditions.VerticalShiftColumn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +39,8 @@ abstract public class Ui {
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
-                final Column column = presenter.getColumn();
-                final Column.VerticalShiftColumn newColumn = column.withVerticalShift(column);
                 final Human human = presenter.getHuman();
+                final VerticalShiftColumn newColumn = presenter.getColumn().withVerticalShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final Range verticalRange = presentation.getVerticalRange();
                 final float padding = padlet.toFloat(human, verticalRange.toLength());
@@ -58,9 +59,13 @@ abstract public class Ui {
                 // TODO Background should have access to ui's vertical range through Column.
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getColumn();
-                presenter.addPresentation(background.present(human, column, presenter));
-                Column elevatedColumn = column.withElevation(column.elevation + gap);
-                presenter.addPresentation(ui.present(human, elevatedColumn, presenter));
+                final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
+                final Presentation foregroundPresentation = ui.present(human, delayColumn, presenter);
+                final Column backgroundColumn = column.withVerticalRange(foregroundPresentation.getVerticalRange());
+                final Presentation backgroundPresentation = background.present(human, backgroundColumn, presenter);
+                delayColumn.endDelay();
+                presenter.addPresentation(foregroundPresentation);
+                presenter.addPresentation(backgroundPresentation);
             }
         });
     }

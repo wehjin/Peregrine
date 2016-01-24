@@ -18,6 +18,7 @@ import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
 
+import static com.rubyhuntersky.columnui.Sizelet.Ruler.CONTEXT;
 import static com.rubyhuntersky.columnui.Sizelet.Ruler.FINGERTIP;
 
 /**
@@ -54,8 +55,8 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         panel = Creator.createPanel(Coloret.BLUE, Sizelet.ofPortion(2, FINGERTIP))
                        .padHorizontal(Sizelet.HALF_FINGER)
                        .padVertical(Sizelet.HALF_FINGER)
-                       .placeBefore(Creator.createPanel(Coloret.RED, new Sizelet(0, .33f, FINGERTIP)), 0)
-                       .placeBefore(Creator.createPanel(Coloret.GREEN, new Sizelet(0, 3, FINGERTIP)), 1);
+                       .placeBefore(Creator.createPanel(Coloret.RED, new Sizelet(0, 1, CONTEXT)), 0)
+                       .placeBefore(Creator.createPanel(Coloret.GREEN, new Sizelet(0, 1.5f, CONTEXT)), 1);
     }
 
     @NonNull

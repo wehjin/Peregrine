@@ -79,7 +79,7 @@ public class UiView extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         cancelPresentation();
-        column = new Column(Range.of(0, w), 0) {
+        column = new Column(Range.of(0, w), Range.ZERO, 0) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {

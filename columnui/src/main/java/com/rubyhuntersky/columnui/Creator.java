@@ -16,7 +16,7 @@ public class Creator {
                 final Column column = presenter.getColumn();
                 final int elevation = column.elevation;
                 final Range horizontalRange = column.horizontalRange;
-                final float height = heightlet.toFloat(presenter.getHuman(), 0);
+                final float height = heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength());
                 final Range verticalRange = new Range(0, height);
                 final Frame frame = new Frame(horizontalRange, verticalRange, elevation);
                 final Patch patch = column.addPatch(frame, Shape.RECTANGLE, coloret);
