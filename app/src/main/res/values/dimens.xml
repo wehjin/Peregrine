@@ -5,4 +5,5 @@
     <dimen name="textsize_singleline_cell">18sp</dimen>
     <dimen name="textsize_doubleline_cell_detail">16sp</dimen>
     <dimen name="textsize_page_primary">24sp</dimen>
+    <dimen name="elevationGap">4dp</dimen>
 </resources>

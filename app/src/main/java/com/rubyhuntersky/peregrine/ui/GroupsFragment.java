@@ -105,11 +105,15 @@ public class GroupsFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Group group = groupsAdapter.getItem(position);
                 final BigDecimal sellAmount = groupsAdapter.getAllocationErrorDollars(group);
-                List<Price> prices = getPrices(group);
-                Price selectedPrice = prices.get(0);
-                if (sellAmount.compareTo(BigDecimal.ZERO) > 0) {
+                final int direction = sellAmount.compareTo(BigDecimal.ZERO);
+                if (direction > 0) {
+                    List<Price> prices = getPrices(group);
+                    Price selectedPrice = prices.size() > 0 ? prices.get(0) : null;
                     final DialogFragment fragment = SellDialogFragment.create(sellAmount, prices, selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
+                } else if (direction < 0) {
+                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs());
+                    fragment.show(getFragmentManager(), "BuyFragment");
                 }
             }
         });
