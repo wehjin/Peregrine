@@ -16,6 +16,20 @@ abstract public class Ui {
 
     abstract public Presentation present(Human human, Column column, Observer observer);
 
+    public Ui padHorizontal(final Sizelet padlet) {
+        final Ui ui = this;
+        return create(new OnPresent() {
+            @Override
+            public void onPresent(Presenter presenter) {
+                final Column column = presenter.getColumn();
+                final float padding = padlet.toFloat(presenter.getHuman(), column.horizontalRange.toLength());
+                Range newRange = column.horizontalRange.inset(padding);
+                Column newColumn = column.withHorizontalRange(newRange);
+                presenter.addPresentation(ui.present(presenter.getHuman(), newColumn, presenter));
+            }
+        });
+    }
+
     static Ui create(final OnPresent onPresent) {
         return new Ui() {
             @Override

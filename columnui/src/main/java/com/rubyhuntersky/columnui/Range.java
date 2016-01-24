@@ -37,6 +37,15 @@ public class Range {
         }
     }
 
+    public Range inset(float value) {
+        if (value == 0) {
+            return this;
+        }
+        float newStart = start + value;
+        float newEnd = end - value;
+        return new Range(newStart, newEnd);
+    }
+
     private boolean isEqual(float start, float end) {
         return this.start == start && this.end == end;
     }

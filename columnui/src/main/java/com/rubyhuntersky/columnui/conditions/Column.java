@@ -25,4 +25,15 @@ abstract public class Column extends Condition {
 
     @NonNull
     abstract public Patch addPatch(Frame frame, Shape shape, Coloret color);
+
+    public Column withHorizontalRange(Range range) {
+        final Column original = this;
+        return new Column(range) {
+            @NonNull
+            @Override
+            public Patch addPatch(Frame frame, Shape shape, Coloret color) {
+                return original.addPatch(frame, shape, color);
+            }
+        };
+    }
 }
