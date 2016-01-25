@@ -16,7 +16,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class VerticalShiftColumn extends Column {
+public class DelayedVerticalShiftColumn extends Column {
 
     @NonNull
     private final Column original;
@@ -24,7 +24,7 @@ public class VerticalShiftColumn extends Column {
     private float shift;
     private List<VerticalShiftPatch> pending = new ArrayList<>();
 
-    public VerticalShiftColumn(@NonNull Column original) {
+    public DelayedVerticalShiftColumn(@NonNull Column original) {
         super(original.horizontalRange, original.verticalRange, original.elevation);
         this.original = original;
     }

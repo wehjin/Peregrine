@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.DelayColumn;
+import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.conditions.VerticalShiftColumn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,13 +34,45 @@ abstract public class Ui {
         });
     }
 
+    public Ui padTop(final Sizelet padlet) {
+        final Ui ui = this;
+        return create(new OnPresent() {
+            @Override
+            public void onPresent(Presenter presenter) {
+                final Human human = presenter.getHuman();
+                final DelayedVerticalShiftColumn newColumn = presenter.getColumn().withDelayedVerticalShift();
+                final Presentation presentation = ui.present(human, newColumn, presenter);
+                final Range verticalRange = presentation.getVerticalRange();
+                final float padding = padlet.toFloat(human, verticalRange.toLength());
+                newColumn.setVerticalShift(padding);
+                final Range newVerticalRange = verticalRange.moveStart(-padding).shift(padding);
+                presenter.addPresentation(new VerticalRangePresentation(newVerticalRange, presentation));
+            }
+        });
+    }
+
+    public Ui padBottom(final Sizelet padlet) {
+        final Ui ui = this;
+        return create(new OnPresent() {
+            @Override
+            public void onPresent(Presenter presenter) {
+                final Human human = presenter.getHuman();
+                final Presentation presentation = ui.present(human, presenter.getColumn(), presenter);
+                final Range verticalRange = presentation.getVerticalRange();
+                final float padding = padlet.toFloat(human, verticalRange.toLength());
+                final Range newVerticalRange = verticalRange.moveEnd(padding);
+                presenter.addPresentation(new VerticalRangePresentation(newVerticalRange, presentation));
+            }
+        });
+    }
+
     public Ui padVertical(final Sizelet padlet) {
         final Ui ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Human human = presenter.getHuman();
-                final VerticalShiftColumn newColumn = presenter.getColumn().withVerticalShift();
+                final DelayedVerticalShiftColumn newColumn = presenter.getColumn().withDelayedVerticalShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final Range verticalRange = presentation.getVerticalRange();
                 final float padding = padlet.toFloat(human, verticalRange.toLength());
@@ -56,7 +88,6 @@ abstract public class Ui {
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
-                // TODO Background should have access to ui's vertical range through Column.
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getColumn();
                 final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
@@ -70,6 +101,10 @@ abstract public class Ui {
         });
     }
 
+    public Ui placeAbove(@NonNull Ui below) {
+        return placeBefore(below, 0);
+    }
+
     static Ui create(final OnPresent onPresent) {
         return new Ui() {
             @Override
@@ -78,7 +113,7 @@ abstract public class Ui {
 
                     boolean isCancelled;
 
-                    List<Presentation> presentations = new ArrayList<>();
+                    final List<Presentation> presentations = new ArrayList<>();
 
                     public Human getHuman() {
                         return human;
@@ -99,7 +134,7 @@ abstract public class Ui {
 
                     @Override
                     public Range getVerticalRange() {
-                        Range range = new Range(Float.MAX_VALUE, Float.MIN_VALUE);
+                        Range range = column.verticalRange;
                         for (Presentation presentation : presentations) {
                             range = range.union(presentation.getVerticalRange());
                         }

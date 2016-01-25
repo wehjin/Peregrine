@@ -51,6 +51,20 @@ public class Range {
         return new Range(start - amount, end + amount);
     }
 
+    public Range moveStart(float amount) {
+        if (amount == 0) {
+            return this;
+        }
+        return new Range(start + amount, end);
+    }
+
+    public Range moveEnd(float amount) {
+        if (amount == 0) {
+            return this;
+        }
+        return new Range(start, end + amount);
+    }
+
     public Range shift(float shift) {
         if (shift == 0) {
             return this;

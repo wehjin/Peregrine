@@ -49,8 +49,8 @@ abstract public class Column extends Condition {
         return this.verticalRange == range ? this : new ColumnWrapper(horizontalRange, range, elevation, this);
     }
 
-    public VerticalShiftColumn withVerticalShift() {
-        return new VerticalShiftColumn(this);
+    public DelayedVerticalShiftColumn withDelayedVerticalShift() {
+        return new DelayedVerticalShiftColumn(this);
     }
 
     public DelayColumn withDelay() {
