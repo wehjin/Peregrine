@@ -27,6 +27,24 @@ public interface Coloret {
             return Color.BLUE;
         }
     };
+    Coloret WHITE = new Coloret() {
+        @Override
+        public int toArgb() {
+            return Color.WHITE;
+        }
+    };
+    Coloret BLACK = new Coloret() {
+        @Override
+        public int toArgb() {
+            return Color.BLACK;
+        }
+    };
+    Coloret DARK_TEXT = new Coloret() {
+        @Override
+        public int toArgb() {
+            return 0xde000000;
+        }
+    };
 
     int toArgb();
 }

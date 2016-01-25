@@ -58,6 +58,10 @@ public class Range {
         return new Range(start + shift, end + shift);
     }
 
+    public Range withLength(float length) {
+        return new Range(start, start + length);
+    }
+
     private boolean isEqual(float start, float end) {
         return this.start == start && this.end == end;
     }

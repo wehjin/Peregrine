@@ -10,12 +10,29 @@ import com.rubyhuntersky.columnui.conditions.Column;
 public class Creator {
 
 
-    static public Ui createLabel(String textString, TextStyle tetStyle) {
+    static public Ui createLabel(final String textString, final TextStylet textStylet) {
         return Ui.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
+                final TextStyle textStyle = textStylet.toStyle(presenter.getHuman(), column.verticalRange.toLength());
+                final TextSize textSize = column.measureText(textString, textStyle);
+                final Shape shape = new TextShape(textString, textStyle, textSize);
+                final Range verticalRange = new Range(0, textSize.textHeight.height);
+                final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
+                final Patch patch = column.addPatch(frame, shape, textStyle.coloret);
+                final BooleanPresentation presentation = new BooleanPresentation() {
+                    @Override
+                    public Range getVerticalRange() {
+                        return verticalRange;
+                    }
 
+                    @Override
+                    protected void onCancel() {
+                        patch.remove();
+                    }
+                };
+                presenter.addPresentation(presentation);
             }
         });
     }

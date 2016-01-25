@@ -6,4 +6,12 @@ package com.rubyhuntersky.columnui;
  */
 
 public class TextSize {
+    public final float width;
+    public final TextHeight textHeight;
+
+    public TextSize(float width, TextHeight textHeight) {
+        this.width = width;
+        this.textHeight = textHeight;
+    }
+
 }

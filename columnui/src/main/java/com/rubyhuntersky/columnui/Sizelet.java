@@ -12,6 +12,8 @@ public class Sizelet {
     public static final Sizelet HALF_FINGER = new Sizelet(0, .5f, Ruler.FINGERTIP);
     public static final Sizelet THIRD_FINGER = new Sizelet(0, .3333f, Ruler.FINGERTIP);
     public static final Sizelet QUARTER_FINGER = new Sizelet(0, .25f, Ruler.FINGERTIP);
+    public static final Sizelet READABLE = new Sizelet(0, 1f, Ruler.READABLE);
+    public static final Sizelet TITLE = new Sizelet(0, 1.5f, Ruler.READABLE);
 
     public static Sizelet ZERO = new Sizelet(0, 0, Ruler.ZERO);
     public static Sizelet FULL = new Sizelet(0, 1, Ruler.CONTEXT);
@@ -38,7 +40,7 @@ public class Sizelet {
         float fullSize;
         if (ruler == Ruler.FINGERTIP) {
             fullSize = human.fingerPixels;
-        } else if (ruler == Ruler.READING_FONT) {
+        } else if (ruler == Ruler.READABLE) {
             fullSize = human.textPixels;
         } else if (ruler == Ruler.CONTEXT) {
             fullSize = containerSize;
@@ -51,7 +53,7 @@ public class Sizelet {
     public enum Ruler {
         ZERO,
         FINGERTIP,
-        READING_FONT,
+        READABLE,
         CONTEXT
     }
 }

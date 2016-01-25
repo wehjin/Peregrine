@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Sizelet;
+import com.rubyhuntersky.columnui.TextStylet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.UiView;
 import com.rubyhuntersky.peregrine.R;
@@ -19,7 +20,6 @@ import com.rubyhuntersky.peregrine.R;
 import java.math.BigDecimal;
 
 import static com.rubyhuntersky.columnui.Sizelet.Ruler.CONTEXT;
-import static com.rubyhuntersky.columnui.Sizelet.Ruler.FINGERTIP;
 
 /**
  * @author wehjin
@@ -52,10 +52,11 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         setStyle(STYLE_NO_TITLE, 0);
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
-        panel = Creator.createPanel(Coloret.BLUE, Sizelet.ofPortion(2, FINGERTIP))
-                       .padHorizontal(Sizelet.HALF_FINGER)
-                       .padVertical(Sizelet.HALF_FINGER)
-                       .placeBefore(Creator.createPanel(Coloret.RED, new Sizelet(0, 1, CONTEXT)), 0)
+
+        panel = Creator.createLabel("Buy $3,000.00", TextStylet.DARK_TITLE)
+                       .padHorizontal(Sizelet.THIRD_FINGER)
+                       .padVertical(Sizelet.THIRD_FINGER)
+                       .placeBefore(Creator.createPanel(Coloret.WHITE, new Sizelet(0, 1, CONTEXT)), 0)
                        .placeBefore(Creator.createPanel(Coloret.GREEN, new Sizelet(0, 1.5f, CONTEXT)), 1);
     }
 

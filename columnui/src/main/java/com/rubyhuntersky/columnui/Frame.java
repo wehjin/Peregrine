@@ -23,4 +23,13 @@ public class Frame {
         }
         return new Frame(horizontal, newVertical, elevation);
     }
+
+    public Frame withVertical(Range range) {
+        return new Frame(horizontal, range, elevation);
+    }
+
+    public Frame withVerticalLength(float verticalLength) {
+        final Range newVertical = vertical.withLength(verticalLength);
+        return new Frame(horizontal, newVertical, elevation);
+    }
 }
