@@ -101,8 +101,9 @@ abstract public class Ui {
         });
     }
 
-    public Ui placeAbove(@NonNull Ui below) {
-        return placeBefore(below, 0);
+    public Ui placeAbove(@NonNull Ui bottomUi) {
+        // TODO Fix extra range at bottom.
+        return placeBefore(bottomUi.padTop(Sizelet.FULL), 0);
     }
 
     static Ui create(final OnPresent onPresent) {

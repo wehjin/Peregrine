@@ -37,6 +37,10 @@ public class Creator {
         });
     }
 
+    static public Ui createDarkTitle(final String textString) {
+        return createLabel(textString, TextStylet.DARK_TITLE);
+    }
+
     static public Ui createPanel(final Coloret coloret, final Sizelet heightlet) {
         return Ui.create(new OnPresent() {
             @Override

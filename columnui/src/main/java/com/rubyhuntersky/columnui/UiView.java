@@ -195,7 +195,7 @@ public class UiView extends FrameLayout {
         }
         Log.d(TAG, "E limits: " + topRow + ", " + bottomRow);
         final float topPadding = topRow;
-        final float height = Math.max(0, bottomRow - topRow);
+        final float height = Math.max(0, bottomRow - topRow + 1);
         final TextHeight textHeight = new TextHeight(height, topPadding);
         textHeightCache.put(typePair, textHeight);
         return textHeight;

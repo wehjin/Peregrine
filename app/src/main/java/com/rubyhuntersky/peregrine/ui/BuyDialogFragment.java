@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rubyhuntersky.columnui.Coloret;
-import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Sizelet;
-import com.rubyhuntersky.columnui.TextStylet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.UiView;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
 
+import static com.rubyhuntersky.columnui.Creator.createDarkTitle;
+import static com.rubyhuntersky.columnui.Creator.createPanel;
 import static com.rubyhuntersky.columnui.Sizelet.Ruler.CONTEXT;
 
 /**
@@ -53,12 +53,14 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
 
-        panel = Creator.createLabel("Buy $3,000.00", TextStylet.DARK_TITLE)
-                       .padTop(Sizelet.THIRD_FINGER)
-                       .padBottom(Sizelet.THIRD_FINGER)
-                       .padHorizontal(Sizelet.THIRD_FINGER)
-                       .placeBefore(Creator.createPanel(Coloret.WHITE, new Sizelet(0, 1, CONTEXT)), 0)
-                       .placeBefore(Creator.createPanel(Coloret.GREEN, new Sizelet(0, 1.5f, CONTEXT)), 1);
+        final String buyString = "EBuy $3,000.00";
+        final String sharesString = "28 shares";
+        panel = createDarkTitle(buyString).padTop(Sizelet.THIRD_FINGER)
+                                          .placeAbove(createDarkTitle(sharesString))
+                                          //.padBottom(Sizelet.THIRD_FINGER)
+                                          .padHorizontal(Sizelet.THIRD_FINGER)
+                                          .placeBefore(createPanel(Coloret.WHITE, new Sizelet(0, 1, CONTEXT)), 0)
+                                          .placeBefore(createPanel(Coloret.GREEN, new Sizelet(0, 1.5f, CONTEXT)), 1);
     }
 
     @NonNull
