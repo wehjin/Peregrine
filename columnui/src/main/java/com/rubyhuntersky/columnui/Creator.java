@@ -47,6 +47,10 @@ public class Creator {
         return createLabel(textString, TextStylet.DARK_TITLE);
     }
 
+    static public Ui createDarkImportant(final String textString) {
+        return createLabel(textString, TextStylet.DARK_IMPORTANT);
+    }
+
     static public Ui createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
         return Ui.create(new OnPresent() {
             @Override

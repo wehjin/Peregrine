@@ -11,6 +11,8 @@ import com.rubyhuntersky.columnui.conditions.Human;
 
 public class TextStylet {
     public static final TextStylet DARK_TITLE = new TextStylet(Sizelet.TITLE, Typeface.DEFAULT, Coloret.DARK_TEXT);
+    public static final TextStylet DARK_IMPORTANT = new TextStylet(Sizelet.IMPORTANT, Typeface.DEFAULT,
+          Coloret.DARK_TEXT);
 
     public final Sizelet heightlet;
     public final Typeface typeface;
