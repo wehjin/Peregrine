@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui;
 
+import android.util.Log;
+
 import com.rubyhuntersky.columnui.conditions.Column;
 
 /**
@@ -10,6 +12,8 @@ import com.rubyhuntersky.columnui.conditions.Column;
 public class Creator {
 
 
+    public static final String TAG = Creator.class.getSimpleName();
+
     static public Ui createLabel(final String textString, final TextStylet textStylet) {
         return Ui.create(new OnPresent() {
             @Override
@@ -19,6 +23,7 @@ public class Creator {
                 final TextSize textSize = column.measureText(textString, textStyle);
                 final Shape shape = new TextShape(textString, textStyle, textSize);
                 final Range verticalRange = new Range(0, textSize.textHeight.height);
+                Log.d(TAG, "createLabel verticalRange:" + verticalRange);
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
                 final Patch patch = column.addPatch(frame, shape, textStyle.coloret);
                 final BooleanPresentation presentation = new BooleanPresentation() {

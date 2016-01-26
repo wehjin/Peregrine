@@ -44,6 +44,8 @@ public class Sizelet {
             fullSize = human.textPixels;
         } else if (ruler == Ruler.CONTEXT) {
             fullSize = containerSize;
+        } else if (ruler == Ruler.PIXEL) {
+            fullSize = 1;
         } else {
             fullSize = 0;
         }
@@ -54,6 +56,7 @@ public class Sizelet {
         ZERO,
         FINGERTIP,
         READABLE,
-        CONTEXT
+        CONTEXT,
+        PIXEL
     }
 }

@@ -210,6 +210,7 @@ public class UiView extends FrameLayout {
     private void init() {
         human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
               getResources().getDimensionPixelSize(R.dimen.readingText));
+        Log.d(TAG, "Human: " + human);
         levelPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
     }

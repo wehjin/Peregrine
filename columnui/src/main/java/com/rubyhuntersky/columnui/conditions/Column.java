@@ -45,7 +45,7 @@ abstract public class Column extends Condition {
         return this.horizontalRange == range ? this : new ColumnWrapper(range, verticalRange, elevation, this);
     }
 
-    public Column withVerticalRange(Range range) {
+    public Column withVerticalContext(Range range) {
         return this.verticalRange == range ? this : new ColumnWrapper(horizontalRange, range, elevation, this);
     }
 

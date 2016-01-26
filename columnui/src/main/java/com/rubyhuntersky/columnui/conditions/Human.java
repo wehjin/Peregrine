@@ -15,4 +15,12 @@ public class Human extends Condition {
         this.fingerPixels = fingerPixels;
         this.textPixels = textPixels;
     }
+
+    @Override
+    public String toString() {
+        return "Human{" +
+              "fingerPixels=" + fingerPixels +
+              ", textPixels=" + textPixels +
+              '}';
+    }
 }

@@ -21,6 +21,14 @@ public class Range {
         this.end = end;
     }
 
+    @Override
+    public String toString() {
+        return "Range{" +
+              "start=" + start +
+              ", end=" + end +
+              '}';
+    }
+
     public float toLength() {
         return end - start;
     }
