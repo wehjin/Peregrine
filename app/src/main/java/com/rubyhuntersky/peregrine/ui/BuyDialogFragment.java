@@ -53,9 +53,12 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
 
-        final String buyString = "EBuy $3,000.00";
+        final String buyString = "Buy $3,000.00";
         final String sharesString = "28 shares";
         panel = createDarkTitle(buyString).padTop(Sizelet.HALF_FINGER)
+                                          .placeAbove(createPanel(Sizelet.THIRD_FINGER, null))
+                                          .placeAbove(createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE),
+                                                Coloret.BLACK))
                                           .placeAbove(createPanel(Sizelet.THIRD_FINGER, null))
                                           .placeAbove(createDarkTitle(sharesString))
                                           .padBottom(Sizelet.THIRD_FINGER)
