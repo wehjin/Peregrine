@@ -1,5 +1,6 @@
 package com.rubyhuntersky.columnui;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rubyhuntersky.columnui.conditions.Column;
@@ -46,7 +47,7 @@ public class Creator {
         return createLabel(textString, TextStylet.DARK_TITLE);
     }
 
-    static public Ui createPanel(final Coloret coloret, final Sizelet heightlet) {
+    static public Ui createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
         return Ui.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -54,7 +55,7 @@ public class Creator {
                 final Range verticalRange = new Range(0,
                       heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength()));
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
-                final Patch patch = column.addPatch(frame, Shape.RECTANGLE, coloret);
+                final Patch patch = coloret == null ? null : column.addPatch(frame, Shape.RECTANGLE, coloret);
                 final Presentation presentation = new BooleanPresentation() {
 
                     @Override
@@ -64,7 +65,9 @@ public class Creator {
 
                     @Override
                     protected void onCancel() {
-                        patch.remove();
+                        if (patch != null) {
+                            patch.remove();
+                        }
                     }
                 };
                 presenter.addPresentation(presentation);

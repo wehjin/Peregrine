@@ -56,20 +56,20 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final String buyString = "EBuy $3,000.00";
         final String sharesString = "28 shares";
         panel = createDarkTitle(buyString).padTop(Sizelet.HALF_FINGER)
-                                          .placeAbove(createPanel(Coloret.WHITE, Sizelet.THIRD_FINGER))
+                                          .placeAbove(createPanel(Sizelet.THIRD_FINGER, null))
                                           .placeAbove(createDarkTitle(sharesString))
                                           .padBottom(Sizelet.THIRD_FINGER)
                                           .padHorizontal(Sizelet.THIRD_FINGER)
-                                          .placeBefore(createPanel(Coloret.WHITE, new Sizelet(0, 1, CONTEXT)), 0)
-                                          .placeBefore(createPanel(Coloret.GREEN, new Sizelet(0, 1.5f, CONTEXT)), 1);
+                                          .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), Coloret.WHITE), 0);
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setCanceledOnTouchOutside(true);
-        return dialog;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+          @Nullable Bundle savedInstanceState) {
+        final View inflate = inflater.inflate(R.layout.fragment_buy, container, false);
+        uiView = (UiView) inflate.findViewById(R.id.ui);
+        return inflate;
     }
 
     @Override
@@ -84,12 +84,11 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         super.onPause();
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-          @Nullable Bundle savedInstanceState) {
-        final View inflate = inflater.inflate(R.layout.fragment_buy, container, false);
-        uiView = (UiView) inflate.findViewById(R.id.ui);
-        return inflate;
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 }

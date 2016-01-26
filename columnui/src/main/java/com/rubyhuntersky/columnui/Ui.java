@@ -106,7 +106,7 @@ abstract public class Ui {
                 final Column column = presenter.getColumn();
                 final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
                 final Presentation foregroundPresentation = ui.present(human, delayColumn, presenter);
-                final Column backgroundColumn = column.withVerticalContext(foregroundPresentation.getVerticalRange());
+                final Column backgroundColumn = column.withVerticalRange(foregroundPresentation.getVerticalRange());
                 final Presentation backgroundPresentation = background.present(human, backgroundColumn, presenter);
                 delayColumn.endDelay();
                 presenter.addPresentation(foregroundPresentation);
@@ -125,7 +125,7 @@ abstract public class Ui {
                 final DelayColumn delayColumn = column.withDelay();
                 final Presentation topPresentation = ui.present(human, delayColumn, presenter);
                 final Range topVerticalRange = topPresentation.getVerticalRange();
-                final Column bottomColumn = column.withVerticalContext(topVerticalRange);
+                final Column bottomColumn = column.withVerticalRange(topVerticalRange);
                 presenter.addPresentation(
                       bottomUi.padTop(new Sizelet(0, topVerticalRange.toLength(), Sizelet.Ruler.PIXEL))
                               .present(human, bottomColumn, presenter));

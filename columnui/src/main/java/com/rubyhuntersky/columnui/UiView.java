@@ -37,6 +37,9 @@ public class UiView extends FrameLayout {
     private Paint textPaint;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
+    private MyColumn myColumn;
+    private Ui measuredUi;
+    private int measuredUiHeight;
 
     public UiView(Context context) {
         super(context);
@@ -53,11 +56,21 @@ public class UiView extends FrameLayout {
         init();
     }
 
+    private void init() {
+        human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
+              getResources().getDimensionPixelSize(R.dimen.readingText));
+        Log.d(TAG, "Human: " + human);
+        levelPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
+        myColumn = new MyColumn(300);
+    }
+
     public void setUi(Ui ui) {
         clearUi();
         this.ui = ui;
         if (ui != null) {
             beginPresentation();
+            requestLayout();
         }
     }
 
@@ -65,6 +78,7 @@ public class UiView extends FrameLayout {
         if (this.ui != null) {
             cancelPresentation();
             this.ui = null;
+            requestLayout();
         }
     }
 
@@ -88,6 +102,34 @@ public class UiView extends FrameLayout {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.d(TAG, "onMeasure width: " + MeasureSpec.toString(widthMeasureSpec) + ", height: " + MeasureSpec.toString(
+              heightMeasureSpec));
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        if (widthMode == MeasureSpec.UNSPECIFIED) {
+            throw new IllegalStateException("Width must be specified");
+        }
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        if (ui == null) {
+            setMeasuredDimension(width, 0);
+            return;
+        }
+
+        if (ui != measuredUi) {
+            Log.d(TAG, "onMeasure presenting");
+            final Column column = myColumn.withHorizontalRange(Range.of(0, width)).withDelay();
+            final Presentation presentation = ui.present(human, column, Observer.EMPTY);
+            final float presentationHeight = presentation.getVerticalRange().toLength();
+            presentation.cancel();
+            measuredUi = ui;
+            measuredUiHeight = (int) presentationHeight;
+        }
+        setMeasuredDimension(width, measuredUiHeight);
+        Log.d(TAG, "onMeasure measured: " + getMeasuredHeight());
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
@@ -96,56 +138,7 @@ public class UiView extends FrameLayout {
         }
 
         cancelPresentation();
-        column = new Column(Range.of(0, w), Range.ZERO, 0) {
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {
-                if (shape == Shape.RECTANGLE) {
-                    final View view = new View(getContext());
-                    view.setBackgroundColor(coloret.toArgb());
-                    setElevation(view, frame);
-                    addView(view, getLayoutParams(frame, 0));
-                    return new ViewPatch(view);
-                } else if (shape instanceof TextShape) {
-                    final TextShape textShape = (TextShape) shape;
-                    final TextView textView = new TextView(getContext());
-                    textView.setGravity(Gravity.TOP);
-                    textView.setTextColor(coloret.toArgb());
-                    textView.setTypeface(textShape.textStyle.typeface);
-                    textView.setTextSize(textShape.textStyle.typeheight);
-                    textView.setText(textShape.textString);
-                    textView.setIncludeFontPadding(false);
-                    final TextHeight textHeight = textShape.textSize.textHeight;
-                    Frame newFrame = frame.withVerticalShift(-textHeight.topPadding)
-                                          .withVerticalLength(textHeight.topPadding + textHeight.height);
-                    setElevation(textView, newFrame);
-                    addView(textView, getLayoutParams(newFrame, textHeight.height / 2));
-                    return new ViewPatch(textView);
-                } else {
-                    return Patch.EMPTY;
-                }
-            }
-
-            private void setElevation(View view, Frame frame) {
-                ViewCompat.setElevation(view, levelPixels * frame.elevation);
-            }
-
-            @Override
-            public TextSize measureText(String text, TextStyle textStyle) {
-                Log.d(TAG, "meaureText: " + textStyle);
-                return new TextSize(getTextWidth(text, textStyle),
-                      getTextHeight(textStyle.typeface, textStyle.typeheight));
-            }
-
-            @NonNull
-            private LayoutParams getLayoutParams(Frame frame, float additionalHeight) {
-                final LayoutParams layoutParams = new LayoutParams((int) frame.horizontal.toLength(),
-                      (int) (frame.vertical.toLength() + additionalHeight));
-                layoutParams.leftMargin = (int) frame.horizontal.start;
-                layoutParams.topMargin = (int) frame.vertical.start;
-                return layoutParams;
-            }
-        };
+        column = myColumn.withHorizontalRange(Range.of(0, w));
         beginPresentation();
     }
 
@@ -207,14 +200,6 @@ public class UiView extends FrameLayout {
         }
     }
 
-    private void init() {
-        human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
-              getResources().getDimensionPixelSize(R.dimen.readingText));
-        Log.d(TAG, "Human: " + human);
-        levelPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
-    }
-
     private class ViewPatch implements Patch {
         private final View view;
 
@@ -225,6 +210,60 @@ public class UiView extends FrameLayout {
         @Override
         public void remove() {
             removeView(view);
+        }
+    }
+
+    private class MyColumn extends Column {
+        public MyColumn(int width) {
+            super(Range.of(0, width), Range.ZERO, 0);
+        }
+
+        private void setElevation(View view, Frame frame) {
+            ViewCompat.setElevation(view, levelPixels * frame.elevation);
+        }
+
+        @NonNull
+        @Override
+        public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {
+            if (shape == Shape.RECTANGLE) {
+                final View view = new View(getContext());
+                view.setBackgroundColor(coloret.toArgb());
+                setElevation(view, frame);
+                addView(view, getLayoutParams(frame, 0));
+                return new ViewPatch(view);
+            } else if (shape instanceof TextShape) {
+                final TextShape textShape = (TextShape) shape;
+                final TextView textView = new TextView(getContext());
+                textView.setGravity(Gravity.TOP);
+                textView.setTextColor(coloret.toArgb());
+                textView.setTypeface(textShape.textStyle.typeface);
+                textView.setTextSize(textShape.textStyle.typeheight);
+                textView.setText(textShape.textString);
+                textView.setIncludeFontPadding(false);
+                final TextHeight textHeight = textShape.textSize.textHeight;
+                Frame newFrame = frame.withVerticalShift(-textHeight.topPadding)
+                                      .withVerticalLength(textHeight.topPadding + textHeight.height);
+                setElevation(textView, newFrame);
+                addView(textView, getLayoutParams(newFrame, textHeight.height / 2));
+                return new ViewPatch(textView);
+            } else {
+                return Patch.EMPTY;
+            }
+        }
+
+        @Override
+        public TextSize measureText(String text, TextStyle textStyle) {
+            Log.d(TAG, "meaureText: " + textStyle);
+            return new TextSize(getTextWidth(text, textStyle), getTextHeight(textStyle.typeface, textStyle.typeheight));
+        }
+
+        @NonNull
+        private LayoutParams getLayoutParams(Frame frame, float additionalHeight) {
+            final LayoutParams layoutParams = new LayoutParams((int) frame.horizontal.toLength(),
+                  (int) (frame.vertical.toLength() + additionalHeight));
+            layoutParams.leftMargin = (int) frame.horizontal.start;
+            layoutParams.topMargin = (int) frame.vertical.start;
+            return layoutParams;
         }
     }
 }
