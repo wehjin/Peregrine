@@ -2,7 +2,6 @@ package com.rubyhuntersky.columnui.conditions;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
@@ -15,15 +14,13 @@ public class DelayPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final Coloret color;
     private final Column column;
     private Patch patch;
 
-    public DelayPatch(Frame frame, Shape shape, Coloret color, @NonNull Column column) {
+    public DelayPatch(Frame frame, Shape shape, @NonNull Column column) {
 
         this.frame = frame;
         this.shape = shape;
-        this.color = color;
         this.column = column;
     }
 
@@ -31,7 +28,7 @@ public class DelayPatch implements Patch {
         if (patch != null) {
             throw new IllegalStateException("Delay already ended");
         }
-        patch = column.addPatch(frame, shape, color);
+        patch = column.addPatch(frame, shape);
     }
 
     @Override

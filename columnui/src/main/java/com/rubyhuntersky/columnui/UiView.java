@@ -18,8 +18,12 @@ import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.shapes.RectangleShape;
+import com.rubyhuntersky.columnui.shapes.TextShape;
+import com.rubyhuntersky.columnui.shapes.ViewShape;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author wehjin
@@ -40,6 +44,7 @@ public class UiView extends FrameLayout {
     private MyColumn myColumn;
     private Ui measuredUi;
     private int measuredUiHeight;
+    private Map<Integer, Integer> measuredHeights = new HashMap<>();
 
     public UiView(Context context) {
         super(context);
@@ -103,8 +108,6 @@ public class UiView extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.d(TAG, "onMeasure width: " + MeasureSpec.toString(widthMeasureSpec) + ", height: " + MeasureSpec.toString(
-              heightMeasureSpec));
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         if (widthMode == MeasureSpec.UNSPECIFIED) {
@@ -117,16 +120,21 @@ public class UiView extends FrameLayout {
         }
 
         if (ui != measuredUi) {
-            Log.d(TAG, "onMeasure presenting");
+            measuredHeights.clear();
+            measuredUi = ui;
+        }
+        if (!measuredHeights.containsKey(width)) {
+            Log.d(TAG, "onMeasure widthSpec: " + MeasureSpec.toString(widthMeasureSpec) + ", heightSpec: " + MeasureSpec
+                  .toString(heightMeasureSpec));
             final Column column = myColumn.withHorizontalRange(Range.of(0, width)).withDelay();
             final Presentation presentation = ui.present(human, column, Observer.EMPTY);
             final float presentationHeight = presentation.getVerticalRange().toLength();
             presentation.cancel();
-            measuredUi = ui;
-            measuredUiHeight = (int) presentationHeight;
+            measuredHeights.put(width, (int) presentationHeight);
+            Log.d(TAG, "onMeasure height: " + (int) presentationHeight);
         }
+        measuredUiHeight = measuredHeights.get(width);
         setMeasuredDimension(width, measuredUiHeight);
-        Log.d(TAG, "onMeasure measured: " + getMeasuredHeight());
     }
 
     @Override
@@ -224,28 +232,15 @@ public class UiView extends FrameLayout {
 
         @NonNull
         @Override
-        public Patch addPatch(Frame frame, Shape shape, Coloret coloret) {
-            if (shape == Shape.RECTANGLE) {
-                final View view = new View(getContext());
-                view.setBackgroundColor(coloret.toArgb());
-                setElevation(view, frame);
-                addView(view, getLayoutParams(frame, 0));
-                return new ViewPatch(view);
+        public Patch addPatch(Frame frame, Shape shape) {
+            if (shape instanceof RectangleShape) {
+                return getRectanglePatch(frame, (RectangleShape) shape);
             } else if (shape instanceof TextShape) {
-                final TextShape textShape = (TextShape) shape;
-                final TextView textView = new TextView(getContext());
-                textView.setGravity(Gravity.TOP);
-                textView.setTextColor(coloret.toArgb());
-                textView.setTypeface(textShape.textStyle.typeface);
-                textView.setTextSize(textShape.textStyle.typeheight);
-                textView.setText(textShape.textString);
-                textView.setIncludeFontPadding(false);
-                final TextHeight textHeight = textShape.textSize.textHeight;
-                Frame newFrame = frame.withVerticalShift(-textHeight.topPadding)
-                                      .withVerticalLength(textHeight.topPadding + textHeight.height);
-                setElevation(textView, newFrame);
-                addView(textView, getLayoutParams(newFrame, textHeight.height / 2));
-                return new ViewPatch(textView);
+                return getTextPatch(frame, (TextShape) shape);
+            } else if (shape instanceof ViewShape) {
+                final ViewShape viewShape = (ViewShape) shape;
+                final View view = viewShape.createView(getContext());
+                return getViewPatch(view, frame, 0);
             } else {
                 return Patch.EMPTY;
             }
@@ -255,6 +250,35 @@ public class UiView extends FrameLayout {
         public TextSize measureText(String text, TextStyle textStyle) {
             Log.d(TAG, "meaureText: " + textStyle);
             return new TextSize(getTextWidth(text, textStyle), getTextHeight(textStyle.typeface, textStyle.typeheight));
+        }
+
+        @NonNull
+        private Patch getTextPatch(Frame frame, TextShape textShape) {
+            final TextView textView = new TextView(getContext());
+            textView.setGravity(Gravity.TOP);
+            textView.setTextColor(textShape.textStyle.coloret.toArgb());
+            textView.setTypeface(textShape.textStyle.typeface);
+            textView.setTextSize(textShape.textStyle.typeheight);
+            textView.setText(textShape.textString);
+            textView.setIncludeFontPadding(false);
+            final TextHeight textHeight = textShape.textSize.textHeight;
+            Frame newFrame = frame.withVerticalShift(-textHeight.topPadding)
+                                  .withVerticalLength(textHeight.topPadding + textHeight.height);
+            return getViewPatch(textView, newFrame, textHeight.height / 2);
+        }
+
+        @NonNull
+        private Patch getRectanglePatch(Frame frame, RectangleShape rectangleShape) {
+            final View view = new View(getContext());
+            view.setBackgroundColor(rectangleShape.coloret.toArgb());
+            return getViewPatch(view, frame, 0);
+        }
+
+        @NonNull
+        private Patch getViewPatch(View view, Frame frame, float additionalHeight) {
+            setElevation(view, frame);
+            addView(view, getLayoutParams(frame, additionalHeight));
+            return new ViewPatch(view);
         }
 
         @NonNull

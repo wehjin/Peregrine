@@ -19,8 +19,8 @@ public class ColumnWrapper extends Column {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-        return original.addPatch(frame, shape, color);
+    public Patch addPatch(Frame frame, Shape shape) {
+        return original.addPatch(frame, shape);
     }
 
     @Override

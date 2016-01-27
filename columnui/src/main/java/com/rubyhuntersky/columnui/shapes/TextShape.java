@@ -1,4 +1,8 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.shapes;
+
+import com.rubyhuntersky.columnui.Shape;
+import com.rubyhuntersky.columnui.TextSize;
+import com.rubyhuntersky.columnui.TextStyle;
 
 /**
  * @author wehjin

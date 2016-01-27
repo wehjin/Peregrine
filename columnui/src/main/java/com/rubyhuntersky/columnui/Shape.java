@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui;
 
+import com.rubyhuntersky.columnui.shapes.RectangleShape;
+
 /**
  * @author wehjin
  * @since 1/23/16.
@@ -7,5 +9,4 @@ package com.rubyhuntersky.columnui;
 
 abstract public class Shape {
 
-    static final public RectangleShape RECTANGLE = new RectangleShape();
 }

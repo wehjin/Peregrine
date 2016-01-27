@@ -7,6 +7,7 @@ import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.DelayColumn;
 import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.presentations.VerticalRangePresentation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,7 +136,7 @@ abstract public class Ui {
         });
     }
 
-    static Ui create(final OnPresent onPresent) {
+    public static Ui create(final OnPresent onPresent) {
         return new Ui() {
             @Override
             public Presentation present(final Human human, final Column column, final Observer observer) {
@@ -190,17 +191,20 @@ abstract public class Ui {
 
                     @Override
                     public void onReaction(Reaction reaction) {
+                        if (isCancelled) return;
                         observer.onReaction(reaction);
                     }
 
                     @Override
                     public void onEnd() {
+                        if (isCancelled) return;
                         cancel();
                         observer.onEnd();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
+                        if (isCancelled) return;
                         cancel();
                         observer.onError(throwable);
                     }

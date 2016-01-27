@@ -4,6 +4,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rubyhuntersky.columnui.conditions.Column;
+import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
+import com.rubyhuntersky.columnui.shapes.RectangleShape;
+import com.rubyhuntersky.columnui.shapes.TextShape;
 
 /**
  * @author wehjin
@@ -26,7 +29,7 @@ public class Creator {
                 final Range verticalRange = new Range(0, textSize.textHeight.height);
                 Log.d(TAG, "createLabel verticalRange:" + verticalRange);
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
-                final Patch patch = column.addPatch(frame, shape, textStyle.coloret);
+                final Patch patch = column.addPatch(frame, shape);
                 final BooleanPresentation presentation = new BooleanPresentation() {
                     @Override
                     public Range getVerticalRange() {
@@ -59,7 +62,8 @@ public class Creator {
                 final Range verticalRange = new Range(0,
                       heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength()));
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
-                final Patch patch = coloret == null ? null : column.addPatch(frame, Shape.RECTANGLE, coloret);
+                final RectangleShape rectangle = new RectangleShape(coloret);
+                final Patch patch = coloret == null ? null : column.addPatch(frame, rectangle);
                 final Presentation presentation = new BooleanPresentation() {
 
                     @Override

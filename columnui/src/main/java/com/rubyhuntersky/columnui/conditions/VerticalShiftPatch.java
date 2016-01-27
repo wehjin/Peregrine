@@ -2,7 +2,6 @@ package com.rubyhuntersky.columnui.conditions;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
@@ -15,15 +14,13 @@ public class VerticalShiftPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final Coloret color;
     private final Column column;
     private Patch patch;
 
-    public VerticalShiftPatch(Frame frame, Shape shape, Coloret color, @NonNull Column column) {
+    public VerticalShiftPatch(Frame frame, Shape shape, @NonNull Column column) {
 
         this.frame = frame;
         this.shape = shape;
-        this.color = color;
         this.column = column;
     }
 
@@ -32,7 +29,7 @@ public class VerticalShiftPatch implements Patch {
             throw new IllegalStateException("Already shifted");
         }
         Frame newFrame = this.frame.withVerticalShift(shift);
-        patch = column.addPatch(newFrame, shape, color);
+        patch = column.addPatch(newFrame, shape);
     }
 
     @Override

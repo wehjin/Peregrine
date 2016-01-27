@@ -32,7 +32,7 @@ abstract public class Column extends Condition {
     }
 
     @NonNull
-    abstract public Patch addPatch(Frame frame, Shape shape, Coloret color);
+    abstract public Patch addPatch(Frame frame, Shape shape);
 
     abstract public TextSize measureText(String text, TextStyle textStyle);
 

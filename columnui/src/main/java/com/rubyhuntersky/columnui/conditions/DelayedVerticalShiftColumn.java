@@ -2,7 +2,6 @@ package com.rubyhuntersky.columnui.conditions;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
@@ -31,8 +30,8 @@ public class DelayedVerticalShiftColumn extends Column {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape, Coloret color) {
-        final VerticalShiftPatch patch = new VerticalShiftPatch(frame, shape, color, original);
+    public Patch addPatch(Frame frame, Shape shape) {
+        final VerticalShiftPatch patch = new VerticalShiftPatch(frame, shape, original);
         if (didShift) {
             patch.setVerticalShift(shift);
         } else {

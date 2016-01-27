@@ -1,10 +1,13 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.presentations;
+
+import com.rubyhuntersky.columnui.Presentation;
+import com.rubyhuntersky.columnui.Range;
 
 /**
  * @author wehjin
  * @since 1/24/16.
  */
-class VerticalRangePresentation implements Presentation {
+public class VerticalRangePresentation implements Presentation {
 
     private final Range verticalRange;
     private final Presentation original;

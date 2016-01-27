@@ -13,9 +13,12 @@ import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.Sizelet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.UiView;
+import com.rubyhuntersky.columnui.material.Android;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
 import static com.rubyhuntersky.columnui.Creator.createPanel;
@@ -55,15 +58,25 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         final String buyString = "Buy $3,000.00";
         final String sharesString = "28 shares";
-        panel = createDarkImportant(buyString).padTop(Sizelet.HALF_FINGER)
-                                              .placeAbove(createPanel(Sizelet.THIRD_FINGER, null))
-                                              .placeAbove(createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE),
-                                                    Coloret.BLACK))
-                                              .placeAbove(createPanel(Sizelet.THIRD_FINGER, null))
-                                              .placeAbove(createDarkImportant(sharesString))
-                                              .padBottom(Sizelet.THIRD_FINGER)
-                                              .padHorizontal(Sizelet.THIRD_FINGER)
-                                              .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), Coloret.WHITE), 0);
+        final List<String> symbols = new ArrayList<>();
+        symbols.add("IBM $3.50");
+        symbols.add("MSFT $2.00");
+        String symbol = symbols.get(0);
+        final Ui spinner = Android.createSpinner(symbols, symbol);
+
+        final Ui spacing = createPanel(Sizelet.THIRD_FINGER, null);
+        final Ui divider = createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE), Coloret.BLACK);
+        this.panel = createDarkImportant(buyString).padTop(Sizelet.HALF_FINGER)
+                                                   .placeAbove(spacing)
+                                                   .placeAbove(spinner)
+                                                   .placeAbove(spacing)
+                                                   .placeAbove(divider)
+                                                   .placeAbove(spacing)
+                                                   .placeAbove(createDarkImportant(sharesString))
+                                                   .padBottom(Sizelet.THIRD_FINGER)
+                                                   .padHorizontal(Sizelet.THIRD_FINGER)
+                                                   .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), Coloret.WHITE),
+                                                         0);
     }
 
     @Nullable
