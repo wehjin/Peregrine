@@ -1,6 +1,7 @@
 package com.rubyhuntersky.columnui.material;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -8,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.Frame;
 import com.rubyhuntersky.columnui.OnPresent;
@@ -45,9 +45,7 @@ public class Android {
                         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, spinnerRes, options) {
                             @Override
                             public View getView(int position, View convertView, ViewGroup parent) {
-                                final TextView view = (TextView) super.getView(position, convertView, parent);
-                                view.setTextSize(height / 6);
-                                return view;
+                                return super.getView(position, convertView, parent);
                             }
                         };
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -69,7 +67,9 @@ public class Android {
                             }
                         });
                         final FrameLayout frameLayout = new FrameLayout(context);
-                        frameLayout.addView(spinner, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+                        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                              LayoutParams.WRAP_CONTENT, Gravity.START | Gravity.CENTER_VERTICAL);
+                        frameLayout.addView(spinner, params);
                         return frameLayout;
                     }
 
