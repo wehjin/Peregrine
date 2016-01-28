@@ -28,6 +28,10 @@ abstract public class Column extends Condition {
         this.elevation = elevation;
     }
 
+    public float getWidth() {
+        return horizontalRange.toLength();
+    }
+
     @NonNull
     abstract public Patch addPatch(Frame frame, Shape shape);
 

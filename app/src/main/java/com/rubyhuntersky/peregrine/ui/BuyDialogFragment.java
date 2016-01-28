@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.columnui.basics.Coloret;
-import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.UiView;
+import com.rubyhuntersky.columnui.basics.Coloret;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.material.Android;
 import com.rubyhuntersky.peregrine.R;
 
@@ -67,9 +67,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final ColumnUi spacing = createPanel(Sizelet.THIRD_FINGER, null);
         final ColumnUi divider = createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE), Coloret.BLACK);
         this.panel = createDarkImportant(buyString).padTop(Sizelet.HALF_FINGER)
-                                                   .placeAbove(spacing)
                                                    .placeAbove(spinner)
-                                                   .placeAbove(spacing)
                                                    .placeAbove(divider)
                                                    .placeAbove(spacing)
                                                    .placeAbove(createDarkImportant(sharesString))

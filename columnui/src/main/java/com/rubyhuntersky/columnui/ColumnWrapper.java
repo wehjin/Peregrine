@@ -20,6 +20,11 @@ public class ColumnWrapper extends Column {
         this.original = original;
     }
 
+    @Override
+    public float getWidth() {
+        return original.getWidth();
+    }
+
     @NonNull
     @Override
     public Patch addPatch(Frame frame, Shape shape) {

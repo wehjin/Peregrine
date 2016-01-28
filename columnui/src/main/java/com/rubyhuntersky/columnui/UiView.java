@@ -132,7 +132,7 @@ public class UiView extends FrameLayout {
                   .toString(heightMeasureSpec));
             final Column column = myColumn.withHorizontalRange(Range.of(0, width)).withDelay();
             final Presentation presentation = ui.present(human, column, Observer.EMPTY);
-            final float presentationHeight = presentation.getVerticalRange().toLength();
+            final float presentationHeight = presentation.getHeight();
             presentation.cancel();
             measuredHeights.put(width, (int) presentationHeight);
             Log.d(TAG, "onMeasure height: " + (int) presentationHeight);

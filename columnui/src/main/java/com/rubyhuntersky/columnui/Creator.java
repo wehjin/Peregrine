@@ -37,9 +37,15 @@ public class Creator {
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
                 final Patch patch = column.addPatch(frame, shape);
                 final BooleanPresentation presentation = new BooleanPresentation() {
+
                     @Override
-                    public Range getVerticalRange() {
-                        return verticalRange;
+                    public float getWidth() {
+                        return column.getWidth();
+                    }
+
+                    @Override
+                    public float getHeight() {
+                        return textSize.textHeight.height;
                     }
 
                     @Override
@@ -65,16 +71,21 @@ public class Creator {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
-                final Range verticalRange = new Range(0,
-                      heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength()));
+                final float height = heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength());
+                final Range verticalRange = new Range(0, height);
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
                 final RectangleShape rectangle = new RectangleShape(coloret);
                 final Patch patch = coloret == null ? null : column.addPatch(frame, rectangle);
                 final Presentation presentation = new BooleanPresentation() {
 
                     @Override
-                    public Range getVerticalRange() {
-                        return verticalRange;
+                    public float getWidth() {
+                        return column.getWidth();
+                    }
+
+                    @Override
+                    public float getHeight() {
+                        return height;
                     }
 
                     @Override

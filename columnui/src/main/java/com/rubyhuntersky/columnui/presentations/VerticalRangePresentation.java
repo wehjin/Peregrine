@@ -1,7 +1,6 @@
 package com.rubyhuntersky.columnui.presentations;
 
 import com.rubyhuntersky.columnui.Presentation;
-import com.rubyhuntersky.columnui.basics.Range;
 
 /**
  * @author wehjin
@@ -9,17 +8,24 @@ import com.rubyhuntersky.columnui.basics.Range;
  */
 public class VerticalRangePresentation implements Presentation {
 
-    private final Range verticalRange;
+    private final float width;
+    private final float height;
     private final Presentation original;
 
-    public VerticalRangePresentation(Range verticalRange, Presentation original) {
-        this.verticalRange = verticalRange;
+    public VerticalRangePresentation(float width, float height, Presentation original) {
+        this.width = width;
+        this.height = height;
         this.original = original;
     }
 
     @Override
-    public Range getVerticalRange() {
-        return verticalRange;
+    public float getWidth() {
+        return width;
+    }
+
+    @Override
+    public float getHeight() {
+        return height;
     }
 
     @Override

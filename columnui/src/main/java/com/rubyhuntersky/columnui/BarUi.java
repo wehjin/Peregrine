@@ -8,5 +8,5 @@ import com.rubyhuntersky.columnui.conditions.Human;
  */
 
 abstract public class BarUi {
-    abstract public Presentation present(Human human, Column column, Observer observer);
+    abstract public Presentation present(Human human, Bar bar, Observer observer);
 }

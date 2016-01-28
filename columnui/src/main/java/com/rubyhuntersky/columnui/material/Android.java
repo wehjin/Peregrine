@@ -10,14 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.Column;
+import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Presenter;
+import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.ColumnUi;
-import com.rubyhuntersky.columnui.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -78,14 +78,20 @@ public class Android {
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
                 final Patch patch = column.addPatch(frame, viewShape);
                 presenter.addPresentation(new BooleanPresentation() {
+
                     @Override
-                    protected void onCancel() {
-                        patch.remove();
+                    public float getWidth() {
+                        return column.getWidth();
                     }
 
                     @Override
-                    public Range getVerticalRange() {
-                        return verticalRange;
+                    public float getHeight() {
+                        return height;
+                    }
+
+                    @Override
+                    protected void onCancel() {
+                        patch.remove();
                     }
                 });
             }
