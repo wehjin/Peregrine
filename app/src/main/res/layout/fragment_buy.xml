@@ -4,7 +4,7 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <com.rubyhuntersky.columnui.UiView
+    <com.rubyhuntersky.columnui.ColumnUiView
         android:id="@+id/ui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -34,14 +34,14 @@ import java.util.Map;
  * @since 1/23/16.
  */
 
-public class UiView extends FrameLayout {
+public class BarUiView extends FrameLayout {
 
-    public static final String TAG = UiView.class.getSimpleName();
+    public static final String TAG = BarUiView.class.getSimpleName();
     private Human human;
     private Column column;
     private Presentation presentation;
     private ColumnUi ui;
-    private int levelPixels;
+    private int elevationPixels;
     private Paint textPaint;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
@@ -50,17 +50,17 @@ public class UiView extends FrameLayout {
     private int measuredUiHeight;
     private Map<Integer, Integer> measuredHeights = new HashMap<>();
 
-    public UiView(Context context) {
+    public BarUiView(Context context) {
         super(context);
         init();
     }
 
-    public UiView(Context context, AttributeSet attrs) {
+    public BarUiView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public UiView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BarUiView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -69,7 +69,7 @@ public class UiView extends FrameLayout {
         human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
               getResources().getDimensionPixelSize(R.dimen.readingText));
         Log.d(TAG, "Human: " + human);
-        levelPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
+        elevationPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         myColumn = new MyColumn(300);
     }
@@ -231,7 +231,7 @@ public class UiView extends FrameLayout {
         }
 
         private void setElevation(View view, Frame frame) {
-            ViewCompat.setElevation(view, levelPixels * frame.elevation);
+            ViewCompat.setElevation(view, elevationPixels * frame.elevation);
         }
 
         @NonNull

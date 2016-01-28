@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rubyhuntersky.columnui.ColumnUi;
-import com.rubyhuntersky.columnui.UiView;
+import com.rubyhuntersky.columnui.ColumnUiView;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.material.Android;
@@ -32,7 +32,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     public static final String AMOUNT_KEY = "amountKey";
     private BigDecimal buyAmount = BigDecimal.ZERO;
-    private UiView uiView;
+    private ColumnUiView columnUiView;
     private ColumnUi panel;
 
     public static BuyDialogFragment create(BigDecimal amount) {
@@ -82,19 +82,19 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
           @Nullable Bundle savedInstanceState) {
         final View inflate = inflater.inflate(R.layout.fragment_buy, container, false);
-        uiView = (UiView) inflate.findViewById(R.id.ui);
+        columnUiView = (ColumnUiView) inflate.findViewById(R.id.ui);
         return inflate;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        uiView.setUi(panel);
+        columnUiView.setUi(panel);
     }
 
     @Override
     public void onPause() {
-        uiView.clearUi();
+        columnUiView.clearUi();
         super.onPause();
     }
 
