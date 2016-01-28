@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.basics;
 
 import android.graphics.Color;
 

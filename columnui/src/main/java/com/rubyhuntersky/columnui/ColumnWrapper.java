@@ -2,6 +2,10 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.Range;
+import com.rubyhuntersky.columnui.basics.TextSize;
+import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Column;
 
 /**

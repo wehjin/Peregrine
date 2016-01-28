@@ -2,15 +2,14 @@ package com.rubyhuntersky.columnui.conditions;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Coloret;
 import com.rubyhuntersky.columnui.ColumnWrapper;
 import com.rubyhuntersky.columnui.Condition;
-import com.rubyhuntersky.columnui.Frame;
+import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.Patch;
-import com.rubyhuntersky.columnui.Range;
+import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.Shape;
-import com.rubyhuntersky.columnui.TextSize;
-import com.rubyhuntersky.columnui.TextStyle;
+import com.rubyhuntersky.columnui.basics.TextSize;
+import com.rubyhuntersky.columnui.basics.TextStyle;
 
 /**
  * @author wehjin

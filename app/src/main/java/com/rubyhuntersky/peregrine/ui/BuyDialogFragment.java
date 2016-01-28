@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.columnui.Coloret;
-import com.rubyhuntersky.columnui.Sizelet;
+import com.rubyhuntersky.columnui.basics.Coloret;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.UiView;
 import com.rubyhuntersky.columnui.material.Android;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
 import static com.rubyhuntersky.columnui.Creator.createPanel;
-import static com.rubyhuntersky.columnui.Sizelet.Ruler.CONTEXT;
+import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.CONTEXT;
 
 /**
  * @author wehjin

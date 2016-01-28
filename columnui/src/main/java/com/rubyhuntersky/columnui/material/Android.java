@@ -10,12 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.Frame;
+import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Presenter;
-import com.rubyhuntersky.columnui.Range;
-import com.rubyhuntersky.columnui.Sizelet;
+import com.rubyhuntersky.columnui.basics.Range;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.Ui;
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;

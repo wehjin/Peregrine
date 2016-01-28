@@ -3,6 +3,8 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.rubyhuntersky.columnui.basics.Range;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.DelayColumn;
 import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;

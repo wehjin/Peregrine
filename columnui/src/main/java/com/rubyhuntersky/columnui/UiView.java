@@ -16,6 +16,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.Range;
+import com.rubyhuntersky.columnui.basics.TextHeight;
+import com.rubyhuntersky.columnui.basics.TextSize;
+import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;

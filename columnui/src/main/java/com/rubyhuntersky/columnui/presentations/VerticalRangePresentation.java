@@ -1,7 +1,7 @@
 package com.rubyhuntersky.columnui.presentations;
 
 import com.rubyhuntersky.columnui.Presentation;
-import com.rubyhuntersky.columnui.Range;
+import com.rubyhuntersky.columnui.basics.Range;
 
 /**
  * @author wehjin

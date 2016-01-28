@@ -1,6 +1,6 @@
 package com.rubyhuntersky.columnui.shapes;
 
-import com.rubyhuntersky.columnui.Coloret;
+import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.Shape;
 
 /**

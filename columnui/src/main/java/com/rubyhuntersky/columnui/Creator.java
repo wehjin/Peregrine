@@ -3,6 +3,13 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.rubyhuntersky.columnui.basics.Coloret;
+import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.Range;
+import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.basics.TextSize;
+import com.rubyhuntersky.columnui.basics.TextStyle;
+import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
