@@ -1,7 +1,9 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.bars;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.Patch;
+import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
@@ -11,11 +13,16 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
  * @since 1/24/16.
  */
 
-public class BarWrapper extends Bar {
-    private final Bar original;
+public class WrapperBar extends Bar {
+    protected final Bar original;
 
-    public BarWrapper(float height, float relatedWidth, int elevation, @NonNull Bar original) {
-        super(height, relatedWidth, elevation);
+    public WrapperBar(float fixedHeight, float relatedWidth, int elevation, @NonNull Bar original) {
+        super(fixedHeight, relatedWidth, elevation);
+        this.original = original;
+    }
+
+    protected WrapperBar(@NonNull Bar original) {
+        super(original.fixedHeight, original.relatedWidth, original.elevation);
         this.original = original;
     }
 
@@ -25,6 +32,7 @@ public class BarWrapper extends Bar {
         return original.addPatch(frame, shape);
     }
 
+    @NonNull
     @Override
     public TextSize measureText(String text, TextStyle textStyle) {
         return original.measureText(text, textStyle);

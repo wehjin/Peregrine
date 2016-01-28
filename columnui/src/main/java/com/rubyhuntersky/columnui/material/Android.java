@@ -10,14 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.Column;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Presenter;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -37,7 +36,7 @@ public class Android {
             @Override
             public void onPresent(final Presenter<Column> presenter) {
                 final Column column = presenter.getDisplay();
-                final float height = Sizelet.FINGER.toFloat(presenter.getHuman(), column.verticalRange.toLength());
+                final float height = Sizelet.FINGER.toFloat(presenter.getHuman(), column.relatedHeight);
                 final ViewShape viewShape = new ViewShape() {
                     @Override
                     public View createView(Context context) {
@@ -74,14 +73,13 @@ public class Android {
                     }
 
                 };
-                final Range verticalRange = Range.of(0, height);
-                final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
+                final Frame frame = new Frame(column.fixedWidth, height, column.elevation);
                 final Patch patch = column.addPatch(frame, viewShape);
                 presenter.addPresentation(new BooleanPresentation() {
 
                     @Override
                     public float getWidth() {
-                        return column.getWidth();
+                        return column.fixedWidth;
                     }
 
                     @Override

@@ -1,9 +1,10 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.columns;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.Patch;
+import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 
@@ -12,17 +13,17 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
  * @since 1/24/16.
  */
 
-public class ColumnWrapper extends Column {
-    private final Column original;
+public class WrapperColumn extends Column {
+    protected final Column original;
 
-    public ColumnWrapper(Range horizontalRange, Range verticalRange, int elevation, @NonNull Column original) {
-        super(horizontalRange, verticalRange, elevation);
+    public WrapperColumn(float fixedWidth, float relatedHeight, int elevation, @NonNull Column original) {
+        super(fixedWidth, relatedHeight, elevation);
         this.original = original;
     }
 
-    @Override
-    public float getWidth() {
-        return original.getWidth();
+    protected WrapperColumn(@NonNull Column original) {
+        super(original.fixedWidth, original.relatedHeight, original.elevation);
+        this.original = original;
     }
 
     @NonNull
@@ -31,6 +32,7 @@ public class ColumnWrapper extends Column {
         return original.addPatch(frame, shape);
     }
 
+    @NonNull
     @Override
     public TextSize measureText(String text, TextStyle textStyle) {
         return original.measureText(text, textStyle);

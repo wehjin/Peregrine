@@ -33,6 +33,11 @@ abstract class BasePresenter<T> implements Presenter<T> {
         return display;
     }
 
+    @Override
+    public List<Presentation> getPresentations() {
+        return presentations;
+    }
+
     public void addPresentation(Presentation presentation) {
         if (isCancelled) {
             presentation.cancel();

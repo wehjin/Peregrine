@@ -2,6 +2,7 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
@@ -32,6 +33,7 @@ public class BarUiUnitTest {
                 return Patch.EMPTY;
             }
 
+            @NonNull
             @Override
             public TextSize measureText(String text, TextStyle textStyle) {
                 return TextSize.ZERO;

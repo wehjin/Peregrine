@@ -2,10 +2,10 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.conditions.DelayColumn;
-import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
+import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.DelayColumn;
+import com.rubyhuntersky.columnui.columns.FrameShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.VerticalRangePresentation;
 
@@ -14,7 +14,7 @@ import com.rubyhuntersky.columnui.presentations.VerticalRangePresentation;
  * @since 1/23/16.
  */
 
-abstract public class ColumnUi {
+abstract public class ColumnUi extends BaseUi<Column> {
 
     abstract public Presentation present(Human human, Column column, Observer observer);
 
@@ -24,9 +24,8 @@ abstract public class ColumnUi {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 final Column column = presenter.getDisplay();
-                final float padding = padlet.toFloat(presenter.getHuman(), column.getWidth());
-                Range newRange = column.horizontalRange.inset(padding);
-                Column newColumn = column.withHorizontalRange(newRange);
+                final float padding = padlet.toFloat(presenter.getHuman(), column.fixedWidth);
+                Column newColumn = column.withFixedWidth(column.fixedWidth - 2 * padding).withFrameShift(padding, 0);
                 presenter.addPresentation(ui.present(presenter.getHuman(), newColumn, presenter));
             }
         });
@@ -39,13 +38,13 @@ abstract public class ColumnUi {
             public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getDisplay();
-                final DelayedVerticalShiftColumn newColumn = column.withDelayedVerticalShift();
+                final FrameShiftColumn newColumn = column.withFrameShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
-                newColumn.setVerticalShift(padding);
+                newColumn.setShift(0, padding);
                 final float newHeight = height + padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.getWidth(), newHeight, presentation));
+                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }
@@ -61,7 +60,7 @@ abstract public class ColumnUi {
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
                 final float newHeight = height + padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.getWidth(), newHeight, presentation));
+                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }
@@ -73,13 +72,13 @@ abstract public class ColumnUi {
             public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getDisplay();
-                final DelayedVerticalShiftColumn newColumn = column.withDelayedVerticalShift();
+                final FrameShiftColumn newColumn = column.withFrameShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
-                newColumn.setVerticalShift(padding);
+                newColumn.setShift(0, padding);
                 final float newHeight = height + 2 * padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.getWidth(), newHeight, presentation));
+                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }
@@ -93,7 +92,7 @@ abstract public class ColumnUi {
                 final Column column = presenter.getDisplay();
                 final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
                 final Presentation frontPresentation = ui.present(human, delayColumn, presenter);
-                final Column backgroundColumn = column.withVerticalRange(Range.of(0, frontPresentation.getHeight()));
+                final Column backgroundColumn = column.withRelatedHeight(frontPresentation.getHeight());
                 final Presentation backgroundPresentation = background.present(human, backgroundColumn, presenter);
                 delayColumn.endDelay();
                 presenter.addPresentation(frontPresentation);
@@ -112,7 +111,7 @@ abstract public class ColumnUi {
                 final DelayColumn delayColumn = column.withDelay();
                 final Presentation topPresentation = ui.present(human, delayColumn, presenter);
                 final float topHeight = topPresentation.getHeight();
-                final Column bottomColumn = column.withVerticalRange(Range.of(0, topHeight));
+                final Column bottomColumn = column.withRelatedHeight(topHeight);
                 presenter.addPresentation(bottomUi.padTop(new Sizelet(0, topHeight, Sizelet.Ruler.PIXEL))
                                                   .present(human, bottomColumn, presenter));
                 presenter.addPresentation(topPresentation);
@@ -124,18 +123,18 @@ abstract public class ColumnUi {
     public static ColumnUi create(final OnPresent<Column> onPresent) {
         return new ColumnUi() {
             @Override
-            public Presentation present(final Human human, final Column column, final Observer observer) {
-                final Presenter<Column> presenter = new BasePresenter<Column>(human, column, observer) {
+            public Presentation present(Human human, final Column column, Observer observer) {
+                final BasePresenter<Column> presenter = new BasePresenter<Column>(human, column, observer) {
                     @Override
                     public float getWidth() {
-                        return display.getWidth();
+                        return display.fixedWidth;
                     }
 
                     @Override
                     public float getHeight() {
                         float union = 0;
                         for (Presentation presentation : presentations) {
-                            union = Math.max(union, presentation.getHeight());
+                            union = Math.max(union, presentation.getWidth());
                         }
                         return union;
                     }
@@ -145,5 +144,4 @@ abstract public class ColumnUi {
             }
         };
     }
-
 }

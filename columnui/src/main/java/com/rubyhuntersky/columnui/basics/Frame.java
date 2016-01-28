@@ -10,6 +10,12 @@ public class Frame {
     public final Range vertical;
     public final int elevation;
 
+    public Frame(float width, float height, int elevation) {
+        this.horizontal = Range.of(0, width);
+        this.vertical = Range.of(0, height);
+        this.elevation = elevation;
+    }
+
     public Frame(Range horizontal, Range vertical, int elevation) {
         this.horizontal = horizontal;
         this.vertical = vertical;
@@ -22,6 +28,15 @@ public class Frame {
             return this;
         }
         return new Frame(horizontal, newVertical, elevation);
+    }
+
+    public Frame withShift(float horizontalShift, float verticalShift) {
+        Range newVertical = vertical.shift(verticalShift);
+        Range newHorizontal = horizontal.shift(horizontalShift);
+        if (newVertical == vertical && newHorizontal == horizontal) {
+            return this;
+        }
+        return new Frame(newHorizontal, newVertical, elevation);
     }
 
     public Frame withVertical(Range range) {
