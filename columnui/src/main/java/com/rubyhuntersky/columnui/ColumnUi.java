@@ -9,10 +9,6 @@ import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.VerticalRangePresentation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author wehjin
  * @since 1/23/16.
@@ -129,78 +125,19 @@ abstract public class ColumnUi {
         return new ColumnUi() {
             @Override
             public Presentation present(final Human human, final Column column, final Observer observer) {
-                final Presenter<Column> presenter = new Presenter<Column>() {
-
-                    boolean isCancelled;
-
-                    final List<Presentation> presentations = new ArrayList<>();
-
-                    public Human getHuman() {
-                        return human;
-                    }
-
-                    public Column getDisplay() {
-                        // TODO override column and remove patches when cancelled.
-                        return column;
-                    }
-
-                    public void addPresentation(Presentation presentation) {
-                        if (isCancelled) {
-                            presentation.cancel();
-                        } else {
-                            presentations.add(presentation);
-                        }
-                    }
-
+                final Presenter<Column> presenter = new BasePresenter<Column>(human, column, observer) {
                     @Override
                     public float getWidth() {
-                        return column.getWidth();
+                        return display.getWidth();
                     }
 
                     @Override
                     public float getHeight() {
-                        float height = 0;
+                        float union = 0;
                         for (Presentation presentation : presentations) {
-                            height = Math.max(height, presentation.getHeight());
+                            union = Math.max(union, presentation.getHeight());
                         }
-                        return height;
-                    }
-
-                    @Override
-                    public boolean isCancelled() {
-                        return isCancelled;
-                    }
-
-                    @Override
-                    public void cancel() {
-                        if (isCancelled) return;
-                        isCancelled = true;
-                        final List<Presentation> toCancel = new ArrayList<>(presentations);
-                        presentations.clear();
-                        Collections.reverse(toCancel);
-                        for (Presentation presentation : toCancel) {
-                            presentation.cancel();
-                        }
-                    }
-
-                    @Override
-                    public void onReaction(Reaction reaction) {
-                        if (isCancelled) return;
-                        observer.onReaction(reaction);
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        if (isCancelled) return;
-                        cancel();
-                        observer.onEnd();
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        if (isCancelled) return;
-                        cancel();
-                        observer.onError(throwable);
+                        return union;
                     }
                 };
                 onPresent.onPresent(presenter);
