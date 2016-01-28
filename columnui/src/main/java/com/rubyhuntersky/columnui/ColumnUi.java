@@ -24,10 +24,10 @@ abstract public class ColumnUi {
 
     public ColumnUi padHorizontal(final Sizelet padlet) {
         final ColumnUi ui = this;
-        return create(new OnPresent() {
+        return create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
-                final Column column = presenter.getColumn();
+            public void onPresent(Presenter<Column> presenter) {
+                final Column column = presenter.getDisplay();
                 final float padding = padlet.toFloat(presenter.getHuman(), column.getWidth());
                 Range newRange = column.horizontalRange.inset(padding);
                 Column newColumn = column.withHorizontalRange(newRange);
@@ -38,11 +38,11 @@ abstract public class ColumnUi {
 
     public ColumnUi padTop(final Sizelet padlet) {
         final ColumnUi ui = this;
-        return create(new OnPresent() {
+        return create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
+            public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
+                final Column column = presenter.getDisplay();
                 final DelayedVerticalShiftColumn newColumn = column.withDelayedVerticalShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
@@ -56,11 +56,11 @@ abstract public class ColumnUi {
 
     public ColumnUi padBottom(final Sizelet padlet) {
         final ColumnUi ui = this;
-        return create(new OnPresent() {
+        return create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
+            public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
+                final Column column = presenter.getDisplay();
                 final Presentation presentation = ui.present(human, column, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
@@ -72,11 +72,11 @@ abstract public class ColumnUi {
 
     public ColumnUi padVertical(final Sizelet padlet) {
         final ColumnUi ui = this;
-        return create(new OnPresent() {
+        return create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
+            public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
+                final Column column = presenter.getDisplay();
                 final DelayedVerticalShiftColumn newColumn = column.withDelayedVerticalShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
@@ -90,11 +90,11 @@ abstract public class ColumnUi {
 
     public ColumnUi placeBefore(@NonNull final ColumnUi background, final int gap) {
         final ColumnUi ui = this;
-        return create(new OnPresent() {
+        return create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
+            public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
+                final Column column = presenter.getDisplay();
                 final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
                 final Presentation frontPresentation = ui.present(human, delayColumn, presenter);
                 final Column backgroundColumn = column.withVerticalRange(Range.of(0, frontPresentation.getHeight()));
@@ -108,11 +108,11 @@ abstract public class ColumnUi {
 
     public ColumnUi placeAbove(@NonNull final ColumnUi bottomUi) {
         final ColumnUi ui = this;
-        return ColumnUi.create(new OnPresent() {
+        return ColumnUi.create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
+            public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
-                final Column column = presenter.getColumn();
+                final Column column = presenter.getDisplay();
                 final DelayColumn delayColumn = column.withDelay();
                 final Presentation topPresentation = ui.present(human, delayColumn, presenter);
                 final float topHeight = topPresentation.getHeight();
@@ -125,11 +125,11 @@ abstract public class ColumnUi {
         });
     }
 
-    public static ColumnUi create(final OnPresent onPresent) {
+    public static ColumnUi create(final OnPresent<Column> onPresent) {
         return new ColumnUi() {
             @Override
             public Presentation present(final Human human, final Column column, final Observer observer) {
-                final Presenter presenter = new Presenter() {
+                final Presenter<Column> presenter = new Presenter<Column>() {
 
                     boolean isCancelled;
 
@@ -139,7 +139,7 @@ abstract public class ColumnUi {
                         return human;
                     }
 
-                    public Column getColumn() {
+                    public Column getDisplay() {
                         // TODO override column and remove patches when cancelled.
                         return column;
                     }

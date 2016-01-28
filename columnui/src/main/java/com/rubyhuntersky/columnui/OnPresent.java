@@ -5,6 +5,6 @@ package com.rubyhuntersky.columnui;
  * @since 1/23/16.
  */
 
-public interface OnPresent {
-    void onPresent(Presenter presenter);
+public interface OnPresent<T> {
+    void onPresent(Presenter<T> presenter);
 }

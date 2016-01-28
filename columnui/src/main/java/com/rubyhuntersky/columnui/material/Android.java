@@ -32,11 +32,11 @@ import java.util.List;
 public class Android {
 
     public static ColumnUi createSpinner(final List<String> options, final String selectedOption) {
-        return ColumnUi.create(new OnPresent() {
+        return ColumnUi.create(new OnPresent<Column>() {
 
             @Override
-            public void onPresent(final Presenter presenter) {
-                final Column column = presenter.getColumn();
+            public void onPresent(final Presenter<Column> presenter) {
+                final Column column = presenter.getDisplay();
                 final float height = Sizelet.FINGER.toFloat(presenter.getHuman(), column.verticalRange.toLength());
                 final ViewShape viewShape = new ViewShape() {
                     @Override

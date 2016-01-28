@@ -7,9 +7,9 @@ import com.rubyhuntersky.columnui.conditions.Human;
  * @since 1/23/16.
  */
 
-public interface Presenter extends Observer, Presentation {
+public interface Presenter<T> extends Observer, Presentation {
 
     Human getHuman();
-    Column getColumn();
+    T getDisplay();
     void addPresentation(Presentation presentation);
 }

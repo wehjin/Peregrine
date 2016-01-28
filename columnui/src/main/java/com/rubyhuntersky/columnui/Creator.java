@@ -25,10 +25,10 @@ public class Creator {
     public static final String TAG = Creator.class.getSimpleName();
 
     static public ColumnUi createLabel(final String textString, final TextStylet textStylet) {
-        return ColumnUi.create(new OnPresent() {
+        return ColumnUi.create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
-                final Column column = presenter.getColumn();
+            public void onPresent(Presenter<Column> presenter) {
+                final Column column = presenter.getDisplay();
                 final TextStyle textStyle = textStylet.toStyle(presenter.getHuman(), column.verticalRange.toLength());
                 final TextSize textSize = column.measureText(textString, textStyle);
                 final Shape shape = new TextShape(textString, textStyle, textSize);
@@ -67,10 +67,10 @@ public class Creator {
     }
 
     static public ColumnUi createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
-        return ColumnUi.create(new OnPresent() {
+        return ColumnUi.create(new OnPresent<Column>() {
             @Override
-            public void onPresent(Presenter presenter) {
-                final Column column = presenter.getColumn();
+            public void onPresent(Presenter<Column> presenter) {
+                final Column column = presenter.getDisplay();
                 final float height = heightlet.toFloat(presenter.getHuman(), column.verticalRange.toLength());
                 final Range verticalRange = new Range(0, height);
                 final Frame frame = new Frame(column.horizontalRange, verticalRange, column.elevation);
