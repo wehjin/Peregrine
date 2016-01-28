@@ -6,6 +6,7 @@ package com.rubyhuntersky.columnui.basics;
  */
 
 public class TextSize {
+    public static final TextSize ZERO = new TextSize(0, TextHeight.ZERO);
     public final float width;
     public final TextHeight textHeight;
 

@@ -2,6 +2,7 @@ package com.rubyhuntersky.columnui.conditions;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.Column;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;

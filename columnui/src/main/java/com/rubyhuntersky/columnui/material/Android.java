@@ -16,8 +16,8 @@ import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Presenter;
 import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.Ui;
-import com.rubyhuntersky.columnui.conditions.Column;
+import com.rubyhuntersky.columnui.ColumnUi;
+import com.rubyhuntersky.columnui.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -31,8 +31,8 @@ import java.util.List;
 
 public class Android {
 
-    public static Ui createSpinner(final List<String> options, final String selectedOption) {
-        return Ui.create(new OnPresent() {
+    public static ColumnUi createSpinner(final List<String> options, final String selectedOption) {
+        return ColumnUi.create(new OnPresent() {
 
             @Override
             public void onPresent(final Presenter presenter) {

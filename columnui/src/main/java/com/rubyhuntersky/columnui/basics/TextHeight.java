@@ -7,6 +7,7 @@ package com.rubyhuntersky.columnui.basics;
 
 public class TextHeight {
 
+    public static final TextHeight ZERO = new TextHeight(0, 0);
     public final float height;
     public final float topPadding;
 

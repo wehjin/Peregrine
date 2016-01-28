@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.DelayColumn;
 import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
@@ -20,25 +19,25 @@ import java.util.List;
  * @since 1/23/16.
  */
 
-abstract public class Ui {
+abstract public class ColumnUi {
 
     abstract public Presentation present(Human human, Column column, Observer observer);
 
-    public Ui logAfterPresent() {
-        final Ui ui = this;
+    public ColumnUi logAfterPresent() {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Presentation presentation = ui.present(presenter.getHuman(), presenter.getColumn(), presenter);
                 final Range verticalRange = presentation.getVerticalRange();
-                Log.d(Ui.class.getSimpleName(), "logOnPresent verticalRange: " + verticalRange);
+                Log.d(ColumnUi.class.getSimpleName(), "logOnPresent verticalRange: " + verticalRange);
                 presenter.addPresentation(presentation);
             }
         });
     }
 
-    public Ui padHorizontal(final Sizelet padlet) {
-        final Ui ui = this;
+    public ColumnUi padHorizontal(final Sizelet padlet) {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -51,8 +50,8 @@ abstract public class Ui {
         });
     }
 
-    public Ui padTop(final Sizelet padlet) {
-        final Ui ui = this;
+    public ColumnUi padTop(final Sizelet padlet) {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -68,8 +67,8 @@ abstract public class Ui {
         });
     }
 
-    public Ui padBottom(final Sizelet padlet) {
-        final Ui ui = this;
+    public ColumnUi padBottom(final Sizelet padlet) {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -83,8 +82,8 @@ abstract public class Ui {
         });
     }
 
-    public Ui padVertical(final Sizelet padlet) {
-        final Ui ui = this;
+    public ColumnUi padVertical(final Sizelet padlet) {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -100,8 +99,8 @@ abstract public class Ui {
         });
     }
 
-    public Ui placeBefore(@NonNull final Ui background, final int gap) {
-        final Ui ui = this;
+    public ColumnUi placeBefore(@NonNull final ColumnUi background, final int gap) {
+        final ColumnUi ui = this;
         return create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
@@ -118,9 +117,9 @@ abstract public class Ui {
         });
     }
 
-    public Ui placeAbove(@NonNull final Ui bottomUi) {
-        final Ui ui = this;
-        return Ui.create(new OnPresent() {
+    public ColumnUi placeAbove(@NonNull final ColumnUi bottomUi) {
+        final ColumnUi ui = this;
+        return ColumnUi.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Human human = presenter.getHuman();
@@ -138,8 +137,8 @@ abstract public class Ui {
         });
     }
 
-    public static Ui create(final OnPresent onPresent) {
-        return new Ui() {
+    public static ColumnUi create(final OnPresent onPresent) {
+        return new ColumnUi() {
             @Override
             public Presentation present(final Human human, final Column column, final Observer observer) {
                 final Presenter presenter = new Presenter() {

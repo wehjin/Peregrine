@@ -1,15 +1,13 @@
-package com.rubyhuntersky.columnui.conditions;
+package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.ColumnWrapper;
-import com.rubyhuntersky.columnui.Condition;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.basics.Range;
-import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
+import com.rubyhuntersky.columnui.conditions.DelayColumn;
+import com.rubyhuntersky.columnui.conditions.DelayedVerticalShiftColumn;
 
 /**
  * @author wehjin
@@ -24,9 +22,9 @@ abstract public class Column extends Condition {
     final public Range verticalRange;
     final public int elevation;
 
-    public Column(@NonNull Range horizontalRange, @NonNull Range verticalRange, int elevation) {
+    public Column(@NonNull Range horizontalRange, @NonNull Range verticalContext, int elevation) {
         this.horizontalRange = horizontalRange;
-        this.verticalRange = verticalRange;
+        this.verticalRange = verticalContext;
         this.elevation = elevation;
     }
 

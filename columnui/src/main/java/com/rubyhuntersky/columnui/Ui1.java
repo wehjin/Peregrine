@@ -6,12 +6,12 @@ package com.rubyhuntersky.columnui;
  */
 
 abstract public class Ui1<T> {
-    abstract public Ui bind(final T condition);
+    abstract public ColumnUi bind(final T condition);
 
-    static <T> Ui1<T> create(final OnBind<T, Ui> onBind) {
+    static <T> Ui1<T> create(final OnBind<T, ColumnUi> onBind) {
         return new Ui1<T>() {
             @Override
-            public Ui bind(final T condition) {
+            public ColumnUi bind(final T condition) {
                 return onBind.onBind(condition);
             }
         };

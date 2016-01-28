@@ -10,7 +10,6 @@ import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
-import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
@@ -25,8 +24,8 @@ public class Creator {
 
     public static final String TAG = Creator.class.getSimpleName();
 
-    static public Ui createLabel(final String textString, final TextStylet textStylet) {
-        return Ui.create(new OnPresent() {
+    static public ColumnUi createLabel(final String textString, final TextStylet textStylet) {
+        return ColumnUi.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();
@@ -53,16 +52,16 @@ public class Creator {
         });
     }
 
-    static public Ui createDarkTitle(final String textString) {
+    static public ColumnUi createDarkTitle(final String textString) {
         return createLabel(textString, TextStylet.DARK_TITLE);
     }
 
-    static public Ui createDarkImportant(final String textString) {
+    static public ColumnUi createDarkImportant(final String textString) {
         return createLabel(textString, TextStylet.DARK_IMPORTANT);
     }
 
-    static public Ui createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
-        return Ui.create(new OnPresent() {
+    static public ColumnUi createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
+        return ColumnUi.create(new OnPresent() {
             @Override
             public void onPresent(Presenter presenter) {
                 final Column column = presenter.getColumn();

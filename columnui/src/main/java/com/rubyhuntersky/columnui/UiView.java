@@ -21,7 +21,6 @@ import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.TextHeight;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
-import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
@@ -41,13 +40,13 @@ public class UiView extends FrameLayout {
     private Human human;
     private Column column;
     private Presentation presentation;
-    private Ui ui;
+    private ColumnUi ui;
     private int levelPixels;
     private Paint textPaint;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
     private MyColumn myColumn;
-    private Ui measuredUi;
+    private ColumnUi measuredUi;
     private int measuredUiHeight;
     private Map<Integer, Integer> measuredHeights = new HashMap<>();
 
@@ -75,7 +74,7 @@ public class UiView extends FrameLayout {
         myColumn = new MyColumn(300);
     }
 
-    public void setUi(Ui ui) {
+    public void setUi(ColumnUi ui) {
         clearUi();
         this.ui = ui;
         if (ui != null) {

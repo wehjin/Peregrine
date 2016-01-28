@@ -3,7 +3,6 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.Range;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 
@@ -12,11 +11,11 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
  * @since 1/24/16.
  */
 
-public class ColumnWrapper extends Column {
-    private final Column original;
+public class BarWrapper extends Bar {
+    private final Bar original;
 
-    public ColumnWrapper(Range horizontalRange, Range verticalRange, int elevation, @NonNull Column original) {
-        super(horizontalRange, verticalRange, elevation);
+    public BarWrapper(float height, float relatedWidth, int elevation, @NonNull Bar original) {
+        super(height, relatedWidth, elevation);
         this.original = original;
     }
 

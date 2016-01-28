@@ -1,6 +1,5 @@
 package com.rubyhuntersky.columnui;
 
-import com.rubyhuntersky.columnui.conditions.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
 
 /**
