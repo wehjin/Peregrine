@@ -134,7 +134,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
                     public float getHeight() {
                         float union = 0;
                         for (Presentation presentation : presentations) {
-                            union = Math.max(union, presentation.getWidth());
+                            union = Math.max(union, presentation.getHeight());
                         }
                         return union;
                     }
