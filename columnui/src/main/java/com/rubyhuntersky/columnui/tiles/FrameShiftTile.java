@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui.bars;
+package com.rubyhuntersky.columnui.tiles;
 
 import android.support.annotation.NonNull;
 
@@ -15,28 +15,28 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftBar extends WrapperBar implements FrameShiftDisplay<Bar> {
+public class FrameShiftTile extends WrapperTile implements FrameShiftDisplay<Tile> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
     private float horizontalShift;
 
-    public FrameShiftBar(@NonNull Bar original) {
+    public FrameShiftTile(@NonNull Tile original) {
         super(original);
     }
 
     @NonNull
     @Override
-    public FrameShiftBar setShift(float horizontalShift, float verticalShift) {
+    public FrameShiftTile setShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
-            this.horizontalShift = horizontalShift;
-            this.verticalShift = verticalShift;
+            this.horizontalShift = horizontal;
+            this.verticalShift = vertical;
             final List<FrameShiftPatch> toShift = new ArrayList<>(pending);
             pending.clear();
             for (FrameShiftPatch patch : toShift) {
-                patch.setShift(horizontalShift, verticalShift);
+                patch.setShift(horizontal, vertical);
             }
         }
         return this;
@@ -45,7 +45,7 @@ public class FrameShiftBar extends WrapperBar implements FrameShiftDisplay<Bar> 
     @NonNull
     @Override
     public Patch addPatch(Frame frame, Shape shape) {
-        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, original);
+        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, coreDisplay);
         if (didShift) {
             patch.setShift(horizontalShift, verticalShift);
         } else {

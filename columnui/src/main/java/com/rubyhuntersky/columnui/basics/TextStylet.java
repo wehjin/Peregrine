@@ -4,15 +4,20 @@ import android.graphics.Typeface;
 
 import com.rubyhuntersky.columnui.conditions.Human;
 
+import static com.rubyhuntersky.columnui.basics.Coloret.DARK_TEXT;
+import static com.rubyhuntersky.columnui.basics.Sizelet.IMPORTANT;
+import static com.rubyhuntersky.columnui.basics.Sizelet.READABLE;
+import static com.rubyhuntersky.columnui.basics.Sizelet.TITLE;
+
 /**
  * @author wehjin
  * @since 1/23/16.
  */
 
 public class TextStylet {
-    public static final TextStylet DARK_TITLE = new TextStylet(Sizelet.TITLE, Typeface.DEFAULT, Coloret.DARK_TEXT);
-    public static final TextStylet DARK_IMPORTANT = new TextStylet(Sizelet.IMPORTANT, Typeface.DEFAULT,
-          Coloret.DARK_TEXT);
+    public static final TextStylet TITLE_DARK = new TextStylet(TITLE, Typeface.DEFAULT, DARK_TEXT);
+    public static final TextStylet IMPORTANT_DARK = new TextStylet(IMPORTANT, Typeface.DEFAULT, DARK_TEXT);
+    public static final TextStylet READABLE_DARK = new TextStylet(READABLE, Typeface.DEFAULT, DARK_TEXT);
 
     public final Sizelet heightlet;
     public final Typeface typeface;

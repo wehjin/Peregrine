@@ -3,23 +3,31 @@ package com.rubyhuntersky.columnui;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.basics.TextHeight;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
+import com.rubyhuntersky.columnui.tiles.FrameShiftTile;
+import com.rubyhuntersky.columnui.tiles.Tile;
+import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.WrapperTile;
 
 /**
  * @author wehjin
@@ -30,6 +38,55 @@ public class Creator {
 
 
     public static final String TAG = Creator.class.getSimpleName();
+
+    static public TileUi textTile(final String textString, final TextStylet textStylet) {
+        return TileUi.create(new OnPresent<Tile>() {
+            @Override
+            public void onPresent(Presenter<Tile> presenter) {
+                final Human human = presenter.getHuman();
+                final Tile tile = presenter.getDisplay();
+                final TextStyle textStyle = textStylet.toStyle(human, tile.relatedHeight);
+                final TextSize textSize = tile.measureText(textString, textStyle);
+                final Frame frame = new Frame(textSize.textWidth, textSize.textHeight.height, tile.elevation);
+                final TextHeight textHeight = textSize.textHeight;
+                final Frame textFrame = frame.withVerticalShift(-textHeight.topPadding)
+                                             .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
+                final ViewShape viewShape = new ViewShape() {
+                    @Override
+                    public View createView(Context context) {
+                        final TextView textView = new TextView(context);
+                        textView.setGravity(Gravity.TOP);
+                        textView.setTextColor(textStyle.coloret.toArgb());
+                        textView.setTypeface(textStyle.typeface);
+                        textView.setTextSize(textStyle.typeheight);
+                        textView.setText(textString);
+                        textView.setIncludeFontPadding(false);
+                        textView.setContentDescription("TextTile");
+                        return textView;
+                    }
+                };
+                final Patch patch = tile.addPatch(textFrame, viewShape);
+                presenter.addPresentation(new PatchPresentation(patch, frame));
+            }
+        });
+    }
+
+    static public BarUi tileBar(final TileUi tileUi) {
+        return BarUi.create(new OnPresent<Bar>() {
+            @Override
+            public void onPresent(Presenter<Bar> presenter) {
+                final Bar bar = presenter.getDisplay();
+                final Tile tile = new WrapperTile(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
+                final FrameShiftTile frameShiftTile = tile.withFrameShift();
+                final Presentation presentation = tileUi.present(presenter.getHuman(), frameShiftTile, presenter);
+                final float presentationHeight = presentation.getHeight();
+                final float extraHeight = bar.fixedHeight - presentationHeight;
+                final float anchor = .5f;
+                frameShiftTile.setShift(0, extraHeight * anchor);
+                presenter.addPresentation(presentation);
+            }
+        });
+    }
 
     static public BarUi colorBar(final Coloret coloret, final Sizelet widthlet) {
         return BarUi.create(new OnPresent<Bar>() {
@@ -101,11 +158,11 @@ public class Creator {
     }
 
     static public ColumnUi createDarkTitle(final String textString) {
-        return createLabel(textString, TextStylet.DARK_TITLE);
+        return createLabel(textString, TextStylet.TITLE_DARK);
     }
 
     static public ColumnUi createDarkImportant(final String textString) {
-        return createLabel(textString, TextStylet.DARK_IMPORTANT);
+        return createLabel(textString, TextStylet.IMPORTANT_DARK);
     }
 
     static public ColumnUi createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {

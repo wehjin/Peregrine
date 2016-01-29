@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.ColumnUiView;
+import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.material.Android;
 import com.rubyhuntersky.peregrine.R;
 
@@ -24,9 +26,9 @@ import static com.rubyhuntersky.columnui.Creator.barColumn;
 import static com.rubyhuntersky.columnui.Creator.colorBar;
 import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
 import static com.rubyhuntersky.columnui.Creator.createPanel;
+import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
 import static com.rubyhuntersky.columnui.basics.Coloret.GREEN;
-import static com.rubyhuntersky.columnui.basics.Coloret.RED;
 import static com.rubyhuntersky.columnui.basics.Coloret.WHITE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.HALF_FINGER;
@@ -77,8 +79,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         final ColumnUi spacing = createPanel(THIRD_FINGER, null);
         final ColumnUi divider = createPanel(ofPortion(.1f, READABLE), BLACK);
-        final BarUi assetSelectionBar = colorBar(GREEN, FINGER).padStart(HALF_FINGER)
-                                                               .expandStart(colorBar(RED, HALF_FINGER));
+
+        final BarUi obelusBarUi = Creator.tileBar(textTile("\u00f7", TextStylet.IMPORTANT_DARK));
+        final BarUi assetSelectionBar = colorBar(GREEN, FINGER).expandStart(obelusBarUi);
         this.panel = createDarkImportant(buyString).padTop(HALF_FINGER)
                                                    .placeAbove(spinner)
                                                    .placeAbove(barColumn(FINGER, assetSelectionBar))

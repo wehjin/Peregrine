@@ -13,6 +13,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,8 @@ import com.rubyhuntersky.columnui.shapes.ViewShape;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author wehjin
@@ -173,10 +176,13 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         });
     }
 
-    public float getTextWidth(String text, TextStyle textStyle) {
-        textPaint.setTypeface(textStyle.typeface);
-        textPaint.setTextSize(textStyle.typeheight);
-        return textPaint.measureText(text);
+    public float getTextWidth(String textString, TextStyle textStyle) {
+        TextView ruler = getTextRuler();
+        ruler.setTypeface(textStyle.typeface);
+        ruler.setTextSize(textStyle.typeheight);
+        ruler.setText(textString);
+        ruler.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        return ruler.getMeasuredWidth();
     }
 
     @NonNull
@@ -186,15 +192,8 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
             return textHeightCache.get(typePair);
         }
 
-        if (textView == null) {
-            textView = new TextView(getContext());
-            textView.setMinHeight(0);
-            textView.setGravity(Gravity.TOP);
-            textView.setBackgroundColor(Color.BLACK);
-            textView.setTextColor(Color.BLUE);
-            textView.setText("E");
-            textView.setIncludeFontPadding(false);
-        }
+        TextView textView = getTextRuler();
+        textView.setText("E");
         textView.setTypeface(typeface);
         textView.setTextSize(typeheight);
         textView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -223,6 +222,19 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         final TextHeight textHeight = new TextHeight(height, topPadding);
         textHeightCache.put(typePair, textHeight);
         return textHeight;
+    }
+
+    private TextView getTextRuler() {
+        if (textView == null) {
+            textView = new TextView(getContext());
+            textView.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            textView.setMinHeight(0);
+            textView.setGravity(Gravity.TOP);
+            textView.setBackgroundColor(Color.BLACK);
+            textView.setTextColor(Color.BLUE);
+            textView.setIncludeFontPadding(false);
+        }
+        return textView;
     }
 
     private void cancelPresentation() {

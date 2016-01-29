@@ -28,4 +28,7 @@ public interface CoreDisplay<T> {
 
     @NonNull
     DelayDisplay<T> withDelay();
+
+    @NonNull
+    FrameShiftDisplay<T> withFrameShift();
 }

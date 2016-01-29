@@ -27,6 +27,7 @@ abstract public class Bar implements FixedDisplay<Bar> {
         return new DelayBar(this);
     }
 
+    @NonNull
     public FrameShiftBar withFrameShift() {
         return new FrameShiftBar(this);
     }

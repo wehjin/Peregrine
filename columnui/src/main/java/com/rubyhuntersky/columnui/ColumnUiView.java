@@ -9,6 +9,7 @@ import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
+import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 
 /**
  * @author wehjin
@@ -68,6 +69,12 @@ public class ColumnUiView extends UiView<Column> {
     @Override
     public DelayDisplay<Column> withDelay() {
         return column.withDelay();
+    }
+
+    @NonNull
+    @Override
+    public FrameShiftDisplay<Column> withFrameShift() {
+        return column.withFrameShift();
     }
 
     @NonNull

@@ -31,6 +31,7 @@ abstract public class Column implements FixedDisplay<Column> {
         return frameShiftColumn;
     }
 
+    @NonNull
     public FrameShiftColumn withFrameShift() {
         return new FrameShiftColumn(this);
     }

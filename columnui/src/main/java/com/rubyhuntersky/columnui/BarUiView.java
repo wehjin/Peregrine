@@ -9,6 +9,7 @@ import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
+import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 
 /**
  * @author wehjin
@@ -74,6 +75,12 @@ public class BarUiView extends UiView<Bar> {
     @Override
     public DelayDisplay<Bar> withDelay() {
         return bar.withDelay();
+    }
+
+    @NonNull
+    @Override
+    public FrameShiftDisplay<Bar> withFrameShift() {
+        return bar.withFrameShift();
     }
 
     @Override

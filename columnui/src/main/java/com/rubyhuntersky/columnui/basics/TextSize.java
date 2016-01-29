@@ -7,12 +7,11 @@ package com.rubyhuntersky.columnui.basics;
 
 public class TextSize {
     public static final TextSize ZERO = new TextSize(0, TextHeight.ZERO);
-    public final float width;
+    public final float textWidth;
     public final TextHeight textHeight;
 
-    public TextSize(float width, TextHeight textHeight) {
-        this.width = width;
+    public TextSize(float textWidth, TextHeight textHeight) {
+        this.textWidth = textWidth;
         this.textHeight = textHeight;
     }
-
 }

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 import com.rubyhuntersky.columnui.patches.FrameShiftPatch;
 
 import java.util.ArrayList;
@@ -14,9 +15,8 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftColumn extends WrapperColumn {
+public class FrameShiftColumn extends WrapperColumn implements FrameShiftDisplay<Column> {
 
-    @NonNull
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
@@ -26,15 +26,17 @@ public class FrameShiftColumn extends WrapperColumn {
         super(original);
     }
 
-    public FrameShiftColumn setShift(float horizontalShift, float verticalShift) {
+    @NonNull
+    @Override
+    public FrameShiftColumn setShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
-            this.horizontalShift = horizontalShift;
-            this.verticalShift = verticalShift;
+            this.horizontalShift = horizontal;
+            this.verticalShift = vertical;
             final List<FrameShiftPatch> toShift = new ArrayList<>(pending);
             pending.clear();
             for (FrameShiftPatch patch : toShift) {
-                patch.setShift(horizontalShift, verticalShift);
+                patch.setShift(horizontal, vertical);
             }
         }
         return this;
