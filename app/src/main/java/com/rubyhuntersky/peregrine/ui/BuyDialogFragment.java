@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.ColumnUiView;
-import com.rubyhuntersky.columnui.Creator;
-import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.material.Android;
 import com.rubyhuntersky.peregrine.R;
@@ -22,9 +20,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rubyhuntersky.columnui.Creator.barColumn;
+import static com.rubyhuntersky.columnui.Creator.colorBar;
 import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
 import static com.rubyhuntersky.columnui.Creator.createPanel;
+import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
+import static com.rubyhuntersky.columnui.basics.Coloret.GREEN;
+import static com.rubyhuntersky.columnui.basics.Coloret.RED;
+import static com.rubyhuntersky.columnui.basics.Coloret.WHITE;
+import static com.rubyhuntersky.columnui.basics.Sizelet.FINGER;
+import static com.rubyhuntersky.columnui.basics.Sizelet.HALF_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.CONTEXT;
+import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
+import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
+import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
 
 /**
  * @author wehjin
@@ -66,21 +75,19 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         String symbol = symbols.get(0);
         final ColumnUi spinner = Android.createSpinner(symbols, symbol);
 
-        final ColumnUi spacing = createPanel(Sizelet.THIRD_FINGER, null);
-        final ColumnUi divider = createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE), Coloret.BLACK);
-        final BarUi assetSelectionBar = Creator.colorBar(Coloret.GREEN, Sizelet.FINGER)
-                                               .padStart(Sizelet.HALF_FINGER)
-                                               .padStart(Sizelet.HALF_FINGER);
-        this.panel = createDarkImportant(buyString).padTop(Sizelet.HALF_FINGER)
+        final ColumnUi spacing = createPanel(THIRD_FINGER, null);
+        final ColumnUi divider = createPanel(ofPortion(.1f, READABLE), BLACK);
+        final BarUi assetSelectionBar = colorBar(GREEN, FINGER).padStart(HALF_FINGER)
+                                                               .expandStart(colorBar(RED, HALF_FINGER));
+        this.panel = createDarkImportant(buyString).padTop(HALF_FINGER)
                                                    .placeAbove(spinner)
-                                                   .placeAbove(Creator.barColumn(Sizelet.FINGER, assetSelectionBar))
+                                                   .placeAbove(barColumn(FINGER, assetSelectionBar))
                                                    .placeAbove(divider)
                                                    .placeAbove(spacing)
                                                    .placeAbove(createDarkImportant(sharesString))
-                                                   .padBottom(Sizelet.THIRD_FINGER)
-                                                   .padHorizontal(Sizelet.THIRD_FINGER)
-                                                   .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), Coloret.WHITE),
-                                                         0);
+                                                   .padBottom(THIRD_FINGER)
+                                                   .padHorizontal(THIRD_FINGER)
+                                                   .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), WHITE), 0);
     }
 
     @Nullable

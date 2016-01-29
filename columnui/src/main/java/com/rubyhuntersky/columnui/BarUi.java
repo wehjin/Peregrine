@@ -16,6 +16,26 @@ abstract public class BarUi extends BaseUi<Bar> {
     @Override
     abstract public Presentation present(Human human, Bar bar, Observer observer);
 
+    public BarUi expandStart(final BarUi startUi) {
+        final BarUi ui = this;
+        return create(new OnPresent<Bar>() {
+            @Override
+            public void onPresent(Presenter<Bar> presenter) {
+                final Bar bar = presenter.getDisplay();
+                final FrameShiftBar frameShiftBar = bar.withFrameShift();
+                final Human human = presenter.getHuman();
+                final Presentation endPresentation = ui.present(human, frameShiftBar, presenter);
+                final Bar startBar = bar.withRelatedWidth(endPresentation.getWidth());
+                final Presentation startPresentation = startUi.present(human, startBar, presenter);
+                final float startWidth = startPresentation.getWidth();
+                frameShiftBar.setShift(startWidth, 0);
+                final float combinedWidth = startWidth + endPresentation.getWidth();
+                presenter.addPresentation(startPresentation);
+                presenter.addPresentation(new ResizePresentation(combinedWidth, bar.fixedHeight, endPresentation));
+            }
+        });
+    }
+
     public BarUi padStart(final Sizelet padlet) {
         final BarUi ui = this;
         return create(new OnPresent<Bar>() {

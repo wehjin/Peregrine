@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static com.rubyhuntersky.columnui.Creator.colorBar;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
+import static com.rubyhuntersky.columnui.basics.Coloret.GREEN;
 import static com.rubyhuntersky.columnui.basics.Sizelet.pixels;
 import static org.junit.Assert.assertEquals;
 
@@ -56,6 +57,20 @@ public class BarUiUnitTest {
             presentation.cancel();
             presentation = null;
         }
+    }
+
+    @Test
+    public void expandStart_movesEndFrame() throws Exception {
+        final BarUi ui = colorBar(BLACK, pixels(30)).expandStart(colorBar(GREEN, pixels(50)));
+        presentation = ui.present(human, bar, Observer.EMPTY);
+        assertEquals(50, frames.get(1).horizontal.start, .0001);
+    }
+
+    @Test
+    public void expandStart_combinesWidths() throws Exception {
+        final BarUi ui = colorBar(BLACK, pixels(30)).expandStart(colorBar(GREEN, pixels(50)));
+        presentation = ui.present(human, bar, Observer.EMPTY);
+        assertEquals(80, presentation.getWidth(), .0001);
     }
 
     @Test
