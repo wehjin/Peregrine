@@ -7,7 +7,7 @@ import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.DelayColumn;
 import com.rubyhuntersky.columnui.columns.FrameShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.presentations.VerticalRangePresentation;
+import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 
 /**
  * @author wehjin
@@ -44,7 +44,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
                 final float padding = padlet.toFloat(human, height);
                 newColumn.setShift(0, padding);
                 final float newHeight = height + padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
+                presenter.addPresentation(new ResizePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }
@@ -60,7 +60,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
                 final float newHeight = height + padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
+                presenter.addPresentation(new ResizePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }
@@ -78,7 +78,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
                 final float padding = padlet.toFloat(human, height);
                 newColumn.setShift(0, padding);
                 final float newHeight = height + 2 * padding;
-                presenter.addPresentation(new VerticalRangePresentation(column.fixedWidth, newHeight, presentation));
+                presenter.addPresentation(new ResizePresentation(column.fixedWidth, newHeight, presentation));
             }
         });
     }

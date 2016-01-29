@@ -6,13 +6,13 @@ import com.rubyhuntersky.columnui.Presentation;
  * @author wehjin
  * @since 1/24/16.
  */
-public class VerticalRangePresentation implements Presentation {
+public class ResizePresentation implements Presentation {
 
     private final float width;
     private final float height;
     private final Presentation original;
 
-    public VerticalRangePresentation(float width, float height, Presentation original) {
+    public ResizePresentation(float width, float height, Presentation original) {
         this.width = width;
         this.height = height;
         this.original = original;

@@ -28,8 +28,13 @@ public class Sizelet {
         return new Sizelet(0, portion, ruler);
     }
 
+    public static Sizelet pixels(int pixels) {
+        return ofPortion(pixels, Ruler.PIXEL);
+    }
+
     private final float value;
     private final float portion;
+
     private final Ruler ruler;
 
     public Sizelet(float value, float portion, Ruler ruler) {

@@ -68,7 +68,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         final ColumnUi spacing = createPanel(Sizelet.THIRD_FINGER, null);
         final ColumnUi divider = createPanel(Sizelet.ofPortion(.1f, Sizelet.Ruler.READABLE), Coloret.BLACK);
-        final BarUi assetSelectionBar = Creator.colorBar(Coloret.GREEN, Sizelet.FINGER);
+        final BarUi assetSelectionBar = Creator.colorBar(Coloret.GREEN, Sizelet.FINGER)
+                                               .padStart(Sizelet.HALF_FINGER)
+                                               .padStart(Sizelet.HALF_FINGER);
         this.panel = createDarkImportant(buyString).padTop(Sizelet.HALF_FINGER)
                                                    .placeAbove(spinner)
                                                    .placeAbove(Creator.barColumn(Sizelet.FINGER, assetSelectionBar))
