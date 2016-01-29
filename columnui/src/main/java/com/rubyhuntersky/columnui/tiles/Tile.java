@@ -7,13 +7,13 @@ package com.rubyhuntersky.columnui.tiles;
 
 abstract public class Tile {
 
-    public final float lowerWidth;
-    public final float lowerHeight;
+    public final float relatedWidth;
+    public final float relatedHeight;
     public final int elevation;
 
-    public Tile(float lowerWidth, float lowerHeight, int elevation) {
-        this.lowerWidth = lowerWidth;
-        this.lowerHeight = lowerHeight;
+    public Tile(float relatedWidth, float relatedHeight, int elevation) {
+        this.relatedWidth = relatedWidth;
+        this.relatedHeight = relatedHeight;
         this.elevation = elevation;
     }
 }

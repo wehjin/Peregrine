@@ -10,7 +10,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/27/16.
  */
-abstract class BasePresenter<T> implements Presenter<T> {
+public abstract class BasePresenter<T> implements Presenter<T> {
 
     protected final Human human;
     protected final T display;

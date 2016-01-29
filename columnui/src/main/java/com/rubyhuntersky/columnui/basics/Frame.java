@@ -22,6 +22,15 @@ public class Frame {
         this.elevation = elevation;
     }
 
+    @Override
+    public String toString() {
+        return "Frame{" +
+              "horizontal=" + horizontal +
+              ", vertical=" + vertical +
+              ", elevation=" + elevation +
+              '}';
+    }
+
     public Frame withVerticalShift(float shift) {
         Range newVertical = vertical.shift(shift);
         if (newVertical == vertical) {

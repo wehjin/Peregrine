@@ -36,7 +36,7 @@ import java.util.Map;
 
 abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout implements FixedDisplay<T> {
 
-    public static final String TAG = UiView.class.getSimpleName();
+    public final String TAG = getClass().getSimpleName();
     private Human human;
     private T display;
     private Presentation presentation;
@@ -69,6 +69,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         Log.d(TAG, "Human: " + human);
         elevationPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
+        setContentDescription(TAG);
     }
 
     public void setUi(BaseUi<T> ui) {
@@ -91,17 +92,21 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     private void beginPresentation() {
         cancelPresentation();
         if (ui != null && display != null) {
+            Log.d(TAG, "Begin presentation");
             presentation = ui.present(human, display, new Observer() {
                 @Override
                 public void onReaction(Reaction reaction) {
+                    Log.d(TAG, "onReaction: " + reaction);
                 }
 
                 @Override
                 public void onEnd() {
+                    Log.d(TAG, "onEnd");
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
+                    Log.e(TAG, "onError", throwable);
                 }
             });
         }
@@ -138,25 +143,34 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
             final T display = withFixedDimension(fixedDimension).withDelay().asType();
             final Presentation presentation = ui.present(human, display, Observer.EMPTY);
             final float variableDimension = getVariableDimension(presentation);
-            Log.d(TAG, "onMeasure variable-dimension: " + (int) variableDimension);
             presentation.cancel();
             variableDimensions.put(fixedDimension, (int) variableDimension);
         }
-        setMeasuredDimensionFromDisplayDimensions(fixedDimension, variableDimensions.get(fixedDimension));
+        final int variableDimension = variableDimensions.get(fixedDimension);
+        Log.d(TAG, "onMeasure setMeasureDimension fixed: " + fixedDimension + ", variable: " + variableDimension);
+        setMeasuredDimensionFromDisplayDimensions(fixedDimension, variableDimension);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "onSizeChanged");
 
         final float fixedDimension = getFixedDimension(w, h);
         if (fixedDimension == getFixedDimension(oldw, oldh)) {
+            Log.d(TAG, "no change in fixed dimension");
             return;
         }
 
         cancelPresentation();
         display = withFixedDimension(fixedDimension);
-        beginPresentation();
+        // Patch views sometimes don't show up if beginPresentation is called directly.
+        post(new Runnable() {
+            @Override
+            public void run() {
+                beginPresentation();
+            }
+        });
     }
 
     public float getTextWidth(String text, TextStyle textStyle) {
@@ -213,7 +227,9 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
 
     private void cancelPresentation() {
         if (presentation != null) {
+            Log.d(TAG, "Cancel presentation");
             presentation.cancel();
+            presentation = null;
         }
     }
 
@@ -235,7 +251,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     @NonNull
     @Override
     public TextSize measureText(String text, TextStyle textStyle) {
-        Log.d(UiView.TAG, "measureText: " + textStyle);
+        Log.d(TAG, "measureText: " + textStyle);
         return new TextSize(getTextWidth(text, textStyle), getTextHeight(textStyle.typeface, textStyle.typeheight));
     }
 
@@ -257,15 +273,24 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     @NonNull
     private Patch getRectanglePatch(Frame frame, RectangleShape rectangleShape) {
         final View view = new View(getContext());
-        view.setBackgroundColor(rectangleShape.coloret.toArgb());
+        final int color = rectangleShape.coloret.toArgb();
+        view.setBackgroundColor(color);
+        view.setContentDescription(String.format("Rectangle{%x}", color));
         return getViewPatch(view, frame, 0);
     }
 
     @NonNull
-    private Patch getViewPatch(View view, Frame frame, float additionalHeight) {
+    private Patch getViewPatch(final View view, final Frame frame, float additionalHeight) {
         setElevation(view, frame);
+        Log.d(TAG, "Add view: " + view + " frame: " + frame);
         addView(view, getPatchLayoutParams(frame, additionalHeight));
-        return new ViewPatch(this, view);
+        return new Patch() {
+            @Override
+            public void remove() {
+                Log.d(TAG, "Remove view: " + view + " frame: " + frame);
+                UiView.this.removeView(view);
+            }
+        };
     }
 
     private void setElevation(View view, Frame frame) {
@@ -273,8 +298,8 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     }
 
     @NonNull
-    private FrameLayout.LayoutParams getPatchLayoutParams(Frame frame, float additionalHeight) {
-        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) frame.horizontal.toLength(),
+    private LayoutParams getPatchLayoutParams(Frame frame, float additionalHeight) {
+        final LayoutParams layoutParams = new FrameLayout.LayoutParams((int) frame.horizontal.toLength(),
               (int) (frame.vertical.toLength() + additionalHeight));
         layoutParams.leftMargin = (int) frame.horizontal.start;
         layoutParams.topMargin = (int) frame.vertical.start;
