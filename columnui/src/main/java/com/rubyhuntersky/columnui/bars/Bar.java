@@ -2,14 +2,14 @@ package com.rubyhuntersky.columnui.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.displays.Display;
+import com.rubyhuntersky.columnui.displays.FixedDisplay;
 
 /**
  * @author wehjin
  * @since 1/23/16.
  */
 
-abstract public class Bar implements Display<Bar> {
+abstract public class Bar implements FixedDisplay<Bar> {
 
     public final float fixedHeight;
     public final float relatedWidth;

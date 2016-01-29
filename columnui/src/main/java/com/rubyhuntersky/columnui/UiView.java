@@ -21,7 +21,7 @@ import com.rubyhuntersky.columnui.basics.TextHeight;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.displays.Display;
+import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -34,7 +34,7 @@ import java.util.Map;
  * @since 1/23/16.
  */
 
-abstract public class UiView<T extends Display<T>> extends FrameLayout implements Display<T> {
+abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout implements FixedDisplay<T> {
 
     public static final String TAG = UiView.class.getSimpleName();
     private Human human;

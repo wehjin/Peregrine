@@ -2,10 +2,10 @@ package com.rubyhuntersky.columnui.patches;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.displays.Display;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.displays.CoreDisplay;
 
 /**
  * @author wehjin
@@ -15,12 +15,12 @@ public class FrameShiftPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final Display display;
+    private final CoreDisplay display;
     private Patch patch;
     private boolean didShift;
     private boolean didRemove;
 
-    public FrameShiftPatch(Frame frame, Shape shape, @NonNull Display display) {
+    public FrameShiftPatch(Frame frame, Shape shape, @NonNull CoreDisplay display) {
         this.frame = frame;
         this.shape = shape;
         this.display = display;

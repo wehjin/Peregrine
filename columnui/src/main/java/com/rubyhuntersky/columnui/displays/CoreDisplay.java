@@ -15,8 +15,17 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 
 public interface CoreDisplay<T> {
     @NonNull
+    T asType();
+
+    @NonNull
     Patch addPatch(Frame frame, Shape shape);
 
     @NonNull
     TextSize measureText(String text, TextStyle textStyle);
+
+    @NonNull
+    T withElevation(int elevation);
+
+    @NonNull
+    DelayDisplay<T> withDelay();
 }

@@ -2,14 +2,14 @@ package com.rubyhuntersky.columnui.columns;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.displays.Display;
+import com.rubyhuntersky.columnui.displays.FixedDisplay;
 
 /**
  * @author wehjin
  * @since 1/23/16.
  */
 
-abstract public class Column implements Display<Column> {
+abstract public class Column implements FixedDisplay<Column> {
 
     public final float fixedWidth;
     public final float relatedHeight;

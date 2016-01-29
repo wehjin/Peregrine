@@ -7,17 +7,8 @@ import android.support.annotation.NonNull;
  * @since 1/27/16.
  */
 
-public interface Display<T> extends CoreDisplay<T> {
-
-    @NonNull
-    T asType();
+public interface FixedDisplay<T> extends CoreDisplay<T> {
 
     @NonNull
     T withFixedDimension(float fixedDimension);
-
-    @NonNull
-    T withElevation(int elevation);
-
-    @NonNull
-    DelayDisplay<T> withDelay();
 }
