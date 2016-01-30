@@ -19,4 +19,11 @@ public class ItemSelectionReaction<T> extends Reaction {
     public T getItem() {
         return item;
     }
+
+    @Override
+    public String toString() {
+        return "ItemSelectionReaction{" +
+              "item=" + item +
+              '}';
+    }
 }

@@ -11,14 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.presenters.OnPresent;
-import com.rubyhuntersky.columnui.patches.Patch;
-import com.rubyhuntersky.columnui.presenters.Presenter;
+import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
+import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
+import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
 import com.rubyhuntersky.columnui.tiles.Tile;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class Android {
 
-    public static TileUi spinnerTile(final List<String> options, final String selectedOption) {
+    public static TileUi spinnerTile(final List<String> options, final int selectedOption) {
         return TileUi.create(new OnPresent<Tile>() {
             @Override
             public void onPresent(Presenter<Tile> presenter) {
@@ -48,16 +48,16 @@ public class Android {
         });
     }
 
-    public static BarUi spinnerBar(final List<String> options, final String selectedOption) {
+    public static BarUi spinnerBar(final List<String> options, final int selectedOption) {
         return spinnerTile(options, selectedOption).toBar();
     }
 
     private static class SpinnerViewShape extends ViewShape {
         private final List<String> options;
-        private final String selectedOption;
+        private final int selectedOption;
         private final Observer observer;
 
-        public SpinnerViewShape(List<String> options, String selectedOption, @NonNull Observer observer) {
+        public SpinnerViewShape(List<String> options, int selectedOption, @NonNull Observer observer) {
             this.options = options;
             this.selectedOption = selectedOption;
             this.observer = observer;
@@ -76,18 +76,27 @@ public class Android {
 
             final Spinner spinner = new Spinner(context);
             spinner.setAdapter(adapter);
-            if (selectedOption != null) {
-                spinner.setSelection(options.indexOf(selectedOption));
-            }
+            spinner.setSelection(selectedOption);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                private int lastPosition = selectedOption;
+
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    observer.onReaction(new ItemSelectionReaction<>(options.get(position)));
+                    if (position == lastPosition) {
+                        return;
+                    }
+                    lastPosition = position;
+                    observer.onReaction(new ItemSelectionReaction<>(position));
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-                    observer.onReaction(new ItemSelectionReaction<>(null));
+                    if (lastPosition < 0) {
+                        return;
+                    }
+                    lastPosition = -1;
+                    observer.onReaction(new ItemSelectionReaction<>(-1));
                 }
             });
             final FrameLayout frameLayout = new FrameLayout(context);

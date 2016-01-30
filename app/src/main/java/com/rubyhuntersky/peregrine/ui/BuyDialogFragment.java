@@ -15,8 +15,9 @@ import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
+import com.rubyhuntersky.columnui.tiles.Cui1;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
-import com.rubyhuntersky.columnui.tiles.Tui1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
 
@@ -57,9 +58,10 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     private AssetPrice selectedPrice;
 
     private ColumnUiView columnUiView;
-    private ColumnUi panel;
-    private Tui1<String> tui1;
+    private Cui1<String> panel;
     private Presentation presentation = Presentation.EMPTY;
+    private String sharesString;
+    private int selectedSymbol;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
@@ -92,22 +94,20 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         for (AssetPrice price : prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
-        final String symbol = symbols.get(prices.indexOf(selectedPrice));
-        final String sharesString = selectedPrice.getSharesString(buyAmount);
+        selectedSymbol = prices.indexOf(selectedPrice);
+        sharesString = selectedPrice.getSharesString(buyAmount);
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
-        final ColumnUi pricesColumn = spinnerBar(symbols, symbol).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
-                                                                 .toColumn(FINGER);
+        final ColumnUi pricesColumn = spinnerBar(symbols, selectedSymbol).expandStart(
+              textTile(DIVISION_SIGN, IMPORTANT_DARK)).toColumn(FINGER);
         this.panel = amountColumn.padTop(HALF_FINGER)
                                  .expandBottom(pricesColumn)
                                  .expandBottom(DIVIDER)
                                  .expandBottom(SPACING)
-                                 .expandBottom(textColumn(sharesString, IMPORTANT_DARK))
+                                 .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
                                  .padBottom(THIRD_FINGER)
                                  .padHorizontal(THIRD_FINGER)
                                  .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
-
-        tui1 = TileCreator.textTile(IMPORTANT_DARK);
     }
 
     @Nullable
@@ -122,11 +122,20 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        presentPanel();
+    }
+
+    private void presentPanel() {
         presentation.cancel();
-        presentation = columnUiView.present(panel, new Observer() {
+        presentation = columnUiView.present(panel.bind(sharesString), new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
+                if (reaction instanceof ItemSelectionReaction) {
+                    selectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
+                    sharesString = "Invalid";
+                    presentPanel();
+                }
             }
 
             @Override
@@ -139,7 +148,6 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
                 Log.e(TAG, "onError", throwable);
             }
         });
-//        tui1.present(new Human(getContext()), new Tile(0, 0, 0, columnUiView), Observer.EMPTY);
     }
 
     @Override
