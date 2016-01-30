@@ -67,7 +67,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
 
-        final String buyString = "Buy $3,000.00";
+        final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(buyAmount);
         final String sharesString = "28 shares";
         final List<String> symbols = new ArrayList<>();
         symbols.add("IBM $3.50");
