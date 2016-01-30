@@ -57,8 +57,8 @@ public class ColumnUiView extends UiView<Column> {
 
     @NonNull
     @Override
-    public FrameShiftDisplay<Column> withFrameShift() {
-        return column.withFrameShift();
+    public FrameShiftDisplay<Column> withShift() {
+        return column.withShift();
     }
 
     @NonNull

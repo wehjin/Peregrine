@@ -30,7 +30,7 @@ public class Tile extends ShapeDisplayWrapper implements CoreDisplay<Tile> {
 
     @NonNull
     @Override
-    public FrameShiftTile withFrameShift() {
+    public FrameShiftTile withShift() {
         return new FrameShiftTile(this);
     }
 

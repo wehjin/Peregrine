@@ -63,8 +63,8 @@ public class BarUiView extends UiView<Bar> {
 
     @NonNull
     @Override
-    public FrameShiftDisplay<Bar> withFrameShift() {
-        return bar.withFrameShift();
+    public FrameShiftDisplay<Bar> withShift() {
+        return bar.withShift();
     }
 
     @Override

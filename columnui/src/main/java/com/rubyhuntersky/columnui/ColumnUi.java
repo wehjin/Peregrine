@@ -38,7 +38,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
             public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getDisplay();
-                final FrameShiftColumn newColumn = column.withFrameShift();
+                final FrameShiftColumn newColumn = column.withShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
@@ -72,7 +72,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
             public void onPresent(Presenter<Column> presenter) {
                 final Human human = presenter.getHuman();
                 final Column column = presenter.getDisplay();
-                final FrameShiftColumn newColumn = column.withFrameShift();
+                final FrameShiftColumn newColumn = column.withShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);

@@ -27,7 +27,7 @@ abstract public class TileUi extends BaseUi<Tile> {
             public void onPresent(Presenter<Bar> presenter) {
                 final Bar bar = presenter.getDisplay();
                 final Tile tile = new Tile(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
-                final FrameShiftTile frameShiftTile = tile.withFrameShift();
+                final FrameShiftTile frameShiftTile = tile.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationHeight = presentation.getHeight();
                 final float extraHeight = bar.fixedHeight - presentationHeight;
@@ -44,7 +44,7 @@ abstract public class TileUi extends BaseUi<Tile> {
             public void onPresent(Presenter<Column> presenter) {
                 final Column column = presenter.getDisplay();
                 final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
-                final FrameShiftTile frameShiftTile = tile.withFrameShift();
+                final FrameShiftTile frameShiftTile = tile.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationWidth = presentation.getWidth();
                 final float extraWidth = column.fixedWidth - presentationWidth;

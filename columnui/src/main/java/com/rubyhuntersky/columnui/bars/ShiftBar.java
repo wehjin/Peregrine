@@ -15,20 +15,20 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftBar extends Bar implements FrameShiftDisplay<Bar> {
+public class ShiftBar extends Bar implements FrameShiftDisplay<Bar> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
     private float horizontalShift;
 
-    public FrameShiftBar(@NonNull Bar original) {
+    public ShiftBar(@NonNull Bar original) {
         super(original);
     }
 
     @NonNull
     @Override
-    public FrameShiftBar setShift(float horizontalShift, float verticalShift) {
+    public ShiftBar setShift(float horizontalShift, float verticalShift) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontalShift;

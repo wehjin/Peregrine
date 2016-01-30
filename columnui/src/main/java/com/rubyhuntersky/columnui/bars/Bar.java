@@ -35,8 +35,8 @@ public class Bar extends ShapeDisplayWrapper implements FixedDisplay<Bar> {
     }
 
     @NonNull
-    public FrameShiftBar withFrameShift() {
-        return new FrameShiftBar(this);
+    public ShiftBar withShift() {
+        return new ShiftBar(this);
     }
 
 

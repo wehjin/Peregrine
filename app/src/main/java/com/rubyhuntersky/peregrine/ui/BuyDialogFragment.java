@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rubyhuntersky.columnui.Creator.barColumn;
 import static com.rubyhuntersky.columnui.Creator.colorColumn;
 import static com.rubyhuntersky.columnui.Creator.textColumn;
 import static com.rubyhuntersky.columnui.Creator.textTile;
@@ -79,7 +78,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final TileUi divisionSign = textTile(DIVISION_SIGN, IMPORTANT_DARK);
         final BarUi stocksBar = spinnerTile(symbols, symbol).toBar().expandStart(divisionSign);
         this.panel = textColumn(buyString, IMPORTANT_DARK).padTop(HALF_FINGER)
-                                                          .placeAbove(barColumn(FINGER, stocksBar))
+                                                          .placeAbove(stocksBar.toColumn(FINGER))
                                                           .placeAbove(divider)
                                                           .placeAbove(spacing)
                                                           .placeAbove(textColumn(sharesString, IMPORTANT_DARK))
