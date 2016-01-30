@@ -54,7 +54,7 @@ public class ColumnUiUnitTest {
                 return ShapeSize.ZERO;
             }
         };
-        padTopUi = Creator.createPanel(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK)
+        padTopUi = Creator.colorColumn(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK)
                           .padTop(Sizelet.ofPortion(15, Ruler.PIXEL));
     }
 

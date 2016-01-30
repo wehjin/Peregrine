@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.ColumnUiView;
-import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.peregrine.R;
 
@@ -21,14 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rubyhuntersky.columnui.Creator.barColumn;
-import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
-import static com.rubyhuntersky.columnui.Creator.createPanel;
+import static com.rubyhuntersky.columnui.Creator.colorColumn;
+import static com.rubyhuntersky.columnui.Creator.textColumn;
 import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
 import static com.rubyhuntersky.columnui.basics.Coloret.WHITE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.HALF_FINGER;
-import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.CONTEXT;
+import static com.rubyhuntersky.columnui.basics.Sizelet.PREVIOUS;
 import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
@@ -74,19 +73,19 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         symbols.add("IBM $3.50");
         symbols.add("MSFT $2.00");
         String symbol = symbols.get(1);
-        final ColumnUi spacing = createPanel(THIRD_FINGER, null);
-        final ColumnUi divider = createPanel(ofPortion(.1f, READABLE), BLACK);
+        final ColumnUi spacing = colorColumn(THIRD_FINGER, null);
+        final ColumnUi divider = colorColumn(ofPortion(.1f, READABLE), BLACK);
 
         final TileUi divisionSign = textTile(DIVISION_SIGN, IMPORTANT_DARK);
         final BarUi stocksBar = spinnerTile(symbols, symbol).toBar().expandStart(divisionSign);
-        this.panel = createDarkImportant(buyString).padTop(HALF_FINGER)
-                                                   .placeAbove(barColumn(FINGER, stocksBar))
-                                                   .placeAbove(divider)
-                                                   .placeAbove(spacing)
-                                                   .placeAbove(createDarkImportant(sharesString))
-                                                   .padBottom(THIRD_FINGER)
-                                                   .padHorizontal(THIRD_FINGER)
-                                                   .placeBefore(createPanel(new Sizelet(0, 1, CONTEXT), WHITE), 0);
+        this.panel = textColumn(buyString, IMPORTANT_DARK).padTop(HALF_FINGER)
+                                                          .placeAbove(barColumn(FINGER, stocksBar))
+                                                          .placeAbove(divider)
+                                                          .placeAbove(spacing)
+                                                          .placeAbove(textColumn(sharesString, IMPORTANT_DARK))
+                                                          .padBottom(THIRD_FINGER)
+                                                          .padHorizontal(THIRD_FINGER)
+                                                          .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
     }
 
     @Nullable

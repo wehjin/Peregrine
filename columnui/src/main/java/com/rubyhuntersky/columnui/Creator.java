@@ -106,7 +106,7 @@ public class Creator {
         });
     }
 
-    static public ColumnUi createLabel(final String textString, final TextStylet textStylet) {
+    static public ColumnUi textColumn(final String textString, final TextStylet textStylet) {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
@@ -139,14 +139,10 @@ public class Creator {
     }
 
     static public ColumnUi createDarkTitle(final String textString) {
-        return createLabel(textString, TextStylet.TITLE_DARK);
+        return textColumn(textString, TextStylet.TITLE_DARK);
     }
 
-    static public ColumnUi createDarkImportant(final String textString) {
-        return createLabel(textString, TextStylet.IMPORTANT_DARK);
-    }
-
-    static public ColumnUi createPanel(final Sizelet heightlet, @Nullable final Coloret coloret) {
+    static public ColumnUi colorColumn(final Sizelet heightlet, @Nullable final Coloret coloret) {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
