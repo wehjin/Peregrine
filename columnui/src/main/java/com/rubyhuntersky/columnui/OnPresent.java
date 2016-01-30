@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui;
 
+import com.rubyhuntersky.columnui.presenters.Presenter;
+
 /**
  * @author wehjin
  * @since 1/23/16.

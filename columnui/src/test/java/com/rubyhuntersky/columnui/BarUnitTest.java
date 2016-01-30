@@ -8,6 +8,7 @@ import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
+import com.rubyhuntersky.columnui.patches.Patch;
 
 import org.junit.Before;
 import org.junit.Test;

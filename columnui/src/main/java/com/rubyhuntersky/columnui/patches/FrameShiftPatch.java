@@ -2,7 +2,6 @@ package com.rubyhuntersky.columnui.patches;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.displays.ShapeDisplay;

@@ -2,7 +2,7 @@ package com.rubyhuntersky.columnui.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Patch;
+import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;

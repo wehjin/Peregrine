@@ -1,6 +1,6 @@
 package com.rubyhuntersky.columnui.presentations;
 
-import com.rubyhuntersky.columnui.Patch;
+import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.basics.Frame;
 
 /**
