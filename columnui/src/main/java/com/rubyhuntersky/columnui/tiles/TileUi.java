@@ -1,23 +1,23 @@
 package com.rubyhuntersky.columnui.tiles;
 
-import com.rubyhuntersky.columnui.bars.BarUi;
-import com.rubyhuntersky.columnui.presenters.BasePresenter;
-import com.rubyhuntersky.columnui.BaseUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.presenters.OnPresent;
-import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.bars.Bar;
+import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.ui.Ui;
+import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.presenters.BasePresenter;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
+import com.rubyhuntersky.columnui.presenters.Presenter;
 
 /**
  * @author wehjin
  * @since 1/28/16.
  */
 
-abstract public class TileUi extends BaseUi<Tile> {
+abstract public class TileUi implements Ui<Tile> {
 
     abstract public Presentation present(Human human, Tile tile, Observer observer);
 

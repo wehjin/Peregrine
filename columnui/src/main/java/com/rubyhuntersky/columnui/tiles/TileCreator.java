@@ -19,6 +19,6 @@ public class TileCreator {
             public TileUi onBind(String condition) {
                 return Creator.textTile(condition, textStylet);
             }
-        });
+        }, "");
     }
 }

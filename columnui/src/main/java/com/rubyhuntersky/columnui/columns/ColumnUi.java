@@ -2,10 +2,10 @@ package com.rubyhuntersky.columnui.columns;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.BaseUi;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.ui.Ui;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
@@ -18,7 +18,7 @@ import com.rubyhuntersky.columnui.tiles.Cui1;
  * @since 1/23/16.
  */
 
-abstract public class ColumnUi extends BaseUi<Column> {
+abstract public class ColumnUi implements Ui<Column> {
 
     abstract public Presentation present(Human human, Column column, Observer observer);
 
@@ -124,16 +124,15 @@ abstract public class ColumnUi extends BaseUi<Column> {
         });
     }
 
-    public <C> Cui1<C> expandBottom(final Cui1<C> unboundExpander) {
+    public <C> Cui1<C> expandBottom(final Cui1<C> cui1) {
         final ColumnUi columnUi = this;
         return Cui1.create(new Cui1.OnBind<C>() {
             @NonNull
             @Override
             public ColumnUi onBind(C condition) {
-                final ColumnUi boundExpander = unboundExpander.bind(condition);
-                return columnUi.expandBottom(boundExpander);
+                return columnUi.expandBottom(cui1.bind(condition));
             }
-        });
+        }, cui1.getStartCondition());
     }
 
     public static ColumnUi create(final OnPresent<Column> onPresent) {

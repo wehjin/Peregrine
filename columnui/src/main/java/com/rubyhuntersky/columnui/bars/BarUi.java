@@ -1,16 +1,16 @@
 package com.rubyhuntersky.columnui.bars;
 
-import com.rubyhuntersky.columnui.presenters.BasePresenter;
-import com.rubyhuntersky.columnui.BaseUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.presenters.OnPresent;
-import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.ui.Ui;
+import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
+import com.rubyhuntersky.columnui.presenters.BasePresenter;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
+import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 
 /**
@@ -18,7 +18,7 @@ import com.rubyhuntersky.columnui.tiles.TileUi;
  * @since 1/27/16.
  */
 
-abstract public class BarUi extends BaseUi<Bar> {
+abstract public class BarUi implements Ui<Bar> {
 
     @Override
     abstract public Presentation present(Human human, Bar bar, Observer observer);

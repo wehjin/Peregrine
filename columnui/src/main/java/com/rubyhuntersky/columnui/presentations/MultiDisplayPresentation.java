@@ -1,6 +1,6 @@
 package com.rubyhuntersky.columnui.presentations;
 
-import com.rubyhuntersky.columnui.BaseUi;
+import com.rubyhuntersky.columnui.ui.Ui;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.conditions.Human;
 
@@ -11,12 +11,12 @@ import com.rubyhuntersky.columnui.conditions.Human;
 
 public class MultiDisplayPresentation<T> extends BooleanPresentation implements Presentation {
 
-    private final BaseUi<T> ui;
+    private final Ui<T> ui;
     private final Human human;
     private final Observer observer;
     private Presentation presentation = Presentation.EMPTY;
 
-    public MultiDisplayPresentation(BaseUi<T> ui, Human human, T display, Observer observer) {
+    public MultiDisplayPresentation(Ui<T> ui, Human human, T display, Observer observer) {
         this.ui = ui;
         this.human = human;
         this.observer = observer;

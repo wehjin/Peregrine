@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.R;
+import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.TextHeight;
@@ -26,6 +29,7 @@ import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.presentations.Presentation1;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -46,11 +50,11 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     private Human human;
     private T display;
     private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
-    private BaseUi<T> ui;
+    private Ui<T> ui;
     public int elevationPixels;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
-    private BaseUi<T> measuredUi;
+    private Ui<T> measuredUi;
     private Map<Integer, Integer> variableDimensions = new HashMap<>();
 
     public UiView(Context context) {
@@ -76,7 +80,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         setContentDescription(TAG);
     }
 
-    public Presentation present(BaseUi<T> ui, Observer observer) {
+    public Presentation present(Ui<T> ui, Observer observer) {
         multiDisplayPresentation.cancel();
         this.ui = ui;
         multiDisplayPresentation = ui == null
@@ -91,6 +95,47 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
                                    };
         requestLayout();
         return multiDisplayPresentation;
+    }
+
+    public <C> Presentation1<C> present(final Ui1<T, C> ui1, final C startCondition, final Observer observer) {
+        return new Presentation1<C>() {
+
+            boolean isCancelled;
+            Presentation presentation = present(ui1.bind(startCondition), observer);
+
+            @Override
+            public void rebind(C condition) {
+                if (isCancelled) {
+                    throw new IllegalStateException("Rebind after cancelled");
+                }
+                presentation.cancel();
+                presentation = present(ui1.bind(condition), observer);
+            }
+
+            @Override
+            public float getWidth() {
+                return isCancelled ? 0 : presentation.getWidth();
+            }
+
+            @Override
+            public float getHeight() {
+                return isCancelled ? 0 : presentation.getHeight();
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return isCancelled;
+            }
+
+            @Override
+            public void cancel() {
+                if (isCancelled) {
+                    return;
+                }
+                isCancelled = true;
+                presentation.cancel();
+            }
+        };
     }
 
     abstract protected void setMeasuredDimensionFromDisplayDimensions(float fixed, float variable);

@@ -4,13 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.UiView;
+import com.rubyhuntersky.columnui.ui.UiView;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
 import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presentations.Presentation1;
-import com.rubyhuntersky.columnui.tiles.Cui1;
 
 /**
  * @author wehjin
@@ -39,47 +36,6 @@ public class ColumnUiView extends UiView<Column> {
 
     private void init() {
         column = new Column(0, 0, 0, this);
-    }
-
-    public <T> Presentation1<T> present(final Cui1<T> cui1, final T startCondition, final Observer observer) {
-        return new Presentation1<T>() {
-
-            boolean isCancelled;
-            Presentation presentation = present(cui1.bind(startCondition), observer);
-
-            @Override
-            public void rebind(T condition) {
-                if (isCancelled) {
-                    throw new IllegalStateException("Rebind after cancelled");
-                }
-                presentation.cancel();
-                presentation = present(cui1.bind(condition), observer);
-            }
-
-            @Override
-            public float getWidth() {
-                return isCancelled ? 0 : presentation.getWidth();
-            }
-
-            @Override
-            public float getHeight() {
-                return isCancelled ? 0 : presentation.getHeight();
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return isCancelled;
-            }
-
-            @Override
-            public void cancel() {
-                if (isCancelled) {
-                    return;
-                }
-                isCancelled = true;
-                presentation.cancel();
-            }
-        };
     }
 
     @NonNull
