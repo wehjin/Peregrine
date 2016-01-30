@@ -22,7 +22,6 @@ import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
-import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
 import com.rubyhuntersky.columnui.tiles.Tile;
 import com.rubyhuntersky.columnui.tiles.TileUi;
@@ -54,6 +53,7 @@ public class Creator {
                     public View createView(Context context) {
                         final TextView textView = new TextView(context);
                         textView.setGravity(Gravity.TOP);
+                        textView.setSingleLine();
                         textView.setTextColor(textStyle.coloret.toArgb());
                         textView.setTypeface(textStyle.typeface);
                         textView.setTextSize(textStyle.typeheight);
@@ -107,39 +107,7 @@ public class Creator {
     }
 
     static public ColumnUi textColumn(final String textString, final TextStylet textStylet) {
-        return ColumnUi.create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                final Column column = presenter.getDisplay();
-                final TextStyle textStyle = textStylet.toStyle(presenter.getHuman(), column.relatedHeight);
-                final TextSize textSize = column.measureText(textString, textStyle);
-                final Shape shape = new TextShape(textString, textStyle, textSize);
-                final Frame frame = new Frame(column.fixedWidth, textSize.textHeight.height, column.elevation);
-                final Patch patch = column.addPatch(frame, shape);
-                final BooleanPresentation presentation = new BooleanPresentation() {
-
-                    @Override
-                    public float getWidth() {
-                        return column.fixedWidth;
-                    }
-
-                    @Override
-                    public float getHeight() {
-                        return textSize.textHeight.height;
-                    }
-
-                    @Override
-                    protected void onCancel() {
-                        patch.remove();
-                    }
-                };
-                presenter.addPresentation(presentation);
-            }
-        });
-    }
-
-    static public ColumnUi createDarkTitle(final String textString) {
-        return textColumn(textString, TextStylet.TITLE_DARK);
+        return textTile(textString, textStylet).toColumn();
     }
 
     static public ColumnUi colorColumn(final Sizelet heightlet, @Nullable final Coloret coloret) {
