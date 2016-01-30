@@ -83,9 +83,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         for (AssetPrice price : prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
-        String symbol = symbols.get(prices.indexOf(selectedPrice));
+        final String symbol = symbols.get(prices.indexOf(selectedPrice));
+        final String sharesString = selectedPrice.getSharesString(buyAmount);
 
-        final String sharesString = "28 shares";
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final ColumnUi pricesColumn = spinnerBar(symbols, symbol).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
                                                                  .toColumn(FINGER);
