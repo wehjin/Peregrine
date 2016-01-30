@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
+import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Patch;
@@ -45,6 +46,10 @@ public class Android {
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });
+    }
+
+    public static BarUi spinnerBar(final List<String> options, final String selectedOption) {
+        return spinnerTile(options, selectedOption).toBar();
     }
 
     private static class SpinnerViewShape extends ViewShape {

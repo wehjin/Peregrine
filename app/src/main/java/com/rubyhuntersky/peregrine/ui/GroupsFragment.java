@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.Asset;
+import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.Assignments;
 import com.rubyhuntersky.peregrine.Group;
 import com.rubyhuntersky.peregrine.PartitionList;
@@ -32,8 +33,6 @@ import java.util.Set;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func3;
-
-import static com.rubyhuntersky.peregrine.ui.SellDialogFragment.Price;
 
 public class GroupsFragment extends BaseFragment {
 
@@ -107,12 +106,17 @@ public class GroupsFragment extends BaseFragment {
                 final BigDecimal sellAmount = groupsAdapter.getAllocationErrorDollars(group);
                 final int direction = sellAmount.compareTo(BigDecimal.ZERO);
                 if (direction > 0) {
-                    List<Price> prices = getPrices(group);
-                    Price selectedPrice = prices.size() > 0 ? prices.get(0) : null;
+                    List<AssetPrice> prices = getPrices(group);
+                    AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
                     final DialogFragment fragment = SellDialogFragment.create(sellAmount, prices, selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
                 } else if (direction < 0) {
-                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs());
+                    List<AssetPrice> prices = getPrices(group);
+                    if (prices.size() == 0) {
+                        prices.add(new AssetPrice());
+                    }
+                    AssetPrice selectedPrice = prices.get(0);
+                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs(), prices, selectedPrice);
                     fragment.setCancelable(true);
                     fragment.show(getFragmentManager(), "BuyFragment");
                 }
@@ -121,15 +125,15 @@ public class GroupsFragment extends BaseFragment {
     }
 
     @NonNull
-    private List<Price> getPrices(Group group) {
+    private List<AssetPrice> getPrices(Group group) {
         final List<Asset> assets = group.getAssets();
-        List<Price> prices = new ArrayList<>();
+        List<AssetPrice> prices = new ArrayList<>();
         Set<String> symbols = new HashSet<>();
         for (Asset asset : assets) {
             if (symbols.contains(asset.symbol)) {
                 continue;
             }
-            prices.add(new Price(asset.symbol, asset.currentPrice));
+            prices.add(new AssetPrice(asset.symbol, asset.currentPrice));
             symbols.add(asset.symbol);
         }
         return prices;

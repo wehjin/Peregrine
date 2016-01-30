@@ -9,10 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.ColumnUiView;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
 import static com.rubyhuntersky.columnui.basics.TextStylet.IMPORTANT_DARK;
-import static com.rubyhuntersky.columnui.material.Android.spinnerTile;
+import static com.rubyhuntersky.columnui.material.Android.spinnerBar;
 
 /**
  * @author wehjin
@@ -39,16 +38,27 @@ import static com.rubyhuntersky.columnui.material.Android.spinnerTile;
  */
 public class BuyDialogFragment extends AppCompatDialogFragment {
 
-    public static final String AMOUNT_KEY = "amountKey";
     public static final String DIVISION_SIGN = "\u00f7";
+    public static final String AMOUNT_KEY = "amountKey";
+    public static final String PRICES_KEY = "pricesKey";
+    public static final String SELECTED_PRICE_KEY = "selectedPriceKey";
+    public static final ColumnUi SPACING = colorColumn(THIRD_FINGER, null);
+    public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
+
     private BigDecimal buyAmount = BigDecimal.ZERO;
+    private List<AssetPrice> prices;
+    private AssetPrice selectedPrice;
+
     private ColumnUiView columnUiView;
     private ColumnUi panel;
 
-    public static BuyDialogFragment create(BigDecimal amount) {
+    public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
         final Bundle arguments = new Bundle();
         arguments.putSerializable(AMOUNT_KEY, amount);
+        arguments.putParcelableArrayList(PRICES_KEY, new ArrayList<>(prices));
+        arguments.putParcelable(SELECTED_PRICE_KEY, selectedPrice);
+
         final BuyDialogFragment fragment = new BuyDialogFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -65,26 +75,28 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         setStyle(STYLE_NO_TITLE, 0);
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
+        prices = getArguments().getParcelableArrayList(PRICES_KEY);
+        selectedPrice = getArguments().getParcelable(SELECTED_PRICE_KEY);
 
         final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(buyAmount);
-        final String sharesString = "28 shares";
         final List<String> symbols = new ArrayList<>();
-        symbols.add("IBM $3.50");
-        symbols.add("MSFT $2.00");
-        String symbol = symbols.get(1);
-        final ColumnUi spacing = colorColumn(THIRD_FINGER, null);
-        final ColumnUi divider = colorColumn(ofPortion(.1f, READABLE), BLACK);
+        for (AssetPrice price : prices) {
+            symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
+        }
+        String symbol = symbols.get(prices.indexOf(selectedPrice));
 
-        final TileUi divisionSign = textTile(DIVISION_SIGN, IMPORTANT_DARK);
-        final BarUi stocksBar = spinnerTile(symbols, symbol).toBar().expandStart(divisionSign);
-        this.panel = textColumn(buyString, IMPORTANT_DARK).padTop(HALF_FINGER)
-                                                          .placeAbove(stocksBar.toColumn(FINGER))
-                                                          .placeAbove(divider)
-                                                          .placeAbove(spacing)
-                                                          .placeAbove(textColumn(sharesString, IMPORTANT_DARK))
-                                                          .padBottom(THIRD_FINGER)
-                                                          .padHorizontal(THIRD_FINGER)
-                                                          .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
+        final String sharesString = "28 shares";
+        final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
+        final ColumnUi pricesColumn = spinnerBar(symbols, symbol).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
+                                                                 .toColumn(FINGER);
+        this.panel = amountColumn.padTop(HALF_FINGER)
+                                 .placeAbove(pricesColumn)
+                                 .placeAbove(DIVIDER)
+                                 .placeAbove(SPACING)
+                                 .placeAbove(textColumn(sharesString, IMPORTANT_DARK))
+                                 .padBottom(THIRD_FINGER)
+                                 .padHorizontal(THIRD_FINGER)
+                                 .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
     }
 
     @Nullable
