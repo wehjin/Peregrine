@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftTile extends WrapperTile implements FrameShiftDisplay<Tile> {
+public class FrameShiftTile extends Tile implements FrameShiftDisplay<Tile> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
@@ -45,7 +45,7 @@ public class FrameShiftTile extends WrapperTile implements FrameShiftDisplay<Til
     @NonNull
     @Override
     public Patch addPatch(Frame frame, Shape shape) {
-        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, coreDisplay);
+        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, basis);
         if (didShift) {
             patch.setShift(horizontalShift, verticalShift);
         } else {

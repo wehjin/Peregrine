@@ -2,8 +2,10 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.basics.Sizelet.Ruler;
 import com.rubyhuntersky.columnui.basics.TextSize;
@@ -32,7 +34,7 @@ public class ColumnUiUnitTest {
     public void setUp() throws Exception {
         human = new Human(17, 13);
         frames = new ArrayList<>();
-        column = new Column(100, 27, 5) {
+        column = new FullColumn(100, 27, 5) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape) {
@@ -44,6 +46,12 @@ public class ColumnUiUnitTest {
             @Override
             public TextSize measureText(String text, TextStyle textStyle) {
                 return TextSize.ZERO;
+            }
+
+            @NonNull
+            @Override
+            public ShapeSize measureShape(Shape shape) {
+                return ShapeSize.ZERO;
             }
         };
         padTopUi = Creator.createPanel(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK)

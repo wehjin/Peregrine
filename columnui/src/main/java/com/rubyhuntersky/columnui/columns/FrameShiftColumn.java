@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftColumn extends WrapperColumn implements FrameShiftDisplay<Column> {
+public class FrameShiftColumn extends Column implements FrameShiftDisplay<Column> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
@@ -45,7 +45,7 @@ public class FrameShiftColumn extends WrapperColumn implements FrameShiftDisplay
     @NonNull
     @Override
     public Patch addPatch(Frame frame, Shape shape) {
-        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, original);
+        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, basis);
         if (didShift) {
             patch.setShift(horizontalShift, verticalShift);
         } else {

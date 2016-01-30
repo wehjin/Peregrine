@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.TextSize;
-import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
 import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
@@ -37,20 +34,7 @@ public class ColumnUiView extends UiView<Column> {
     }
 
     private void init() {
-        column = new Column(0, 0, 0) {
-
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape) {
-                return ColumnUiView.this.addPatch(frame, shape);
-            }
-
-            @NonNull
-            @Override
-            public TextSize measureText(String text, TextStyle textStyle) {
-                return ColumnUiView.this.measureText(text, textStyle);
-            }
-        };
+        column = new Column(0, 0, 0, this);
     }
 
     @NonNull

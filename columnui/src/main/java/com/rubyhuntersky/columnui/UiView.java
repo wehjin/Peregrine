@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.TextHeight;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
@@ -265,6 +266,22 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     public TextSize measureText(String text, TextStyle textStyle) {
         Log.d(TAG, "measureText: " + textStyle);
         return new TextSize(getTextWidth(text, textStyle), getTextHeight(textStyle.typeface, textStyle.typeheight));
+    }
+
+    @NonNull
+    @Override
+    public ShapeSize measureShape(Shape shape) {
+        if (shape instanceof ViewShape) {
+            final ViewShape viewShape = (ViewShape) shape;
+            final View view = viewShape.createView(getContext());
+            view.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+            final int measuredWidth = view.getMeasuredWidth();
+            final int measuredHeight = view.getMeasuredHeight();
+            return new ShapeSize(measuredWidth, measuredHeight);
+        } else {
+            return ShapeSize.ZERO;
+        }
     }
 
     @NonNull

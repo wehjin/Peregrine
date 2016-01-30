@@ -5,6 +5,7 @@ import com.rubyhuntersky.columnui.bars.FrameShiftBar;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
+import com.rubyhuntersky.columnui.tiles.TileUi;
 
 /**
  * @author wehjin
@@ -15,6 +16,10 @@ abstract public class BarUi extends BaseUi<Bar> {
 
     @Override
     abstract public Presentation present(Human human, Bar bar, Observer observer);
+
+    public BarUi expandStart(final TileUi startUi) {
+        return expandStart(startUi.toBar());
+    }
 
     public BarUi expandStart(final BarUi startUi) {
         final BarUi ui = this;

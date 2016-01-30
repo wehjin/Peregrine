@@ -12,10 +12,8 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.BarUi;
 import com.rubyhuntersky.columnui.ColumnUi;
 import com.rubyhuntersky.columnui.ColumnUiView;
-import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.basics.TextStylet;
-import com.rubyhuntersky.columnui.material.Android;
+import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
@@ -23,12 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rubyhuntersky.columnui.Creator.barColumn;
-import static com.rubyhuntersky.columnui.Creator.colorBar;
 import static com.rubyhuntersky.columnui.Creator.createDarkImportant;
 import static com.rubyhuntersky.columnui.Creator.createPanel;
 import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
-import static com.rubyhuntersky.columnui.basics.Coloret.GREEN;
 import static com.rubyhuntersky.columnui.basics.Coloret.WHITE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.HALF_FINGER;
@@ -36,6 +32,8 @@ import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.CONTEXT;
 import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
+import static com.rubyhuntersky.columnui.basics.TextStylet.IMPORTANT_DARK;
+import static com.rubyhuntersky.columnui.material.Android.spinnerTile;
 
 /**
  * @author wehjin
@@ -44,6 +42,7 @@ import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
 public class BuyDialogFragment extends AppCompatDialogFragment {
 
     public static final String AMOUNT_KEY = "amountKey";
+    public static final String DIVISION_SIGN = "\u00f7";
     private BigDecimal buyAmount = BigDecimal.ZERO;
     private ColumnUiView columnUiView;
     private ColumnUi panel;
@@ -74,17 +73,14 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final List<String> symbols = new ArrayList<>();
         symbols.add("IBM $3.50");
         symbols.add("MSFT $2.00");
-        String symbol = symbols.get(0);
-        final ColumnUi spinner = Android.createSpinner(symbols, symbol);
-
+        String symbol = symbols.get(1);
         final ColumnUi spacing = createPanel(THIRD_FINGER, null);
         final ColumnUi divider = createPanel(ofPortion(.1f, READABLE), BLACK);
 
-        final BarUi obelusBarUi = Creator.tileBar(textTile("\u00f7", TextStylet.IMPORTANT_DARK));
-        final BarUi assetSelectionBar = colorBar(GREEN, FINGER).expandStart(obelusBarUi);
+        final TileUi divisionSign = textTile(DIVISION_SIGN, IMPORTANT_DARK);
+        final BarUi stocksBar = spinnerTile(symbols, symbol).toBar().expandStart(divisionSign);
         this.panel = createDarkImportant(buyString).padTop(HALF_FINGER)
-                                                   .placeAbove(spinner)
-                                                   .placeAbove(barColumn(FINGER, assetSelectionBar))
+                                                   .placeAbove(barColumn(FINGER, stocksBar))
                                                    .placeAbove(divider)
                                                    .placeAbove(spacing)
                                                    .placeAbove(createDarkImportant(sharesString))

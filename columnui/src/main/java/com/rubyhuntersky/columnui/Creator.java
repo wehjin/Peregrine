@@ -24,10 +24,8 @@ import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
-import com.rubyhuntersky.columnui.tiles.FrameShiftTile;
 import com.rubyhuntersky.columnui.tiles.Tile;
 import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.tiles.WrapperTile;
 
 /**
  * @author wehjin
@@ -67,23 +65,6 @@ public class Creator {
                 };
                 final Patch patch = tile.addPatch(textFrame, viewShape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
-            }
-        });
-    }
-
-    static public BarUi tileBar(final TileUi tileUi) {
-        return BarUi.create(new OnPresent<Bar>() {
-            @Override
-            public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
-                final Tile tile = new WrapperTile(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
-                final FrameShiftTile frameShiftTile = tile.withFrameShift();
-                final Presentation presentation = tileUi.present(presenter.getHuman(), frameShiftTile, presenter);
-                final float presentationHeight = presentation.getHeight();
-                final float extraHeight = bar.fixedHeight - presentationHeight;
-                final float anchor = .5f;
-                frameShiftTile.setShift(0, extraHeight * anchor);
-                presenter.addPresentation(presentation);
             }
         });
     }

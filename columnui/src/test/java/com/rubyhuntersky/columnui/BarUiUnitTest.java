@@ -3,7 +3,9 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.bars.Bar;
+import com.rubyhuntersky.columnui.bars.FullBar;
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
@@ -34,7 +36,7 @@ public class BarUiUnitTest {
     public void setUp() throws Exception {
         human = new Human(17, 13);
         frames = new ArrayList<>();
-        bar = new Bar(100, 27, 5) {
+        bar = new FullBar(100, 27, 5) {
 
             @NonNull
             @Override
@@ -47,6 +49,12 @@ public class BarUiUnitTest {
             @Override
             public TextSize measureText(String text, TextStyle textStyle) {
                 return TextSize.ZERO;
+            }
+
+            @NonNull
+            @Override
+            public ShapeSize measureShape(Shape shape) {
+                return ShapeSize.ZERO;
             }
         };
     }

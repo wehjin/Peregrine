@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.rubyhuntersky.columnui.bars.Bar;
-import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.TextSize;
-import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
 import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 
@@ -37,20 +34,7 @@ public class BarUiView extends UiView<Bar> {
     }
 
     private void init() {
-        bar = new Bar(0, 0, 0) {
-
-            @NonNull
-            @Override
-            public Patch addPatch(Frame frame, Shape shape) {
-                return BarUiView.this.addPatch(frame, shape);
-            }
-
-            @NonNull
-            @Override
-            public TextSize measureText(String text, TextStyle textStyle) {
-                return BarUiView.this.measureText(text, textStyle);
-            }
-        };
+        bar = new Bar(0, 0, 0, this);
     }
 
     @NonNull

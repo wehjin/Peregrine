@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.displays.CoreDisplay;
+import com.rubyhuntersky.columnui.displays.ShapeDisplay;
 
 /**
  * @author wehjin
@@ -15,12 +15,12 @@ public class DelayPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final CoreDisplay display;
+    private final ShapeDisplay display;
     private Patch patch;
     private boolean didEndDelay;
     private boolean didRemove;
 
-    public DelayPatch(Frame frame, Shape shape, @NonNull CoreDisplay display) {
+    public DelayPatch(Frame frame, Shape shape, @NonNull ShapeDisplay display) {
 
         this.frame = frame;
         this.shape = shape;
