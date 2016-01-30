@@ -13,7 +13,7 @@ import android.widget.Spinner;
 
 import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.OnPresent;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.basics.Frame;

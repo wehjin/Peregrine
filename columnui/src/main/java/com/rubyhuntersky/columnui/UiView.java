@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -25,6 +24,7 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.patches.Patch;
+import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
@@ -45,10 +45,9 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     public final String TAG = getClass().getSimpleName();
     private Human human;
     private T display;
-    private Presentation presentation;
+    private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
     private BaseUi<T> ui;
     public int elevationPixels;
-    private Paint textPaint;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
     private BaseUi<T> measuredUi;
@@ -74,48 +73,24 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
               getResources().getDimensionPixelSize(R.dimen.readingText));
         Log.d(TAG, "Human: " + human);
         elevationPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         setContentDescription(TAG);
     }
 
-    public void setUi(BaseUi<T> ui) {
-        clearUi();
+    public Presentation present(BaseUi<T> ui, Observer observer) {
+        multiDisplayPresentation.cancel();
         this.ui = ui;
-        if (ui != null) {
-            beginPresentation();
-            requestLayout();
-        }
-    }
-
-    public void clearUi() {
-        if (this.ui != null) {
-            cancelPresentation();
-            this.ui = null;
-            requestLayout();
-        }
-    }
-
-    private void beginPresentation() {
-        cancelPresentation();
-        if (ui != null && display != null) {
-            Log.d(TAG, "Begin presentation");
-            presentation = ui.present(human, display, new Observer() {
-                @Override
-                public void onReaction(Reaction reaction) {
-                    Log.d(TAG, "onReaction: " + reaction);
-                }
-
-                @Override
-                public void onEnd() {
-                    Log.d(TAG, "onEnd");
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    Log.e(TAG, "onError", throwable);
-                }
-            });
-        }
+        multiDisplayPresentation = ui == null
+                                   ? new MultiDisplayPresentation<T>()
+                                   : new MultiDisplayPresentation<T>(ui, human, display, observer) {
+                                       @Override
+                                       protected void onCancel() {
+                                           super.onCancel();
+                                           UiView.this.ui = null;
+                                           requestLayout();
+                                       }
+                                   };
+        requestLayout();
+        return multiDisplayPresentation;
     }
 
     abstract protected void setMeasuredDimensionFromDisplayDimensions(float fixed, float variable);
@@ -146,7 +121,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         if (!variableDimensions.containsKey(fixedDimension)) {
             Log.d(TAG, "onMeasure widthSpec: " + MeasureSpec.toString(widthMeasureSpec) + ", heightSpec: " + MeasureSpec
                   .toString(heightMeasureSpec));
-            final T display = withFixedDimension(fixedDimension).withDelay().asType();
+            final T display = asDisplayWithFixedDimension(fixedDimension).withDelay().asType();
             final Presentation presentation = ui.present(human, display, Observer.EMPTY);
             final float variableDimension = getVariableDimension(presentation);
             presentation.cancel();
@@ -158,23 +133,21 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int oldWidth, int oldHeight) {
+        super.onSizeChanged(w, h, oldWidth, oldHeight);
         Log.d(TAG, "onSizeChanged");
 
         final float fixedDimension = getFixedDimension(w, h);
-        if (fixedDimension == getFixedDimension(oldw, oldh)) {
+        if (fixedDimension == getFixedDimension(oldWidth, oldHeight)) {
             Log.d(TAG, "no change in fixed dimension");
             return;
         }
-
-        cancelPresentation();
-        display = withFixedDimension(fixedDimension);
+        display = asDisplayWithFixedDimension(fixedDimension);
         // Patch views sometimes don't show up if beginPresentation is called directly.
         post(new Runnable() {
             @Override
             public void run() {
-                beginPresentation();
+                multiDisplayPresentation.setDisplay(display);
             }
         });
     }
@@ -238,14 +211,6 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
             textView.setIncludeFontPadding(false);
         }
         return textView;
-    }
-
-    private void cancelPresentation() {
-        if (presentation != null) {
-            Log.d(TAG, "Cancel presentation");
-            presentation.cancel();
-            presentation = null;
-        }
     }
 
     @NonNull

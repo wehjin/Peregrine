@@ -60,7 +60,7 @@ public class Column extends ShapeDisplayWrapper implements FixedDisplay<Column> 
 
     @NonNull
     @Override
-    public Column withFixedDimension(float fixedDimension) {
+    public Column asDisplayWithFixedDimension(float fixedDimension) {
         return withFixedWidth(fixedDimension);
     }
 

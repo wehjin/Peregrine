@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.presenters;
 
 import com.rubyhuntersky.columnui.presenters.Presenter;
 

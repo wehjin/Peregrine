@@ -6,6 +6,8 @@ package com.rubyhuntersky.columnui.presentations;
  */
 
 public interface Presentation {
+    Presentation EMPTY = new CancelledPresentation();
+
     float getWidth();
     float getHeight();
     boolean isCancelled();

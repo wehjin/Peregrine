@@ -10,5 +10,5 @@ import android.support.annotation.NonNull;
 public interface FixedDisplay<T> extends CoreDisplay<T> {
 
     @NonNull
-    T withFixedDimension(float fixedDimension);
+    T asDisplayWithFixedDimension(float fixedDimension);
 }

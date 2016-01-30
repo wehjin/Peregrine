@@ -1,17 +1,13 @@
 package com.rubyhuntersky.columnui;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
-import com.rubyhuntersky.columnui.bars.BarUiView;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.Sizelet;
@@ -26,6 +22,7 @@ import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -83,30 +80,6 @@ public class Creator {
                 final float width = widthlet.toFloat(presenter.getHuman(), bar.relatedWidth);
                 final Frame frame = new Frame(width, bar.fixedHeight, bar.elevation);
                 final Patch patch = bar.addPatch(frame, new RectangleShape(coloret));
-                presenter.addPresentation(new PatchPresentation(patch, frame));
-            }
-        });
-    }
-
-    @NonNull
-    static public ColumnUi barColumn(@NonNull final Sizelet heightlet, @NonNull final BarUi barUi) {
-        return ColumnUi.create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                final Column column = presenter.getDisplay();
-                final float height = heightlet.toFloat(presenter.getHuman(), column.relatedHeight);
-                final Shape shape = new ViewShape() {
-                    @Override
-                    public View createView(Context context) {
-                        final FrameLayout frameLayout = new FrameLayout(context);
-                        final BarUiView barView = new BarUiView(context);
-                        barView.setUi(barUi);
-                        frameLayout.addView(barView, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-                        return frameLayout;
-                    }
-                };
-                final Frame frame = new Frame(column.fixedWidth, height, column.elevation);
-                final Patch patch = column.addPatch(frame, shape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });

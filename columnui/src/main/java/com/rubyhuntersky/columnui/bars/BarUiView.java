@@ -46,8 +46,8 @@ public class BarUiView extends UiView<Bar> {
 
     @NonNull
     @Override
-    public Bar withFixedDimension(float fixedDimension) {
-        return bar.withFixedDimension(fixedDimension);
+    public Bar asDisplayWithFixedDimension(float fixedDimension) {
+        return bar.asDisplayWithFixedDimension(fixedDimension);
     }
 
     @NonNull

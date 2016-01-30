@@ -12,6 +12,7 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 
 import org.junit.After;

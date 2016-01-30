@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
+import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 
 /**

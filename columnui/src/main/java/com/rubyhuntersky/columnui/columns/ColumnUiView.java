@@ -46,8 +46,8 @@ public class ColumnUiView extends UiView<Column> {
 
     @NonNull
     @Override
-    public Column withFixedDimension(float fixedDimension) {
-        return column.withFixedDimension(fixedDimension);
+    public Column asDisplayWithFixedDimension(float fixedDimension) {
+        return column.asDisplayWithFixedDimension(fixedDimension);
     }
 
     @NonNull

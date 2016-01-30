@@ -42,7 +42,7 @@ public class Bar extends ShapeDisplayWrapper implements FixedDisplay<Bar> {
 
     @NonNull
     @Override
-    public Bar withFixedDimension(float fixedDimension) {
+    public Bar asDisplayWithFixedDimension(float fixedDimension) {
         return withFixedHeight(fixedDimension);
     }
 

@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
+import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.tiles.TileCreator;
+import com.rubyhuntersky.columnui.tiles.Tui1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
 
@@ -44,6 +50,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     public static final String SELECTED_PRICE_KEY = "selectedPriceKey";
     public static final ColumnUi SPACING = colorColumn(THIRD_FINGER, null);
     public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
+    public static final String TAG = BuyDialogFragment.class.getSimpleName();
 
     private BigDecimal buyAmount = BigDecimal.ZERO;
     private List<AssetPrice> prices;
@@ -51,6 +58,8 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private ColumnUiView columnUiView;
     private ColumnUi panel;
+    private Tui1<String> tui1;
+    private Presentation presentation = Presentation.EMPTY;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
@@ -97,6 +106,8 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
                                  .padBottom(THIRD_FINGER)
                                  .padHorizontal(THIRD_FINGER)
                                  .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
+
+        tui1 = TileCreator.textTile(IMPORTANT_DARK);
     }
 
     @Nullable
@@ -111,12 +122,29 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        columnUiView.setUi(panel);
+        presentation.cancel();
+        presentation = columnUiView.present(panel, new Observer() {
+            @Override
+            public void onReaction(Reaction reaction) {
+                Log.d(TAG, "onReaction: " + reaction);
+            }
+
+            @Override
+            public void onEnd() {
+                Log.d(TAG, "onEnd");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e(TAG, "onError", throwable);
+            }
+        });
+//        tui1.present(new Human(getContext()), new Tile(0, 0, 0, columnUiView), Observer.EMPTY);
     }
 
     @Override
     public void onPause() {
-        columnUiView.clearUi();
+        presentation.cancel();
         super.onPause();
     }
 
