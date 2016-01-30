@@ -14,7 +14,8 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
-import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.presentations.EmptyPresentation1;
+import com.rubyhuntersky.columnui.presentations.Presentation1;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.Cui1;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
@@ -59,9 +60,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private ColumnUiView columnUiView;
     private Cui1<String> panel;
-    private Presentation presentation = Presentation.EMPTY;
     private String sharesString;
     private int selectedSymbol;
+    private Presentation1<String> presentation1 = new EmptyPresentation1<>();
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
@@ -122,19 +123,14 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        presentPanel();
-    }
-
-    private void presentPanel() {
-        presentation.cancel();
-        presentation = columnUiView.present(panel.bind(sharesString), new Observer() {
+        presentation1 = columnUiView.present(panel, sharesString, new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
                 if (reaction instanceof ItemSelectionReaction) {
                     selectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
                     sharesString = "Invalid";
-                    presentPanel();
+                    presentation1.rebind(sharesString);
                 }
             }
 
@@ -152,7 +148,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     @Override
     public void onPause() {
-        presentation.cancel();
+        presentation1.cancel();
         super.onPause();
     }
 

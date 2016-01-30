@@ -4,7 +4,7 @@ package com.rubyhuntersky.columnui.presentations;
  * @author wehjin
  * @since 1/30/16.
  */
-public class CancelledPresentation implements Presentation {
+public class EmptyPresentation implements Presentation {
     @Override
     public float getWidth() {
         return 0;

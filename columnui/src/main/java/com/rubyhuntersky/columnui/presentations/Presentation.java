@@ -6,7 +6,7 @@ package com.rubyhuntersky.columnui.presentations;
  */
 
 public interface Presentation {
-    Presentation EMPTY = new CancelledPresentation();
+    Presentation EMPTY = new EmptyPresentation();
 
     float getWidth();
     float getHeight();
