@@ -10,6 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.rubyhuntersky.columnui.bars.Bar;
+import com.rubyhuntersky.columnui.bars.BarUi;
+import com.rubyhuntersky.columnui.bars.BarUiView;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.Sizelet;
@@ -18,6 +20,7 @@ import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;

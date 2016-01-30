@@ -1,7 +1,12 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.bars;
 
-import com.rubyhuntersky.columnui.bars.Bar;
-import com.rubyhuntersky.columnui.bars.ShiftBar;
+import com.rubyhuntersky.columnui.BasePresenter;
+import com.rubyhuntersky.columnui.BaseUi;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.OnPresent;
+import com.rubyhuntersky.columnui.Presentation;
+import com.rubyhuntersky.columnui.Presenter;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.conditions.Human;

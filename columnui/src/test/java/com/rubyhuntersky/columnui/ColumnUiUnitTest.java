@@ -2,6 +2,7 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;

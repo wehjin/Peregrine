@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui;
 
+import com.rubyhuntersky.columnui.columns.ColumnUi;
+
 /**
  * @author wehjin
  * @since 1/23/16.

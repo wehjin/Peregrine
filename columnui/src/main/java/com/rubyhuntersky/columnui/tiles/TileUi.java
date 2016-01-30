@@ -1,9 +1,9 @@
 package com.rubyhuntersky.columnui.tiles;
 
-import com.rubyhuntersky.columnui.BarUi;
+import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.BasePresenter;
 import com.rubyhuntersky.columnui.BaseUi;
-import com.rubyhuntersky.columnui.ColumnUi;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Presentation;

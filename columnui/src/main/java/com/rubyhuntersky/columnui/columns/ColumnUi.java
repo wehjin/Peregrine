@@ -1,11 +1,14 @@
-package com.rubyhuntersky.columnui;
+package com.rubyhuntersky.columnui.columns;
 
 import android.support.annotation.NonNull;
 
+import com.rubyhuntersky.columnui.BasePresenter;
+import com.rubyhuntersky.columnui.BaseUi;
+import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.OnPresent;
+import com.rubyhuntersky.columnui.Presentation;
+import com.rubyhuntersky.columnui.Presenter;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.DelayColumn;
-import com.rubyhuntersky.columnui.columns.FrameShiftColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 
@@ -101,7 +104,7 @@ abstract public class ColumnUi extends BaseUi<Column> {
         });
     }
 
-    public ColumnUi placeAbove(@NonNull final ColumnUi bottomUi) {
+    public ColumnUi expandBottom(@NonNull final ColumnUi bottomUi) {
         final ColumnUi ui = this;
         return ColumnUi.create(new OnPresent<Column>() {
             @Override

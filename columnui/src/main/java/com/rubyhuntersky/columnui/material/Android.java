@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.BarUi;
+import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.OnPresent;
 import com.rubyhuntersky.columnui.Patch;

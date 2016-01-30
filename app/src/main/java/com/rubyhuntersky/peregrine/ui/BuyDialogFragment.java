@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.columnui.ColumnUi;
-import com.rubyhuntersky.columnui.ColumnUiView;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
 
@@ -90,10 +90,10 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final ColumnUi pricesColumn = spinnerBar(symbols, symbol).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
                                                                  .toColumn(FINGER);
         this.panel = amountColumn.padTop(HALF_FINGER)
-                                 .placeAbove(pricesColumn)
-                                 .placeAbove(DIVIDER)
-                                 .placeAbove(SPACING)
-                                 .placeAbove(textColumn(sharesString, IMPORTANT_DARK))
+                                 .expandBottom(pricesColumn)
+                                 .expandBottom(DIVIDER)
+                                 .expandBottom(SPACING)
+                                 .expandBottom(textColumn(sharesString, IMPORTANT_DARK))
                                  .padBottom(THIRD_FINGER)
                                  .padHorizontal(THIRD_FINGER)
                                  .placeBefore(colorColumn(PREVIOUS, WHITE), 0);

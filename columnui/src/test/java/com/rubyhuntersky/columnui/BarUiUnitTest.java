@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.bars.Bar;
+import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.bars.FullBar;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
