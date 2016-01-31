@@ -6,10 +6,10 @@ import android.util.Pair;
  * @author wehjin
  * @since 1/30/16.
  */
-public class PairPresentation1<C> implements Presentation1<C> {
-    private final Pair<Presentation1<C>, Presentation1<C>> pair;
+public class PairPresentation implements Presentation {
+    private final Pair<Presentation, Presentation> pair;
 
-    public PairPresentation1(Pair<Presentation1<C>, Presentation1<C>> pair) {
+    public PairPresentation(Pair<Presentation, Presentation> pair) {
         this.pair = pair;
     }
 
@@ -37,9 +37,4 @@ public class PairPresentation1<C> implements Presentation1<C> {
         pair.second.cancel();
     }
 
-    @Override
-    public void rebind(C condition) {
-        pair.first.rebind(condition);
-        pair.second.rebind(condition);
-    }
 }

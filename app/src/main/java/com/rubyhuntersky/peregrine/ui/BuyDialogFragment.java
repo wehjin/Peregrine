@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
-import com.rubyhuntersky.columnui.presentations.EmptyPresentation1;
-import com.rubyhuntersky.columnui.presentations.Presentation1;
+import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
+import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.columnui.tiles.Cui1;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
@@ -58,9 +58,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     private List<AssetPrice> prices;
 
     private ColumnUiView columnUiView;
-    private Cui1<String> panel;
+    private ColumnUi1<String> panel;
     private String sharesString;
-    private Presentation1<String> presentation1 = new EmptyPresentation1<>();
+    private Presentation presentation1 = new EmptyPresentation();
     private AssetPrice selectedAssetPrice;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {

@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui.tiles;
+package com.rubyhuntersky.columnui.displays;
 
 import android.support.annotation.NonNull;
 

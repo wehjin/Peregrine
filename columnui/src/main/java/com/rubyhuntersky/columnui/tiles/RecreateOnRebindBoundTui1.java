@@ -1,18 +1,14 @@
 package com.rubyhuntersky.columnui.tiles;
 
-import android.util.Log;
-
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presentations.Presentation1;
 
 /**
  * @author wehjin
  * @since 1/30/16.
  */
-class RecreateOnRebindBoundTui1<C> extends BoundTui1<C> {
-    public static final String TAG = RecreateOnRebindBoundTui1.class.getSimpleName();
+class RecreateOnRebindBoundTui1<C> extends BoundTui1 {
     private final TileCreator.ConditionedUiSource<Tile, C> conditionedUiSource;
     private final C startCondition;
 
@@ -22,9 +18,9 @@ class RecreateOnRebindBoundTui1<C> extends BoundTui1<C> {
     }
 
     @Override
-    public Presentation1<C> present(final Human human, final Tile display, final Observer observer) {
+    public Presentation present(final Human human, final Tile display, final Observer observer) {
 
-        return new Presentation1<C>() {
+        return new Presentation() {
             Presentation presentation = conditionedUiSource.getUi(startCondition).present(human, display, observer);
 
             @Override
@@ -47,18 +43,7 @@ class RecreateOnRebindBoundTui1<C> extends BoundTui1<C> {
                 presentation.cancel();
             }
 
-            @Override
-            public void rebind(C condition) {
-                if (isCancelled()) return;
-                Log.d(TAG, "Rebind, recreating for condition: " + condition);
-                presentation.cancel();
-                presentation = conditionedUiSource.getUi(condition).present(human, display, observer);
-            }
         };
     }
 
-    @Override
-    public C getCondition() {
-        return startCondition;
-    }
 }

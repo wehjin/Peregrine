@@ -17,17 +17,17 @@ public class TileCreator {
         Ui<D> getUi(C condition);
     }
 
-    public static Tui1<String> textTile1(final TextStylet textStylet) {
+    public static TileUi1<String> textTile1(final TextStylet textStylet) {
         final ConditionedUiSource<Tile, String> uiSource = new ConditionedUiSource<Tile, String>() {
             @Override
             public Ui<Tile> getUi(String condition) {
                 return Creator.textTile(condition, textStylet);
             }
         };
-        return Tui1.create(new Tui1.OnBind<String>() {
+        return TileUi1.create(new TileUi1.OnBind<String>() {
             @NonNull
             @Override
-            public BoundTui1<String> onBind(final String condition) {
+            public BoundTui1 onBind(final String condition) {
                 return new RecreateOnRebindBoundTui1<>(uiSource, condition);
             }
         });

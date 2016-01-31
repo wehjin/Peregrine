@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.displays.ShapeDisplay;
-import com.rubyhuntersky.columnui.tiles.ShapeDisplayWrapper;
+import com.rubyhuntersky.columnui.displays.ShapeDisplayWrapper;
 
 /**
  * @author wehjin

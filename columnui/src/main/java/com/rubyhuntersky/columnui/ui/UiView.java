@@ -27,9 +27,8 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.patches.Patch;
-import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation1;
+import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presentations.Presentation1;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.TextShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
@@ -49,8 +48,8 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     public final String TAG = getClass().getSimpleName();
     private Human human;
     private T display;
-    private MultiDisplayPresentation1<T, ?> multiDisplayPresentation1 = new MultiDisplayPresentation1<>();
-    private BoundUi1<T, ?> ui;
+    private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
+    private BoundUi<T> ui;
     public int elevationPixels;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
@@ -80,21 +79,21 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         setContentDescription(TAG);
     }
 
-    public <C> Presentation1<C> present(BoundUi1<T, C> ui, Observer observer) {
-        multiDisplayPresentation1.cancel();
+    public Presentation present(BoundUi<T> ui, Observer observer) {
+        multiDisplayPresentation.cancel();
         this.ui = ui;
-        final MultiDisplayPresentation1<T, C> presentation1 = ui == null
-                                                              ? new MultiDisplayPresentation1<T, C>()
-                                                              : new MultiDisplayPresentation1<T, C>(ui, human, display,
-                                                                    observer) {
-                                                                  @Override
-                                                                  protected void onCancel() {
-                                                                      super.onCancel();
-                                                                      UiView.this.ui = null;
-                                                                      requestLayout();
-                                                                  }
-                                                              };
-        multiDisplayPresentation1 = presentation1;
+        final MultiDisplayPresentation<T> presentation1 = ui == null
+                                                          ? new MultiDisplayPresentation<T>()
+                                                          : new MultiDisplayPresentation<T>(ui, human, display,
+                                                                observer) {
+                                                              @Override
+                                                              protected void onCancel() {
+                                                                  super.onCancel();
+                                                                  UiView.this.ui = null;
+                                                                  requestLayout();
+                                                              }
+                                                          };
+        multiDisplayPresentation = presentation1;
         requestLayout();
         return presentation1;
     }
@@ -153,7 +152,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         post(new Runnable() {
             @Override
             public void run() {
-                multiDisplayPresentation1.setDisplay(display);
+                multiDisplayPresentation.setDisplay(display);
             }
         });
     }

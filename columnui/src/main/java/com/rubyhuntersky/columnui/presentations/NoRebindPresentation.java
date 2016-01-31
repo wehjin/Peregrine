@@ -4,16 +4,11 @@ package com.rubyhuntersky.columnui.presentations;
  * @author wehjin
  * @since 1/30/16.
  */
-public class NoRebindPresentation1<C> implements Presentation1<C> {
+public class NoRebindPresentation implements Presentation {
     private final Presentation present;
 
-    public NoRebindPresentation1(Presentation present) {
+    public NoRebindPresentation(Presentation present) {
         this.present = present;
-    }
-
-    @Override
-    public void rebind(C condition) {
-        // Do nothing
     }
 
     @Override

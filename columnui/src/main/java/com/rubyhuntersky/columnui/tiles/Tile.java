@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.displays.CoreDisplay;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
 import com.rubyhuntersky.columnui.displays.ShapeDisplay;
+import com.rubyhuntersky.columnui.displays.ShapeDisplayWrapper;
 
 /**
  * @author wehjin
