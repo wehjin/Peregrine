@@ -18,5 +18,5 @@ public interface CoreDisplay<T> extends ShapeDisplay {
     DelayDisplay<T> withDelay();
 
     @NonNull
-    FrameShiftDisplay<T> withShift();
+    ShiftDisplay<T> withShift();
 }

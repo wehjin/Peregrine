@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
+import com.rubyhuntersky.columnui.displays.ShiftDisplay;
 import com.rubyhuntersky.columnui.patches.FrameShiftPatch;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class ShiftBar extends Bar implements FrameShiftDisplay<Bar> {
+public class ShiftBar extends Bar implements ShiftDisplay<Bar> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();

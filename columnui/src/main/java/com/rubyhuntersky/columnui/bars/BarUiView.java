@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.ui.UiView;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
-import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
+import com.rubyhuntersky.columnui.displays.ShiftDisplay;
 
 /**
  * @author wehjin
@@ -64,7 +64,7 @@ public class BarUiView extends UiView<Bar> {
 
     @NonNull
     @Override
-    public FrameShiftDisplay<Bar> withShift() {
+    public ShiftDisplay<Bar> withShift() {
         return bar.withShift();
     }
 

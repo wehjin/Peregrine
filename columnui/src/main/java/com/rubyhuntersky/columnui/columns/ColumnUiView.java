@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
-import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
+import com.rubyhuntersky.columnui.displays.ShiftDisplay;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.ui.UiView;
 
@@ -58,7 +58,7 @@ public class ColumnUiView extends UiView<Column> {
 
     @NonNull
     @Override
-    public FrameShiftDisplay<Column> withShift() {
+    public ShiftDisplay<Column> withShift() {
         return column.withShift();
     }
 

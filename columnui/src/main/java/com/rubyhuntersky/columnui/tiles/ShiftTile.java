@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.Shape;
 import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
+import com.rubyhuntersky.columnui.displays.ShiftDisplay;
 import com.rubyhuntersky.columnui.patches.FrameShiftPatch;
 
 import java.util.ArrayList;
@@ -15,20 +15,20 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class FrameShiftTile extends Tile implements FrameShiftDisplay<Tile> {
+public class ShiftTile extends Tile implements ShiftDisplay<Tile> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
     private float horizontalShift;
 
-    public FrameShiftTile(@NonNull Tile original) {
+    public ShiftTile(@NonNull Tile original) {
         super(original);
     }
 
     @NonNull
     @Override
-    public FrameShiftTile setShift(float horizontal, float vertical) {
+    public ShiftTile setShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontal;

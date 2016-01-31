@@ -29,7 +29,7 @@ abstract public class TileUi implements Ui<Tile> {
             public void onPresent(Presenter<Bar> presenter) {
                 final Bar bar = presenter.getDisplay();
                 final Tile tile = new Tile(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
-                final FrameShiftTile frameShiftTile = tile.withShift();
+                final ShiftTile frameShiftTile = tile.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationHeight = presentation.getHeight();
                 final float extraHeight = bar.fixedHeight - presentationHeight;
@@ -63,7 +63,7 @@ abstract public class TileUi implements Ui<Tile> {
     public <P extends Presentation> P presentToColumn(Human human, Column column, Observer observer,
           PresentationMaker<P, Tile> maker) {
         final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
-        final FrameShiftTile frameShiftTile = tile.withShift();
+        final ShiftTile frameShiftTile = tile.withShift();
         final P presentation = maker.present(human, frameShiftTile, observer, 0);
         final float presentationWidth = presentation.getWidth();
         final float extraWidth = column.fixedWidth - presentationWidth;
