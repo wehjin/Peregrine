@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.BarUi1;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
@@ -51,7 +52,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     public static final String AMOUNT_KEY = "amountKey";
     public static final String PRICES_KEY = "pricesKey";
     public static final String SELECTED_PRICE_KEY = "selectedPriceKey";
-    public static final ColumnUi SPACING = colorColumn(THIRD_FINGER, null);
+    public static final ColumnUi SPACING = colorColumn(Sizelet.QUARTER_FINGER, null);
     public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
 
@@ -96,7 +97,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
         program = amountColumn.padTop(HALF_FINGER)
+                              .expandBottom(SPACING)
                               .expandBottom(pricesBar.toColumn(FINGER))
+                              .expandBottom(SPACING)
                               .expandBottom(DIVIDER)
                               .expandBottom(SPACING)
                               .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
