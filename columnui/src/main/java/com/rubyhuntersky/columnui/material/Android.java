@@ -13,6 +13,7 @@ import android.widget.Spinner;
 
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.bars.BarUi;
+import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.patches.Patch;
@@ -50,6 +51,15 @@ public class Android {
 
     public static BarUi spinnerBar(final List<String> options, final int selectedOption) {
         return spinnerTile(options, selectedOption).toBar();
+    }
+
+    public static BarUi1<Integer> spinnerBar(final List<String> options) {
+        return BarUi1.create(new BarUi1.OnBind<Integer>() {
+            @Override
+            public BarUi onBind(Integer condition) {
+                return spinnerBar(options, condition);
+            }
+        });
     }
 
     private static class SpinnerViewShape extends ViewShape {

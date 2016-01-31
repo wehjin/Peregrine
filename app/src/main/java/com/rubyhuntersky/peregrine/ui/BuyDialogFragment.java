@@ -14,6 +14,7 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
+import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -58,8 +59,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     private List<AssetPrice> prices;
 
     private ColumnUiView columnUiView;
-    private ColumnUi1<String> panel;
-    private String sharesString;
+    private ColumnUi2<Integer, String> panel;
     private Presentation presentation1 = new EmptyPresentation();
     private AssetPrice selectedAssetPrice;
 
@@ -97,21 +97,18 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         for (AssetPrice price : prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
-        int selectedSymbol = prices.indexOf(selectedAssetPrice);
-        sharesString = selectedAssetPrice.getSharesString(buyAmount);
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
-        final ColumnUi pricesColumn = spinnerBar(symbols, selectedSymbol).expandStart(
-              textTile(DIVISION_SIGN, IMPORTANT_DARK)).toColumn(FINGER);
-
-        this.panel = amountColumn.padTop(HALF_FINGER)
-                                 .expandBottom(pricesColumn)
-                                 .expandBottom(DIVIDER)
-                                 .expandBottom(SPACING)
-                                 .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
-                                 .padBottom(THIRD_FINGER)
-                                 .padHorizontal(THIRD_FINGER)
-                                 .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
+        final ColumnUi1<Integer> pricesColumn = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
+                                                                   .toColumn(FINGER);
+        panel = amountColumn.padTop(HALF_FINGER)
+                            .expandBottom(pricesColumn)
+                            .expandBottom(DIVIDER)
+                            .expandBottom(SPACING)
+                            .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
+                            .padBottom(THIRD_FINGER)
+                            .padHorizontal(THIRD_FINGER)
+                            .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
     }
 
     @Nullable
@@ -131,7 +128,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private void present() {
         presentation1.cancel();
-        presentation1 = columnUiView.present(panel.bind(sharesString), new Observer() {
+        final ColumnUi boundPanel = panel.bind(selectedAssetPrice.getSharesString(buyAmount))
+                                         .bind(prices.indexOf(selectedAssetPrice));
+        presentation1 = columnUiView.present(boundPanel, new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);

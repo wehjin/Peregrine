@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.columns.BoundCui1;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -27,7 +28,7 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
             @NonNull
             @Override
-            public BoundCui1 onBind(final C condition) {
+            public ColumnUi onBind(final C condition) {
                 return new BoundCui1() {
 
                     @Override

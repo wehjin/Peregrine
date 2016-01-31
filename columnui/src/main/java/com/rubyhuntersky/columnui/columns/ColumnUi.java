@@ -6,8 +6,6 @@ import android.util.Pair;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.presentations.NoRebindPresentation;
-import com.rubyhuntersky.columnui.presentations.PairPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
@@ -212,35 +210,8 @@ public abstract class ColumnUi implements Ui<Column> {
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
             @NonNull
             @Override
-            public BoundCui1 onBind(final C condition) {
-                return BoundCui1.create(new BoundCui1.OnPresent1() {
-
-                    @Override
-                    public Presentation onPresent(Human human, Column column, Observer observer) {
-                        return new PairPresentation(presentBottomExpansion(human, column, observer,
-                              new PresentationMaker<Presentation, Column>() {
-                                  @Override
-                                  public Presentation present(Human human, Column display, Observer observer,
-                                        int index) {
-                                      if (index == 0) {
-                                          return new NoRebindPresentation(columnUi.present(human, display, observer));
-                                      }
-                                      if (index == 1) {
-                                          return columnUi1.bind(condition).present(human, display, observer);
-                                      }
-                                      return null;
-                                  }
-
-                                  @Override
-                                  public Presentation resize(float width, float height, Presentation basis) {
-                                      final float width1 = width;
-                                      final float height1 = height;
-                                      final Presentation original = basis;
-                                      return new ResizePresentation(width1, height1, original);
-                                  }
-                              }));
-                    }
-                });
+            public ColumnUi onBind(final C condition) {
+                return columnUi.expandBottom(columnUi1.bind(condition));
             }
         });
     }
