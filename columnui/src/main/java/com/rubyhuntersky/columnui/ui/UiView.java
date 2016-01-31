@@ -27,7 +27,7 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.patches.Patch;
-import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation;
+import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation1;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.Presentation1;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
@@ -49,8 +49,8 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     public final String TAG = getClass().getSimpleName();
     private Human human;
     private T display;
-    private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
-    private Ui<T> ui;
+    private MultiDisplayPresentation1<T, ?> multiDisplayPresentation1 = new MultiDisplayPresentation1<>();
+    private BoundUi1<T, ?> ui;
     public int elevationPixels;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
@@ -80,62 +80,23 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         setContentDescription(TAG);
     }
 
-    public Presentation present(Ui<T> ui, Observer observer) {
-        multiDisplayPresentation.cancel();
+    public <C> Presentation1<C> present(BoundUi1<T, C> ui, Observer observer) {
+        multiDisplayPresentation1.cancel();
         this.ui = ui;
-        multiDisplayPresentation = ui == null
-                                   ? new MultiDisplayPresentation<T>()
-                                   : new MultiDisplayPresentation<T>(ui, human, display, observer) {
-                                       @Override
-                                       protected void onCancel() {
-                                           super.onCancel();
-                                           UiView.this.ui = null;
-                                           requestLayout();
-                                       }
-                                   };
+        final MultiDisplayPresentation1<T, C> presentation1 = ui == null
+                                                              ? new MultiDisplayPresentation1<T, C>()
+                                                              : new MultiDisplayPresentation1<T, C>(ui, human, display,
+                                                                    observer) {
+                                                                  @Override
+                                                                  protected void onCancel() {
+                                                                      super.onCancel();
+                                                                      UiView.this.ui = null;
+                                                                      requestLayout();
+                                                                  }
+                                                              };
+        multiDisplayPresentation1 = presentation1;
         requestLayout();
-        return multiDisplayPresentation;
-    }
-
-    public <C> Presentation1<C> present(final Ui1<T, C> ui1, final C startCondition, final Observer observer) {
-        return new Presentation1<C>() {
-
-            boolean isCancelled;
-            Presentation presentation = present(ui1.bind(startCondition), observer);
-
-            @Override
-            public void rebind(C condition) {
-                if (isCancelled) {
-                    throw new IllegalStateException("Rebind after cancelled");
-                }
-                presentation.cancel();
-                presentation = present(ui1.bind(condition), observer);
-            }
-
-            @Override
-            public float getWidth() {
-                return isCancelled ? 0 : presentation.getWidth();
-            }
-
-            @Override
-            public float getHeight() {
-                return isCancelled ? 0 : presentation.getHeight();
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return isCancelled;
-            }
-
-            @Override
-            public void cancel() {
-                if (isCancelled) {
-                    return;
-                }
-                isCancelled = true;
-                presentation.cancel();
-            }
-        };
+        return presentation1;
     }
 
     abstract protected void setMeasuredDimensionFromDisplayDimensions(float fixed, float variable);
@@ -192,7 +153,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         post(new Runnable() {
             @Override
             public void run() {
-                multiDisplayPresentation.setDisplay(display);
+                multiDisplayPresentation1.setDisplay(display);
             }
         });
     }

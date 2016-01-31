@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui.tiles;
 
+import android.util.Log;
+
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -10,6 +12,7 @@ import com.rubyhuntersky.columnui.presentations.Presentation1;
  * @since 1/30/16.
  */
 class RecreateOnRebindBoundTui1<C> extends BoundTui1<C> {
+    public static final String TAG = RecreateOnRebindBoundTui1.class.getSimpleName();
     private final TileCreator.ConditionedUiSource<Tile, C> conditionedUiSource;
     private final C startCondition;
 
@@ -47,6 +50,7 @@ class RecreateOnRebindBoundTui1<C> extends BoundTui1<C> {
             @Override
             public void rebind(C condition) {
                 if (isCancelled()) return;
+                Log.d(TAG, "Rebind, recreating for condition: " + condition);
                 presentation.cancel();
                 presentation = conditionedUiSource.getUi(condition).present(human, display, observer);
             }

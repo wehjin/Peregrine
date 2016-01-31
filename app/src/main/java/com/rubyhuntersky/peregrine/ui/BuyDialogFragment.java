@@ -123,7 +123,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        presentation1 = columnUiView.present(panel, sharesString, new Observer() {
+        presentation1 = columnUiView.present(panel.bind(sharesString), new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);

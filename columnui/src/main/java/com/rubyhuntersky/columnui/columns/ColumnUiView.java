@@ -4,10 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.rubyhuntersky.columnui.ui.UiView;
 import com.rubyhuntersky.columnui.displays.DelayDisplay;
 import com.rubyhuntersky.columnui.displays.FrameShiftDisplay;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.ui.UiView;
 
 /**
  * @author wehjin
