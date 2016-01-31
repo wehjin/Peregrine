@@ -103,6 +103,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final ColumnUi pricesColumn = spinnerBar(symbols, selectedSymbol).expandStart(
               textTile(DIVISION_SIGN, IMPORTANT_DARK)).toColumn(FINGER);
+
         this.panel = amountColumn.padTop(HALF_FINGER)
                                  .expandBottom(pricesColumn)
                                  .expandBottom(DIVIDER)

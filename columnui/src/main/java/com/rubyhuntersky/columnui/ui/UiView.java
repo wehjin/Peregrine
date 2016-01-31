@@ -49,7 +49,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     private Human human;
     private T display;
     private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
-    private BoundUi<T> ui;
+    private Ui<T> ui;
     public int elevationPixels;
     private TextView textView;
     private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
@@ -79,7 +79,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         setContentDescription(TAG);
     }
 
-    public Presentation present(BoundUi<T> ui, Observer observer) {
+    public Presentation present(Ui<T> ui, Observer observer) {
         multiDisplayPresentation.cancel();
         this.ui = ui;
         final MultiDisplayPresentation<T> presentation1 = ui == null

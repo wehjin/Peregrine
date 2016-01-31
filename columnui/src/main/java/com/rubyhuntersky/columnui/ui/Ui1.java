@@ -7,5 +7,5 @@ package com.rubyhuntersky.columnui.ui;
 
 public interface Ui1<T, C> {
 
-    BoundUi<T> bind(C condition);
+    Ui<T> bind(C condition);
 }

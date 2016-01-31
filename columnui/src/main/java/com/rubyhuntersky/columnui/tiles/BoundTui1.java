@@ -5,15 +5,15 @@ import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
-import com.rubyhuntersky.columnui.ui.BoundUi;
 import com.rubyhuntersky.columnui.ui.PresentationMaker;
+import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
  * @author wehjin
  * @since 1/30/16.
  */
 
-public abstract class BoundTui1 extends TileUi implements BoundUi<Tile> {
+public abstract class BoundTui1 extends TileUi implements Ui<Tile> {
 
     @Override
     public abstract Presentation present(Human human, Tile tile, Observer observer);
