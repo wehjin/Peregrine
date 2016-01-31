@@ -56,13 +56,12 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private BigDecimal buyAmount = BigDecimal.ZERO;
     private List<AssetPrice> prices;
-    private AssetPrice selectedPrice;
 
     private ColumnUiView columnUiView;
     private Cui1<String> panel;
     private String sharesString;
-    private int selectedSymbol;
     private Presentation1<String> presentation1 = new EmptyPresentation1<>();
+    private AssetPrice selectedAssetPrice;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
@@ -88,15 +87,18 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
         prices = getArguments().getParcelableArrayList(PRICES_KEY);
-        selectedPrice = getArguments().getParcelable(SELECTED_PRICE_KEY);
+        selectedAssetPrice = getArguments().getParcelable(SELECTED_PRICE_KEY);
+        buildPanel();
+    }
 
+    private void buildPanel() {
         final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(buyAmount);
         final List<String> symbols = new ArrayList<>();
         for (AssetPrice price : prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
-        selectedSymbol = prices.indexOf(selectedPrice);
-        sharesString = selectedPrice.getSharesString(buyAmount);
+        int selectedSymbol = prices.indexOf(selectedAssetPrice);
+        sharesString = selectedAssetPrice.getSharesString(buyAmount);
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final ColumnUi pricesColumn = spinnerBar(symbols, selectedSymbol).expandStart(
@@ -123,14 +125,20 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        present();
+    }
+
+    private void present() {
+        presentation1.cancel();
         presentation1 = columnUiView.present(panel.bind(sharesString), new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
                 if (reaction instanceof ItemSelectionReaction) {
-                    selectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
-                    sharesString = "Invalid";
-                    presentation1.rebind(sharesString);
+                    int newSelectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
+                    selectedAssetPrice = prices.get(newSelectedSymbol);
+                    buildPanel();
+                    present();
                 }
             }
 
