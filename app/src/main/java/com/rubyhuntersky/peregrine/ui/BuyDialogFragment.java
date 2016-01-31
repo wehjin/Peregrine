@@ -60,7 +60,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private ColumnUiView columnUiView;
     private ColumnUi2<Integer, String> panel;
-    private Presentation presentation1 = new EmptyPresentation();
+    private Presentation presentation = new EmptyPresentation();
     private AssetPrice selectedAssetPrice;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
@@ -127,10 +127,10 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     }
 
     private void present() {
-        presentation1.cancel();
+        presentation.cancel();
         final ColumnUi boundPanel = panel.bind(selectedAssetPrice.getSharesString(buyAmount))
                                          .bind(prices.indexOf(selectedAssetPrice));
-        presentation1 = columnUiView.present(boundPanel, new Observer() {
+        presentation = columnUiView.present(boundPanel, new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
@@ -156,7 +156,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     @Override
     public void onPause() {
-        presentation1.cancel();
+        presentation.cancel();
         super.onPause();
     }
 
