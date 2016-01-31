@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +109,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
                                   private int newSelectedSymbol = selectedSymbol;
 
                                   @Override
-                                  public Pair<Integer, String> print() {
-                                      return new Pair<>(selectedSymbol, selectedAssetPrice.getSharesString(buyAmount));
+                                  public ColumnUi print(ColumnUi2<Integer, String> ui2) {
+                                      return ui2.bind(selectedAssetPrice.getSharesString(buyAmount))
+                                                .bind(selectedSymbol);
                                   }
 
                                   @Override

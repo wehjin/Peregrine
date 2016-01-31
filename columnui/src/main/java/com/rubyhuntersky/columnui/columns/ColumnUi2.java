@@ -1,7 +1,5 @@
 package com.rubyhuntersky.columnui.columns;
 
-import android.util.Pair;
-
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
@@ -68,9 +66,8 @@ public abstract class ColumnUi2<C1, C2> {
 
             void present(final Repl<C1, C2> repl, final SwitchPresenter<Column> presenter) {
                 if (presenter.isCancelled()) return;
-                final Pair<C1, C2> print = repl.print();
-                final ColumnUi bound = columnUi2.bind(print.second).bind(print.first);
-                presenter.addPresentation(bound.present(presenter.getHuman(), presenter.getDisplay(), new Observer() {
+                final ColumnUi print = repl.print(columnUi2);
+                presenter.addPresentation(print.present(presenter.getHuman(), presenter.getDisplay(), new Observer() {
                     @Override
                     public void onReaction(Reaction reaction) {
                         if (presenter.isCancelled()) return;
@@ -95,7 +92,7 @@ public abstract class ColumnUi2<C1, C2> {
     }
 
     public interface Repl<C1, C2> {
-        Pair<C1, C2> print();
+        ColumnUi print(ColumnUi2<C1, C2> unbound);
         void read(Reaction reaction);
         boolean eval();
     }
