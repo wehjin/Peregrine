@@ -6,14 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
+import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
@@ -59,9 +60,9 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     private List<AssetPrice> prices;
 
     private ColumnUiView columnUiView;
-    private ColumnUi2<Integer, String> panel;
     private Presentation presentation = new EmptyPresentation();
     private AssetPrice selectedAssetPrice;
+    private ColumnUi program;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
 
@@ -88,27 +89,47 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
         prices = getArguments().getParcelableArrayList(PRICES_KEY);
         selectedAssetPrice = getArguments().getParcelable(SELECTED_PRICE_KEY);
-        buildPanel();
-    }
-
-    private void buildPanel() {
         final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(buyAmount);
         final List<String> symbols = new ArrayList<>();
         for (AssetPrice price : prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
-
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
-        final ColumnUi1<Integer> pricesColumn = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK))
-                                                                   .toColumn(FINGER);
-        panel = amountColumn.padTop(HALF_FINGER)
-                            .expandBottom(pricesColumn)
-                            .expandBottom(DIVIDER)
-                            .expandBottom(SPACING)
-                            .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
-                            .padBottom(THIRD_FINGER)
-                            .padHorizontal(THIRD_FINGER)
-                            .placeBefore(colorColumn(PREVIOUS, WHITE), 0);
+        final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
+        program = amountColumn.padTop(HALF_FINGER)
+                              .expandBottom(pricesBar.toColumn(FINGER))
+                              .expandBottom(DIVIDER)
+                              .expandBottom(SPACING)
+                              .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
+                              .padBottom(THIRD_FINGER)
+                              .padHorizontal(THIRD_FINGER)
+                              .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+                              .printReadEval(new ColumnUi2.Repl<Integer, String>() {
+
+                                  private int selectedSymbol = prices.indexOf(selectedAssetPrice);
+                                  private int newSelectedSymbol = selectedSymbol;
+
+                                  @Override
+                                  public Pair<Integer, String> print() {
+                                      return new Pair<>(selectedSymbol, selectedAssetPrice.getSharesString(buyAmount));
+                                  }
+
+                                  @Override
+                                  public void read(Reaction reaction) {
+                                      if (reaction instanceof ItemSelectionReaction) {
+                                          newSelectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
+                                      }
+                                  }
+
+                                  @Override
+                                  public boolean eval() {
+                                      if (newSelectedSymbol == selectedSymbol) return false;
+                                      selectedAssetPrice = prices.get(newSelectedSymbol);
+                                      selectedSymbol = newSelectedSymbol;
+                                      return true;
+                                  }
+                              });
+
     }
 
     @Nullable
@@ -128,18 +149,10 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private void present() {
         presentation.cancel();
-        final ColumnUi boundPanel = panel.bind(selectedAssetPrice.getSharesString(buyAmount))
-                                         .bind(prices.indexOf(selectedAssetPrice));
-        presentation = columnUiView.present(boundPanel, new Observer() {
+        presentation = columnUiView.present(program, new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
-                if (reaction instanceof ItemSelectionReaction) {
-                    int newSelectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
-                    selectedAssetPrice = prices.get(newSelectedSymbol);
-                    buildPanel();
-                    present();
-                }
             }
 
             @Override
