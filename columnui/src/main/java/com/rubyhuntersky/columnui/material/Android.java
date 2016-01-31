@@ -41,7 +41,8 @@ public class Android {
                 final Tile tile = presenter.getDisplay();
                 final SpinnerViewShape spinnerViewShape = new SpinnerViewShape(options, selectedOption, Observer.EMPTY);
                 final ShapeSize shapeSize = tile.measureShape(spinnerViewShape);
-                final Frame frame = new Frame(shapeSize.measuredWidth, shapeSize.measuredHeight, tile.elevation);
+                final int adjustedWidth = shapeSize.measuredWidth + 2; // A few pixels short causes ellipsis.
+                final Frame frame = new Frame(adjustedWidth, shapeSize.measuredHeight, tile.elevation);
                 final SpinnerViewShape shape = new SpinnerViewShape(options, selectedOption, presenter);
                 final Patch patch = tile.addPatch(frame, shape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
