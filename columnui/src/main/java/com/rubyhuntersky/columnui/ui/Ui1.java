@@ -5,8 +5,7 @@ package com.rubyhuntersky.columnui.ui;
  * @since 1/30/16.
  */
 
-public interface Ui1<T, C> extends Ui<T> {
+public interface Ui1<T, C> {
 
-    C getStartCondition();
-    Ui<T> bind(C condition);
+    BoundUi1<T, C> bind(C condition);
 }

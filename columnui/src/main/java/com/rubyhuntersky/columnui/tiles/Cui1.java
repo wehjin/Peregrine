@@ -7,8 +7,12 @@ import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.presentations.NoRebindPresentation1;
+import com.rubyhuntersky.columnui.presentations.PairPresentation1;
+import com.rubyhuntersky.columnui.presentations.Presentation1;
+import com.rubyhuntersky.columnui.presentations.ResizePresentation1;
+import com.rubyhuntersky.columnui.ui.PresentationMaker;
 import com.rubyhuntersky.columnui.ui.Ui1;
-import com.rubyhuntersky.columnui.presentations.Presentation;
 
 /**
  * @author wehjin
@@ -20,58 +24,107 @@ abstract public class Cui1<C> implements Ui1<Column, C> {
     private Cui1() {
     }
 
-    public abstract ColumnUi bind(C condition);
+    @Override
+    public abstract BoundCui1<C> bind(C condition);
 
     public Cui1<C> padBottom(final Sizelet padlet) {
         final Cui1<C> ui1 = this;
         return Cui1.create(new OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(C condition) {
-                // TODO Think about using lifting operations.
-                return ui1.bind(condition).padBottom(padlet);
+            public BoundCui1<C> onBind(final C condition) {
+                return BoundCui1.create(condition, new BoundCui1.OnPresent1<C>() {
+                    @Override
+                    public Presentation1<C> onPresent(Human human, Column column, Observer observer) {
+                        return ColumnUi.presentWithBottomPadding(padlet, human, column, observer,
+                              new PresentationMaker<Presentation1<C>, Column>() {
+                                  @Override
+                                  public Presentation1<C> present(Human human, Column display, Observer observer,
+                                        int index) {
+                                      return ui1.bind(condition).present(human, display, observer);
+                                  }
+
+                                  @Override
+                                  public Presentation1<C> resize(float width, float height, Presentation1<C> basis) {
+                                      return new ResizePresentation1<>(width, height, basis);
+                                  }
+
+                              });
+                    }
+                });
             }
-        }, ui1.getStartCondition());
+        });
     }
 
     public Cui1<C> padHorizontal(final Sizelet padlet) {
-        final Cui1<C> ui1 = this;
         return Cui1.create(new OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(C condition) {
-                // TODO Think about using lifting operations.
-                return ui1.bind(condition).padHorizontal(padlet);
+            public BoundCui1<C> onBind(final C condition) {
+                return BoundCui1.create(condition, new BoundCui1.OnPresent1<C>() {
+                    @Override
+                    public Presentation1<C> onPresent(Human human, Column column, Observer observer) {
+                        return ColumnUi.presentWithHorizontalPadding(padlet, human, column, observer,
+                              new PresentationMaker<Presentation1<C>, Column>() {
+                                  @Override
+                                  public Presentation1<C> present(Human human, Column display, Observer observer,
+                                        int index) {
+                                      return Cui1.this.bind(condition).present(human, display, observer);
+                                  }
+
+                                  @Override
+                                  public Presentation1<C> resize(float width, float height, Presentation1<C> basis) {
+                                      return new ResizePresentation1<>(width, height, basis);
+                                  }
+
+                              });
+                    }
+                });
             }
-        }, ui1.getStartCondition());
+        });
     }
 
     public Cui1<C> placeBefore(final ColumnUi columnUi, final int elevate) {
-        final Cui1<C> ui1 = this;
         return Cui1.create(new OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(C condition) {
-                // TODO Think about using lifting operations.
-                return ui1.bind(condition).placeBefore(columnUi, elevate);
+            public BoundCui1<C> onBind(final C condition) {
+                return BoundCui1.create(condition, new BoundCui1.OnPresent1<C>() {
+                    @Override
+                    public Presentation1<C> onPresent(Human human, Column column, Observer observer) {
+                        return new PairPresentation1<>(
+                              ColumnUi.presentFirstBeforeSecond(elevate, human, column, observer,
+                                    new PresentationMaker<Presentation1<C>, Column>() {
+                                        @Override
+                                        public Presentation1<C> present(Human human, Column display, Observer observer,
+                                              int index) {
+                                            if (index == 0) {
+                                                return Cui1.this.bind(condition).present(human, display, observer);
+                                            }
+                                            if (index == 1) {
+                                                return new NoRebindPresentation1<>(
+                                                      columnUi.present(human, display, observer));
+                                            }
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public Presentation1<C> resize(float width, float height,
+                                              Presentation1<C> basis) {
+                                            return null;
+                                        }
+
+                                    }));
+                    }
+                });
             }
-        }, ui1.getStartCondition());
+        });
     }
 
-    public static <C> Cui1<C> create(final OnBind<C> onBind, final C startCondition) {
+    public static <C> Cui1<C> create(final OnBind<C> onBind) {
         return new Cui1<C>() {
             @Override
-            public Presentation present(Human human, Column display, Observer observer) {
-                return bind(startCondition).present(human, display, observer);
-            }
-
-            @Override
-            public C getStartCondition() {
-                return startCondition;
-            }
-
-            @Override
-            public ColumnUi bind(C condition) {
+            public BoundCui1<C> bind(C condition) {
                 return onBind.onBind(condition);
             }
         };
@@ -79,7 +132,8 @@ abstract public class Cui1<C> implements Ui1<Column, C> {
 
     public interface OnBind<C> {
         @NonNull
-        ColumnUi onBind(C condition);
+        BoundCui1<C> onBind(C condition);
     }
+
 }
 

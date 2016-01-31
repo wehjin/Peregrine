@@ -1,17 +1,19 @@
 package com.rubyhuntersky.columnui.bars;
 
+import android.support.annotation.NonNull;
+
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.ui.Ui;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
  * @author wehjin
@@ -28,19 +30,24 @@ abstract public class BarUi implements Ui<Bar> {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                final Column column = presenter.getDisplay();
-                final Human human = presenter.getHuman();
-                final float height = heightlet.toFloat(human, column.relatedHeight);
-                final Bar bar = new Bar(height, column.fixedWidth, column.elevation, column);
-                final ShiftBar shiftBar = bar.withShift();
-                final Presentation presentation = barUi.present(human, shiftBar, presenter);
-                final float presentationWidth = presentation.getWidth();
-                final float extraWidth = column.fixedWidth - presentationWidth;
-                final float anchor = .5f;
-                shiftBar.setShift(extraWidth * anchor, 0);
-                presenter.addPresentation(new ResizePresentation(column.fixedWidth, bar.fixedHeight, presentation));
+                presenter.addPresentation(
+                      presentBarToColumn(barUi, heightlet, presenter.getHuman(), presenter.getDisplay(), presenter));
             }
         });
+    }
+
+    @NonNull
+    private Presentation presentBarToColumn(BarUi barUi, Sizelet heightlet, Human human, Column column,
+          Observer observer) {
+        final float height = heightlet.toFloat(human, column.relatedHeight);
+        final Bar bar = new Bar(height, column.fixedWidth, column.elevation, column);
+        final ShiftBar shiftBar = bar.withShift();
+        final Presentation presentation = barUi.present(human, shiftBar, observer);
+        final float presentationWidth = presentation.getWidth();
+        final float extraWidth = column.fixedWidth - presentationWidth;
+        final float anchor = .5f;
+        shiftBar.setShift(extraWidth * anchor, 0);
+        return new ResizePresentation(column.fixedWidth, bar.fixedHeight, presentation);
     }
 
     public BarUi expandStart(final TileUi startUi) {

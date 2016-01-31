@@ -3,10 +3,10 @@ package com.rubyhuntersky.columnui.tiles;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.presentations.Presentation1;
 import com.rubyhuntersky.columnui.ui.Ui1;
-import com.rubyhuntersky.columnui.presentations.Presentation;
 
 /**
  * @author wehjin
@@ -19,41 +19,41 @@ abstract public class Tui1<C> implements Ui1<Tile, C> {
     }
 
     @Override
-    public abstract TileUi bind(C condition);
+    public abstract BoundTui1<C> bind(C condition);
 
     public Cui1<C> toColumn() {
-        final Tui1<C> tui1 = this;
         return Cui1.create(new Cui1.OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(C condition) {
-                return tui1.bind(condition).toColumn();
+            public BoundCui1<C> onBind(final C condition) {
+                return new BoundCui1<C>() {
+
+                    @Override
+                    public C getCondition() {
+                        return condition;
+                    }
+
+                    @Override
+                    public Presentation1<C> present(Human human, Column display, Observer observer) {
+                        return Tui1.this.bind(condition).presentToColumn(human, display, observer);
+                    }
+                };
             }
-        }, tui1.getStartCondition());
+        });
     }
 
-    public static <T> Tui1<T> create(final OnBind<T> onBind, final T startCondition) {
-        return new Tui1<T>() {
+    public static <C> Tui1<C> create(final OnBind<C> onBind) {
+        return new Tui1<C>() {
 
             @Override
-            public T getStartCondition() {
-                return startCondition;
-            }
-
-            @Override
-            public TileUi bind(T condition) {
+            public BoundTui1<C> bind(C condition) {
                 return onBind.onBind(condition);
-            }
-
-            @Override
-            public Presentation present(Human human, Tile display, Observer observer) {
-                return bind(startCondition).present(human, display, observer);
             }
         };
     }
 
-    public interface OnBind<T> {
+    public interface OnBind<C> {
         @NonNull
-        TileUi onBind(T condition);
+        BoundTui1<C> onBind(C condition);
     }
 }
