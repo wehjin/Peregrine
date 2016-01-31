@@ -71,6 +71,16 @@ abstract public class ColumnUi1<C> implements Ui1<Column, C> {
         }));
     }
 
+    public ColumnUi1<C> expandVertical(final Sizelet heightlet) {
+        return ColumnUi1.create(new OnBind<C>() {
+            @NonNull
+            @Override
+            public ColumnUi onBind(C condition) {
+                return ColumnUi1.this.bind(condition).expandVertical(heightlet);
+            }
+        });
+    }
+
     public static <C> ColumnUi1<C> create(final OnBind<C> onBind) {
         return new ColumnUi1<C>() {
             @Override

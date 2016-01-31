@@ -52,6 +52,15 @@ public abstract class ColumnUi2<C1, C2> {
         });
     }
 
+    public ColumnUi2<C1, C2> expandVertical(final Sizelet heightlet) {
+        return create(new OnBind<C1, C2>() {
+            @Override
+            public ColumnUi1<C1> onBind(C2 condition) {
+                return ColumnUi2.this.bind(condition).expandVertical(heightlet);
+            }
+        });
+    }
+
     public ColumnUi printReadEval(final Repl<C1, C2> repl) {
         final ColumnUi2<C1, C2> columnUi2 = this;
         return ColumnUi.create(new OnPresent<Column>() {

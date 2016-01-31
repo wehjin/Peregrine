@@ -32,7 +32,7 @@ public class Column extends ShapeDisplayWrapper implements FixedDisplay<Column> 
         return new Column(fixedWidth, relatedHeight, elevation, this);
     }
 
-    public Column withFrameShift(float horizontal, float vertical) {
+    public Column withShift(float horizontal, float vertical) {
         final ShiftColumn frameShiftColumn = withShift();
         frameShiftColumn.setShift(horizontal, vertical);
         return frameShiftColumn;

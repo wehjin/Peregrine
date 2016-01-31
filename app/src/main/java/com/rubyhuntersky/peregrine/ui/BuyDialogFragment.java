@@ -21,6 +21,7 @@ import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
+import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
 
@@ -34,10 +35,10 @@ import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
 import static com.rubyhuntersky.columnui.basics.Coloret.WHITE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.FINGER;
-import static com.rubyhuntersky.columnui.basics.Sizelet.HALF_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.PREVIOUS;
 import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
+import static com.rubyhuntersky.columnui.basics.Sizelet.TWO_THIRDS_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
 import static com.rubyhuntersky.columnui.basics.TextStylet.IMPORTANT_DARK;
 import static com.rubyhuntersky.columnui.material.Android.spinnerBar;
@@ -96,14 +97,14 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         }
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
-        program = amountColumn.padTop(HALF_FINGER)
-                              .expandBottom(SPACING)
+        final TileUi1<String> sharedTile = TileCreator.textTile1(IMPORTANT_DARK);
+        program = amountColumn.expandBottom(SPACING)
                               .expandBottom(pricesBar.toColumn(FINGER))
                               .expandBottom(SPACING)
                               .expandBottom(DIVIDER)
                               .expandBottom(SPACING)
-                              .expandBottom(TileCreator.textTile1(IMPORTANT_DARK).toColumn())
-                              .padBottom(THIRD_FINGER)
+                              .expandBottom(sharedTile.toColumn())
+                              .expandVertical(TWO_THIRDS_FINGER)
                               .padHorizontal(THIRD_FINGER)
                               .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
                               .printReadEval(new ColumnUi2.Repl<Integer, String>() {

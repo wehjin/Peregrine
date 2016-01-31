@@ -2,8 +2,6 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
@@ -12,17 +10,22 @@ import com.rubyhuntersky.columnui.basics.Sizelet.Ruler;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static com.rubyhuntersky.columnui.Creator.colorColumn;
+import static com.rubyhuntersky.columnui.basics.Sizelet.pixels;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -34,6 +37,7 @@ public class ColumnUiUnitTest {
     private Column column;
     private ArrayList<Frame> frames;
     private ColumnUi padTopUi;
+    private Presentation presentation;
 
     @Before
     public void setUp() throws Exception {
@@ -59,8 +63,29 @@ public class ColumnUiUnitTest {
                 return ShapeSize.ZERO;
             }
         };
-        padTopUi = Creator.colorColumn(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK)
-                          .padTop(Sizelet.ofPortion(15, Ruler.PIXEL));
+        padTopUi = colorColumn(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK).padTop(
+              Sizelet.ofPortion(15, Ruler.PIXEL));
+        presentation = Presentation.EMPTY;
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        presentation.cancel();
+    }
+
+    @Test
+    public void expandVertical_increasesHeight() throws Exception {
+        final ColumnUi verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
+        presentation = verticalExpansion.present(human, column, Observer.EMPTY);
+        assertEquals(27, presentation.getHeight(), .0001);
+    }
+
+    @Test
+    public void expandVertical_movesFrameDown() throws Exception {
+        final ColumnUi verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
+        presentation = verticalExpansion.present(human, column, Observer.EMPTY);
+        assertEquals(5, frames.get(0).vertical.start, .0001);
+        assertEquals(22, frames.get(0).vertical.end, .0001);
     }
 
     @Test
