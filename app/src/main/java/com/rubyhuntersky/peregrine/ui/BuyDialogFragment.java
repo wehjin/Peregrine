@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,9 @@ import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
 import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.peregrine.AssetPrice;
+import com.rubyhuntersky.peregrine.BuyProgram;
 import com.rubyhuntersky.peregrine.R;
+import com.rubyhuntersky.peregrine.TradeDialogFragment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,30 +48,24 @@ import static com.rubyhuntersky.columnui.material.Android.spinnerBar;
  * @author wehjin
  * @since 1/19/16.
  */
-public class BuyDialogFragment extends AppCompatDialogFragment {
+public class BuyDialogFragment extends TradeDialogFragment {
 
     public static final String DIVISION_SIGN = "\u00f7";
-    public static final String AMOUNT_KEY = "amountKey";
-    public static final String PRICES_KEY = "pricesKey";
-    public static final String SELECTED_PRICE_KEY = "selectedPriceKey";
     public static final ColumnUi SPACING = colorColumn(Sizelet.QUARTER_FINGER, null);
     public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
-
-    private BigDecimal buyAmount = BigDecimal.ZERO;
-    private List<AssetPrice> prices;
+    public static final String PROGRAM_KEY = "programKey";
 
     private ColumnUiView columnUiView;
     private Presentation presentation = new EmptyPresentation();
-    private AssetPrice selectedAssetPrice;
-    private ColumnUi program;
+    private ColumnUi ui;
+    private BuyProgram program;
 
-    public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, AssetPrice selectedPrice) {
+    public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, int selectedPrice) {
+        final BuyProgram buyProgram = new BuyProgram(amount, prices, selectedPrice);
 
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(AMOUNT_KEY, amount);
-        arguments.putParcelableArrayList(PRICES_KEY, new ArrayList<>(prices));
-        arguments.putParcelable(SELECTED_PRICE_KEY, selectedPrice);
+        arguments.putParcelable(PROGRAM_KEY, buyProgram);
 
         final BuyDialogFragment fragment = new BuyDialogFragment();
         fragment.setArguments(arguments);
@@ -80,6 +75,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable(PROGRAM_KEY, program);
     }
 
     @Override
@@ -87,52 +83,53 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, 0);
 
-        buyAmount = (BigDecimal) getArguments().getSerializable(AMOUNT_KEY);
-        prices = getArguments().getParcelableArrayList(PRICES_KEY);
-        selectedAssetPrice = getArguments().getParcelable(SELECTED_PRICE_KEY);
-        final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(buyAmount);
+        program = getArguments().getParcelable(PROGRAM_KEY);
+        if (program == null) {
+            return;
+        }
+
+        final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(program.buyAmount);
         final List<String> symbols = new ArrayList<>();
-        for (AssetPrice price : prices) {
+        for (AssetPrice price : program.prices) {
             symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
         }
+
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
         final TileUi1<String> sharedTile = TileCreator.textTile1(IMPORTANT_DARK);
-        program = amountColumn.expandBottom(SPACING)
-                              .expandBottom(pricesBar.toColumn(FINGER))
-                              .expandBottom(SPACING)
-                              .expandBottom(DIVIDER)
-                              .expandBottom(SPACING)
-                              .expandBottom(sharedTile.toColumn())
-                              .expandVertical(TWO_THIRDS_FINGER)
-                              .padHorizontal(THIRD_FINGER)
-                              .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-                              .printReadEval(new ColumnUi2.Repl<Integer, String>() {
+        ui = amountColumn.expandBottom(SPACING)
+                         .expandBottom(pricesBar.toColumn(FINGER))
+                         .expandBottom(SPACING)
+                         .expandBottom(DIVIDER)
+                         .expandBottom(SPACING)
+                         .expandBottom(sharedTile.toColumn())
+                         .expandVertical(TWO_THIRDS_FINGER)
+                         .padHorizontal(THIRD_FINGER)
+                         .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+                         .printReadEval(new ColumnUi2.Repl<Integer, String>() {
 
-                                  private int selectedSymbol = prices.indexOf(selectedAssetPrice);
-                                  private int newSelectedSymbol = selectedSymbol;
+                             private int selection = program.getSelectedPrice();
 
-                                  @Override
-                                  public ColumnUi print(ColumnUi2<Integer, String> ui2) {
-                                      return ui2.bind(selectedAssetPrice.getSharesString(buyAmount))
-                                                .bind(selectedSymbol);
-                                  }
+                             @Override
+                             public ColumnUi print(ColumnUi2<Integer, String> ui2) {
+                                 final String sharesString = getSharesString(program.getSharesCount());
+                                 return ui2.bind(sharesString).bind(program.getSelectedPrice());
+                             }
 
-                                  @Override
-                                  public void read(Reaction reaction) {
-                                      if (reaction instanceof ItemSelectionReaction) {
-                                          newSelectedSymbol = (int) ((ItemSelectionReaction) reaction).getItem();
-                                      }
-                                  }
+                             @Override
+                             public void read(Reaction reaction) {
+                                 if (reaction instanceof ItemSelectionReaction) {
+                                     selection = (int) ((ItemSelectionReaction) reaction).getItem();
+                                 }
+                             }
 
-                                  @Override
-                                  public boolean eval() {
-                                      if (newSelectedSymbol == selectedSymbol) return false;
-                                      selectedAssetPrice = prices.get(newSelectedSymbol);
-                                      selectedSymbol = newSelectedSymbol;
-                                      return true;
-                                  }
-                              });
+                             @Override
+                             public boolean eval() {
+                                 if (selection == program.getSelectedPrice()) return false;
+                                 program.setSelectedPrice(selection);
+                                 return true;
+                             }
+                         });
 
     }
 
@@ -153,7 +150,7 @@ public class BuyDialogFragment extends AppCompatDialogFragment {
 
     private void present() {
         presentation.cancel();
-        presentation = columnUiView.present(program, new Observer() {
+        presentation = columnUiView.present(ui, new Observer() {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);

@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
+import com.rubyhuntersky.peregrine.TradeDialogFragment;
+import com.rubyhuntersky.peregrine.Values;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import rx.subjects.BehaviorSubject;
  * @author wehjin
  * @since 1/19/16.
  */
-public class SellDialogFragment extends AppCompatDialogFragment {
+public class SellDialogFragment extends TradeDialogFragment {
 
     public static final String AMOUNT_KEY = "amountKey";
     public static final String PRICES_KEY = "pricesKey";
@@ -132,7 +133,8 @@ public class SellDialogFragment extends AppCompatDialogFragment {
         selectedPrice.subscribe(new Action1<AssetPrice>() {
             @Override
             public void call(AssetPrice price) {
-                sharesText.setText(price.getSharesString(amount));
+                final BigDecimal sharesCount = amount.divide(price.amount, Values.SCALE, BigDecimal.ROUND_HALF_UP);
+                sharesText.setText(getSharesString(sharesCount));
             }
         });
         return inflate;

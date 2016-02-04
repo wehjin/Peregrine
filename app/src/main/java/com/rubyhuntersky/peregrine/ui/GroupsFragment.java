@@ -115,8 +115,7 @@ public class GroupsFragment extends BaseFragment {
                     if (prices.size() == 0) {
                         prices.add(new AssetPrice());
                     }
-                    AssetPrice selectedPrice = prices.get(0);
-                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs(), prices, selectedPrice);
+                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs(), prices, 0);
                     fragment.setCancelable(true);
                     fragment.show(getFragmentManager(), "BuyFragment");
                 }

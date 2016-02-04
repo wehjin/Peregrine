@@ -26,12 +26,6 @@ public class AssetPrice implements Parcelable {
         this("-", BigDecimal.ONE);
     }
 
-    public String getSharesString(BigDecimal amount) {
-        final BigDecimal shareCount = amount.divide(this.amount, Values.SCALE, BigDecimal.ROUND_HALF_UP);
-        final String shareCountString = shareCount.setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString();
-        return String.format("%s shares", shareCountString);
-    }
-
     @Override
     public int describeContents() {
         return 0;
