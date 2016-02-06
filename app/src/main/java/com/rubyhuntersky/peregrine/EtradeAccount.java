@@ -109,7 +109,14 @@ public class EtradeAccount {
 
         @Override
         public List<FundingOption> getFundingOptions(String exclude) {
-            return fundingOptions;
+            final ArrayList<FundingOption> includedOptions = new ArrayList<>();
+            for (FundingOption option : fundingOptions) {
+                if (option.getAssetName().equals(exclude)) {
+                    continue;
+                }
+                includedOptions.add(option);
+            }
+            return includedOptions;
         }
 
         public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance, List<Asset> assets) {

@@ -9,7 +9,6 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class BuyProgramUnitTest {
 
@@ -78,9 +77,9 @@ public class BuyProgramUnitTest {
         final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, singletonList(asset));
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
-        assertEquals(buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
-        assertEquals(BigDecimal.ONE, buyProgram.getSharesToSellForFunding());
-        assertEquals(buyAmount.subtract(assetValue), buyProgram.getAdditionalFundsNeededAfterSale());
+        assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
+        assertEquals("shares to sell", BigDecimal.ONE, buyProgram.getSharesToSellForFunding());
+        assertEquals("funds needed after sale", buyAmount.subtract(assetValue), buyProgram.getAdditionalFundsNeededAfterSale());
     }
 
     @Test
@@ -100,7 +99,20 @@ public class BuyProgramUnitTest {
     }
 
     @Test
-    public void program_computesFundsNeeded_whenAccountHasNoFundsAndSamePosition() throws Exception {
-        fail("Not yet implemented");
+    public void program_computesFundsNeeded_whenAccountHasNoFundsAndSamePositionAsBuy() throws Exception {
+        final AssetPrice selectedBuyOption = buyOptions.get(0);
+
+        final String accountId = "test1";
+        final AccountBalance accountBalance = new AccountBalance(BigDecimal.ZERO);
+        final EtradeAccount etradeAccount = new EtradeAccount("Test", accountId, "unittest", BigDecimal.ZERO);
+
+        final BigDecimal assetValue = buyAmount.multiply(BigDecimal.valueOf(2));
+        final Asset asset = new Asset(accountId, selectedBuyOption.name, assetValue, BigDecimal.ONE, assetValue);
+        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, singletonList(asset));
+
+        buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
+        assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
+        assertEquals("shares to sell", BigDecimal.ZERO, buyProgram.getSharesToSellForFunding());
+        assertEquals("funds needed after sale", buyAmount, buyProgram.getAdditionalFundsNeededAfterSale());
     }
 }

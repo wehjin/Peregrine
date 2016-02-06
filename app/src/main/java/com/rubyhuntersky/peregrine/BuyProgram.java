@@ -27,10 +27,6 @@ public class BuyProgram implements Parcelable, FundingProgram {
         this.selectedBuyOption = selectedBuyOption;
     }
 
-    public BuyProgram() {
-        this(BigDecimal.ZERO, Collections.<AssetPrice>emptyList(), -1);
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(buyAmount);
@@ -135,7 +131,11 @@ public class BuyProgram implements Parcelable, FundingProgram {
 
     @Override
     public BigDecimal getSharesToSellForFunding() {
-        final FundingOption fundingOption = getFundingOptions().get(selectedBuyOption);
+        final FundingOption fundingOption = getFundingOption();
+        if (fundingOption == null) {
+            return BigDecimal.ZERO;
+        }
+
         final BigDecimal fundsNeeded = getAdditionalFundsNeededToBuy();
         final BigDecimal sharesToSell =
               fundsNeeded.divide(fundingOption.getSellPrice(), Values.SCALE, BigDecimal.ROUND_HALF_UP);
@@ -144,9 +144,20 @@ public class BuyProgram implements Parcelable, FundingProgram {
 
     @Override
     public BigDecimal getAdditionalFundsNeededAfterSale() {
-        final FundingOption fundingOption = getFundingOptions().get(selectedBuyOption);
+        final FundingOption fundingOption = getFundingOption();
+        if (fundingOption == null) {
+            return buyAmount;
+        }
+
         final BigDecimal fundedAmount = getSharesToSellForFunding().multiply(fundingOption.getSellPrice());
         return buyAmount.subtract(fundedAmount).max(BigDecimal.ZERO);
+    }
+
+    private FundingOption getFundingOption() {
+        final List<FundingOption> fundingOptions = getFundingOptions();
+        return selectedBuyOption < 0 || selectedBuyOption >= fundingOptions.size()
+               ? null
+               : fundingOptions.get(selectedBuyOption);
     }
 
     private AssetPrice getBuyOption() {
