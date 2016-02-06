@@ -14,6 +14,10 @@ public class AccountBalance {
 
     public final BigDecimal netCash;
 
+    public AccountBalance(BigDecimal netCash) {
+        this.netCash = netCash;
+    }
+
     public AccountBalance(JSONObject balance) throws JSONException {
         final JSONObject accountBalance = balance.getJSONObject("accountBalance");
         final double netCash = accountBalance.getDouble("netCash");
