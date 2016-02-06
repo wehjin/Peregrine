@@ -20,5 +20,5 @@ public interface FundingProgram {
     void setSelectedFundingOption(int selection);
 
     BigDecimal getSharesToSellForFunding();
-    BigDecimal getAdditionFundsRequiredAfterSale();
+    BigDecimal getAdditionalFundsNeededAfterSale();
 }

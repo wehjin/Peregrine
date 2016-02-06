@@ -75,12 +75,12 @@ public class BuyProgram implements Parcelable, FundingProgram {
 
     public BigDecimal getSharesToBuy() {
         final AssetPrice assetPrice = getBuyOption();
-        if (assetPrice == null) return null;
+        if (assetPrice == null)
+            return null;
         return buyAmount.divide(assetPrice.price, Values.SCALE, BigDecimal.ROUND_HALF_UP);
     }
 
-    public void setFundingAccounts(List<? extends FundingAccount> fundingAccounts, int selectedFundingAccount,
-          int selectedFundingOption) {
+    public void setFundingAccounts(List<? extends FundingAccount> fundingAccounts, int selectedFundingAccount, int selectedFundingOption) {
         this.fundingAccounts = fundingAccounts;
         this.selectedFundingAccount = selectedFundingAccount;
     }
@@ -108,7 +108,8 @@ public class BuyProgram implements Parcelable, FundingProgram {
     @Override
     public BigDecimal getAdditionalFundsNeededToBuy() {
         final FundingAccount fundingAccount = getFundingAccount();
-        if (fundingAccount == null) return null;
+        if (fundingAccount == null)
+            return null;
         final BigDecimal cashAvailableInFundingAccount = fundingAccount.getCashAvailable();
         return buyAmount.subtract(cashAvailableInFundingAccount).max(BigDecimal.ZERO);
     }
@@ -117,7 +118,8 @@ public class BuyProgram implements Parcelable, FundingProgram {
     public List<FundingOption> getFundingOptions() {
         final AssetPrice buyOption = getBuyOption();
         final FundingAccount fundingAccount = getFundingAccount();
-        if (fundingAccount == null || buyOption == null) return Collections.emptyList();
+        if (fundingAccount == null || buyOption == null)
+            return Collections.emptyList();
         return fundingAccount.getFundingOptions(buyOption.name);
     }
 
@@ -135,25 +137,27 @@ public class BuyProgram implements Parcelable, FundingProgram {
     public BigDecimal getSharesToSellForFunding() {
         final FundingOption fundingOption = getFundingOptions().get(selectedBuyOption);
         final BigDecimal fundsNeeded = getAdditionalFundsNeededToBuy();
-        final BigDecimal sharesToSell = fundsNeeded.divide(fundingOption.getSellPrice(), Values.SCALE,
-              BigDecimal.ROUND_HALF_UP);
-        return sharesToSell.min(fundingOption.getSharesAvailableToSell());
+        final BigDecimal sharesToSell =
+              fundsNeeded.divide(fundingOption.getSellPrice(), Values.SCALE, BigDecimal.ROUND_HALF_UP);
+        return sharesToSell.min(fundingOption.getSharesAvailableToSell()).setScale(0, BigDecimal.ROUND_CEILING);
     }
 
     @Override
-    public BigDecimal getAdditionFundsRequiredAfterSale() {
+    public BigDecimal getAdditionalFundsNeededAfterSale() {
         final FundingOption fundingOption = getFundingOptions().get(selectedBuyOption);
         final BigDecimal fundedAmount = getSharesToSellForFunding().multiply(fundingOption.getSellPrice());
         return buyAmount.subtract(fundedAmount).max(BigDecimal.ZERO);
     }
 
     private AssetPrice getBuyOption() {
-        if (selectedBuyOption < 0) return null;
+        if (selectedBuyOption < 0)
+            return null;
         return buyOptions.get(selectedBuyOption);
     }
 
     private FundingAccount getFundingAccount() {
-        if (selectedFundingAccount < 0) return null;
+        if (selectedFundingAccount < 0)
+            return null;
         return fundingAccounts.get(selectedFundingAccount);
     }
 

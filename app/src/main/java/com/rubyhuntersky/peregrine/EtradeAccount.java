@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,8 +32,8 @@ public class EtradeAccount {
         return netAccountValue;
     }
 
-    public FundingAccount toFundingAccount(final AccountBalance accountBalance) {
-        return new EtradeFundingAccount(this, accountBalance);
+    public FundingAccount toFundingAccount(final AccountBalance accountBalance, List<Asset> assets) {
+        return new EtradeFundingAccount(this, accountBalance, assets);
     }
 
     public JSONObject toJSONObject() throws JSONException {
@@ -113,10 +112,13 @@ public class EtradeAccount {
             return fundingOptions;
         }
 
-        public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance) {
+        public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance, List<Asset> assets) {
             accountName = etradeAccount.accountId;
             cashAvailable = accountBalance.netCash;
-            fundingOptions = Collections.emptyList();
+            fundingOptions = new ArrayList<>();
+            for (Asset asset : assets) {
+                fundingOptions.add(asset.toFundingOption());
+            }
         }
 
         public EtradeFundingAccount(Parcel in) {
