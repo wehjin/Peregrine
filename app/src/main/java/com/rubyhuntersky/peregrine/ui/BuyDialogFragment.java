@@ -90,8 +90,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
         final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(program.buyAmount);
         final List<String> symbols = new ArrayList<>();
-        for (AssetPrice price : program.prices) {
-            symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.amount));
+        for (AssetPrice price : program.buyOptions) {
+            symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.price));
         }
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
@@ -108,12 +108,12 @@ public class BuyDialogFragment extends TradeDialogFragment {
                          .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
                          .printReadEval(new ColumnUi2.Repl<Integer, String>() {
 
-                             private int selection = program.getSelectedPrice();
+                             private int selection = program.getSelectedBuyOption();
 
                              @Override
                              public ColumnUi print(ColumnUi2<Integer, String> ui2) {
-                                 final String sharesString = getSharesString(program.getSharesCount());
-                                 return ui2.bind(sharesString).bind(program.getSelectedPrice());
+                                 final String sharesString = getSharesString(program.getSharesToBuy());
+                                 return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
                              }
 
                              @Override
@@ -125,8 +125,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
                              @Override
                              public boolean eval() {
-                                 if (selection == program.getSelectedPrice()) return false;
-                                 program.setSelectedPrice(selection);
+                                 if (selection == program.getSelectedBuyOption()) return false;
+                                 program.setSelectedBuyOption(selection);
                                  return true;
                              }
                          });

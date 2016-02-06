@@ -21,10 +21,10 @@ public class AccountAssets {
 
     public static final String TAG = AccountAssets.class.getSimpleName();
     private final JSONObject jsonObject;
-    private final String accountDescription;
     private final String accountId;
-    private final String positions;
+    private final String accountDescription;
     private final Date arrivalTime;
+    private List<Asset> assets;
 
     public AccountAssets(JSONObject jsonObject) throws JSONException {
         this.jsonObject = jsonObject;
@@ -41,16 +41,26 @@ public class AccountAssets {
         this.arrivalTime = arrivalTime;
 
         final JSONArray response = jsonObject.optJSONArray("response");
-        this.positions = response == null ? "[]" : response.toString(2);
+        String positions = response == null ? "[]" : response.toString(2);
+        assets = new ArrayList<>();
+        try {
+            final JSONArray jsonArray = new JSONArray(positions);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                assets.add(new Asset(jsonArray.getJSONObject(i), accountId, accountDescription, this.arrivalTime));
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "toAssetList", e);
+        }
     }
 
     @Override
     public String toString() {
         return "AccountAssets{" +
-              "accountDescription='" + accountDescription + '\'' +
+              "jsonObject=" + jsonObject +
+              ", accountDescription='" + accountDescription + '\'' +
               ", accountId='" + accountId + '\'' +
-              ", positions='" + positions + '\'' +
               ", arrivalTime=" + arrivalTime +
+              ", assets=" + assets +
               '}';
     }
 
@@ -59,15 +69,7 @@ public class AccountAssets {
     }
 
     public List<Asset> toAssetList() {
-        List<Asset> assets = new ArrayList<>();
-        try {
-            final JSONArray jsonArray = new JSONArray(this.positions);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                assets.add(new Asset(jsonArray.getJSONObject(i), accountId, accountDescription, arrivalTime));
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "toAssetList", e);
-        }
         return assets;
     }
+
 }

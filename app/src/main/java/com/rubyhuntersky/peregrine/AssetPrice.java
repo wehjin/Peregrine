@@ -11,11 +11,11 @@ import java.math.BigDecimal;
  */
 public class AssetPrice implements Parcelable {
     public final String name;
-    public final BigDecimal amount;
+    public final BigDecimal price;
 
-    public AssetPrice(String name, BigDecimal amount) {
+    public AssetPrice(String name, BigDecimal price) {
         this.name = name;
-        this.amount = amount;
+        this.price = price;
     }
 
     public AssetPrice(Parcel in) {
@@ -34,7 +34,7 @@ public class AssetPrice implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeSerializable(amount);
+        dest.writeSerializable(price);
     }
 
     public static final Creator<AssetPrice> CREATOR = new Creator<AssetPrice>() {

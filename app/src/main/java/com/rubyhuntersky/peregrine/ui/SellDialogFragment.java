@@ -109,7 +109,7 @@ public class SellDialogFragment extends TradeDialogFragment {
                 return Observable.from(prices).map(new Func1<AssetPrice, String>() {
                     @Override
                     public String call(AssetPrice price) {
-                        return price.name + " " + UiHelper.getCurrencyDisplayString(price.amount);
+                        return price.name + " " + UiHelper.getCurrencyDisplayString(price.price);
                     }
                 }).toList().toBlocking().first();
             }
@@ -133,7 +133,7 @@ public class SellDialogFragment extends TradeDialogFragment {
         selectedPrice.subscribe(new Action1<AssetPrice>() {
             @Override
             public void call(AssetPrice price) {
-                final BigDecimal sharesCount = amount.divide(price.amount, Values.SCALE, BigDecimal.ROUND_HALF_UP);
+                final BigDecimal sharesCount = amount.divide(price.price, Values.SCALE, BigDecimal.ROUND_HALF_UP);
                 sharesText.setText(getSharesString(sharesCount));
             }
         });
