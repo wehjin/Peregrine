@@ -38,7 +38,7 @@ public class Storage {
     private final SharedPreferences sharedPreferences;
     private final OauthAppToken oauthAppToken;
     private OauthToken oauthToken;
-    private Savelet<AccountList> accountsList;
+    private Savelet<AllAccounts> accountsList;
     private Savelet<List<AccountAssets>> accountAssetsList;
     private Savelet<Assignments> assignments;
 
@@ -69,12 +69,12 @@ public class Storage {
     }
 
 
-    public Observable<AccountList> streamAccountsList() {
+    public Observable<AllAccounts> streamAccountsList() {
         return accountsList.stream();
     }
 
-    public void writeAccountList(AccountList accountList) {
-        this.accountsList.write(accountList);
+    public void writeAccountList(AllAccounts allAccounts) {
+        this.accountsList.write(allAccounts);
     }
 
 
@@ -95,9 +95,8 @@ public class Storage {
                         return;
                     }
 
-                    oauthToken = new OauthToken(sharedPreferences.getString(PREFKEY_ACCESS_KEY, null),
-                                                sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null),
-                                                oauthAppToken);
+                    oauthToken =
+                          new OauthToken(sharedPreferences.getString(PREFKEY_ACCESS_KEY, null), sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null), oauthAppToken);
                 }
                 subscriber.onNext(oauthToken);
                 subscriber.onCompleted();
@@ -172,20 +171,20 @@ public class Storage {
         }
     }
 
-    private static class AccountsListBuilder implements Builder<AccountList> {
+    private static class AccountsListBuilder implements Builder<AllAccounts> {
 
         @Override
-        public AccountList buildFallback() {
+        public AllAccounts buildFallback() {
             return null;
         }
 
         @Override
-        public AccountList build(String jsonString) throws JSONException {
-            return new AccountList(jsonString);
+        public AllAccounts build(String jsonString) throws JSONException {
+            return new AllAccounts(jsonString);
         }
 
         @Override
-        public String stringify(AccountList object) throws JSONException {
+        public String stringify(AllAccounts object) throws JSONException {
             return object.toJSONObject().toString();
         }
     }
@@ -203,9 +202,7 @@ public class Storage {
                 public void call(T object) {
                     if (object != null) {
                         try {
-                            sharedPreferences.edit()
-                                             .putString(preferenceKey, builder.stringify(object))
-                                             .apply();
+                            sharedPreferences.edit().putString(preferenceKey, builder.stringify(object)).apply();
                         } catch (JSONException e) {
                             Log.e(TAG, "Write preferences", e);
                         }

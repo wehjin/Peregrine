@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AccountList;
+import com.rubyhuntersky.peregrine.AllAccounts;
 import com.rubyhuntersky.peregrine.EtradeAccount;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
@@ -32,12 +32,12 @@ public class NetValueFragment extends BaseFragment {
 
     private TextView netWorthTextView;
     private TextView refreshTimeTextVIew;
-    private Action1<AccountList> updateSubviewsFromAccountList = new Action1<AccountList>() {
+    private Action1<AllAccounts> updateSubviewsFromAccountList = new Action1<AllAccounts>() {
         @Override
-        public void call(AccountList accountList) {
-            final String centerString = accountList == null ? "No data" : getFormattedNetWorth(accountList);
+        public void call(AllAccounts allAccounts) {
+            final String centerString = allAccounts == null ? "No data" : getFormattedNetWorth(allAccounts);
 
-            final long count = accountList == null ? 0 : accountList.accounts.size();
+            final long count = allAccounts == null ? 0 : allAccounts.accounts.size();
             final CharSequence cornerString = String.format("%d", count);
             netWorthTextView.setText(centerString);
             refreshTimeTextVIew.setText(cornerString);
@@ -45,8 +45,8 @@ public class NetValueFragment extends BaseFragment {
     };
 
     @NonNull
-    private String getFormattedNetWorth(AccountList accountList) {
-        return UiHelper.getCurrencyDisplayString(getNetWorth(accountList.accounts));
+    private String getFormattedNetWorth(AllAccounts allAccounts) {
+        return UiHelper.getCurrencyDisplayString(getNetWorth(allAccounts.accounts));
     }
 
     private Subscription accountsListSubscription;
@@ -111,7 +111,7 @@ public class NetValueFragment extends BaseFragment {
         refreshTimeTextVIew = (TextView) view.findViewById(R.id.textview_refresh_time);
     }
 
-    private Observable<AccountList> getAccountsListStream() {
-        return getBaseActivity().getAccountsListStream();
+    private Observable<AllAccounts> getAccountsListStream() {
+        return getBaseActivity().getAllAccountsStream();
     }
 }

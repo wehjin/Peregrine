@@ -97,6 +97,15 @@ public class EtradeAccount {
         final private BigDecimal cashAvailable;
         final private String accountName;
 
+        public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance, List<Asset> assets) {
+            accountName = etradeAccount.accountId;
+            cashAvailable = accountBalance.netCash;
+            fundingOptions = new ArrayList<>();
+            for (Asset asset : assets) {
+                fundingOptions.add(asset.toFundingOption());
+            }
+        }
+
         @Override
         public String getAccountName() {
             return accountName;
@@ -117,15 +126,6 @@ public class EtradeAccount {
                 includedOptions.add(option);
             }
             return includedOptions;
-        }
-
-        public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance, List<Asset> assets) {
-            accountName = etradeAccount.accountId;
-            cashAvailable = accountBalance.netCash;
-            fundingOptions = new ArrayList<>();
-            for (Asset asset : assets) {
-                fundingOptions.add(asset.toFundingOption());
-            }
         }
 
         public EtradeFundingAccount(Parcel in) {

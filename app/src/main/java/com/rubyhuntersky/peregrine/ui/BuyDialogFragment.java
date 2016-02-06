@@ -125,7 +125,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
                              @Override
                              public boolean eval() {
-                                 if (selection == program.getSelectedBuyOption()) return false;
+                                 if (selection == program.getSelectedBuyOption())
+                                     return false;
                                  program.setSelectedBuyOption(selection);
                                  return true;
                              }
@@ -135,8 +136,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-          @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View inflate = inflater.inflate(R.layout.fragment_buy, container, false);
         columnUiView = (ColumnUiView) inflate.findViewById(R.id.ui);
         return inflate;

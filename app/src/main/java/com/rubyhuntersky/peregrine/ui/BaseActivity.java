@@ -10,7 +10,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.rubyhuntersky.peregrine.AccountAssets;
-import com.rubyhuntersky.peregrine.AccountList;
+import com.rubyhuntersky.peregrine.AllAccounts;
 import com.rubyhuntersky.peregrine.EtradeAccount;
 import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.PartitionList;
@@ -84,8 +84,10 @@ public class BaseActivity extends AppCompatActivity {
     private String getString(InputStream inputStream) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        for (String s = br.readLine(); s != null; s = br.readLine()) stringBuilder.append(s);
-        for (int c = br.read(); c != -1; c = br.read()) stringBuilder.append((char) c);
+        for (String s = br.readLine(); s != null; s = br.readLine())
+            stringBuilder.append(s);
+        for (int c = br.read(); c != -1; c = br.read())
+            stringBuilder.append((char) c);
         return stringBuilder.toString();
     }
 
@@ -93,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
         return partitionListStream;
     }
 
-    public Observable<AccountList> getAccountsListStream() {
+    public Observable<AllAccounts> getAllAccountsStream() {
         return storage.streamAccountsList();
     }
 
@@ -108,23 +110,23 @@ public class BaseActivity extends AppCompatActivity {
 
     public void refresh() {
         refreshSubscription.unsubscribe();
-        refreshSubscription = fetchAndStoreAccountsList().flatMap(
-              new Func1<AccountList, Observable<List<AccountAssets>>>() {
+        refreshSubscription =
+              fetchAndStoreAccountsList().flatMap(new Func1<AllAccounts, Observable<List<AccountAssets>>>() {
                   @Override
-                  public Observable<List<AccountAssets>> call(AccountList accountList) {
-                      return fetchAndStoreAccountAssetsList(accountList);
+                  public Observable<List<AccountAssets>> call(AllAccounts allAccounts) {
+                      return fetchAndStoreAccountAssetsList(allAccounts);
                   }
               }).subscribe(new Action1<List<AccountAssets>>() {
-            @Override
-            public void call(List<AccountAssets> accountAssetList) {
-                logDebug("Refresh completed");
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                alertError("Refresh error", throwable);
-            }
-        });
+                  @Override
+                  public void call(List<AccountAssets> accountAssetList) {
+                      logDebug("Refresh completed");
+                  }
+              }, new Action1<Throwable>() {
+                  @Override
+                  public void call(Throwable throwable) {
+                      alertError("Refresh error", throwable);
+                  }
+              });
     }
 
     public EtradeApi getEtradeApi() {
@@ -146,10 +148,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AccountList accountList) {
-        return (accountList == null
+    private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AllAccounts allAccounts) {
+        return (allAccounts == null
                 ? Observable.just((List<AccountAssets>) null)
-                : fetchAccountAssets(accountList).toList()).doOnNext(new Action1<List<AccountAssets>>() {
+                : fetchAccountAssets(allAccounts).toList()).doOnNext(new Action1<List<AccountAssets>>() {
             @Override
             public void call(List<AccountAssets> accountAssetsList) {
                 getStorage().writeAccountAssetsList(accountAssetsList);
@@ -158,8 +160,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<AccountAssets> fetchAccountAssets(AccountList accountList) {
-        return Observable.from(accountList.accounts)
+    private Observable<AccountAssets> fetchAccountAssets(AllAccounts allAccounts) {
+        return Observable.from(allAccounts.accounts)
                          .flatMap(new Func1<EtradeAccount, Observable<Pair<JSONObject, JSONObject>>>() {
                              @Override
                              public Observable<Pair<JSONObject, JSONObject>> call(EtradeAccount etradeAccount) {
@@ -170,8 +172,7 @@ public class BaseActivity extends AppCompatActivity {
                              @Override
                              public AccountAssets call(Pair<JSONObject, JSONObject> jsonPair) {
                                  try {
-                                     return new AccountAssets(
-                                           EtradeApi.addBalanceToPositions(jsonPair.first, jsonPair.second));
+                                     return new AccountAssets(EtradeApi.addBalanceToPositions(jsonPair.first, jsonPair.second));
                                  } catch (JSONException e) {
                                      throw new RuntimeException(e);
                                  }
@@ -180,56 +181,51 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected Observable<AccountList> fetchAndStoreAccountsList() {
-        final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList = new Func1<OauthToken,
-              Observable<List<EtradeAccount>>>() {
-            @Override
-            public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
-                return getEtradeApi().fetchAccountList(oauthToken);
-            }
-        };
+    protected Observable<AllAccounts> fetchAndStoreAccountsList() {
+        final Func1<OauthToken, Observable<List<EtradeAccount>>> accessTokenToAccountList =
+              new Func1<OauthToken, Observable<List<EtradeAccount>>>() {
+                  @Override
+                  public Observable<List<EtradeAccount>> call(OauthToken oauthToken) {
+                      return getEtradeApi().fetchAccountList(oauthToken);
+                  }
+              };
         return getOauthAccessToken().flatMap(accessTokenToAccountList)
-                                    .onErrorResumeNext(
-                                          new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
-                                              @Override
-                                              public Observable<? extends List<EtradeAccount>> call(
-                                                    Throwable throwable) {
-                                                  if (throwable instanceof EtradeApi.NotAuthorizedException) {
-                                                      return renewOauthAccessToken().flatMap(accessTokenToAccountList);
-                                                  } else {
-                                                      return Observable.error(throwable);
-                                                  }
-                                              }
-                                          })
-                                    .onErrorResumeNext(
-                                          new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
-                                              @Override
-                                              public Observable<? extends List<EtradeAccount>> call(
-                                                    Throwable throwable) {
-                                                  if (throwable instanceof EtradeApi.NotAuthorizedException) {
-                                                      return fetchOauthAccessToken().flatMap(accessTokenToAccountList)
-                                                                                    .doOnSubscribe(new Action0() {
-                                                                                        @Override
-                                                                                        public void call() {
-                                                                                            getStorage()
-                                                                                                  .eraseOauthAccessToken();
-                                                                                        }
-                                                                                    });
-                                                  } else {
-                                                      return Observable.error(throwable);
-                                                  }
-                                              }
-                                          })
-                                    .map(new Func1<List<EtradeAccount>, AccountList>() {
+                                    .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
                                         @Override
-                                        public AccountList call(List<EtradeAccount> etradeAccounts) {
-                                            return new AccountList(etradeAccounts, new Date());
+                                        public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                                            if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                                                return renewOauthAccessToken().flatMap(accessTokenToAccountList);
+                                            } else {
+                                                return Observable.error(throwable);
+                                            }
                                         }
                                     })
-                                    .doOnNext(new Action1<AccountList>() {
+                                    .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
                                         @Override
-                                        public void call(AccountList accountList) {
-                                            getStorage().writeAccountList(accountList);
+                                        public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                                            if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                                                return fetchOauthAccessToken().flatMap(accessTokenToAccountList)
+                                                                              .doOnSubscribe(new Action0() {
+                                                                                  @Override
+                                                                                  public void call() {
+                                                                                      getStorage().eraseOauthAccessToken();
+                                                                                  }
+                                                                              });
+                                            } else {
+                                                return Observable.error(throwable);
+                                            }
+                                        }
+                                    })
+                                    .map(new Func1<List<EtradeAccount>, AllAccounts>() {
+                                        @Override
+                                        public AllAccounts call(List<EtradeAccount> etradeAccounts) {
+                                            return new AllAccounts(etradeAccounts, new Date());
+                                        }
+                                    })
+                                    .doOnNext(new Action1<AllAccounts>() {
+                                        @Override
+                                        public void call(AllAccounts allAccounts) {
+                                            getStorage().writeAccountList(allAccounts);
                                         }
                                     });
     }
@@ -245,22 +241,19 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<Pair<JSONObject, JSONObject>> fetchAccountPositionsAndBalanceResponses(OauthToken oauthToken,
-          EtradeAccount etradeAccount) {
-        final Func2<JSONObject, JSONObject, Pair<JSONObject, JSONObject>> toPair = new Func2<JSONObject, JSONObject,
-              Pair<JSONObject, JSONObject>>() {
-            @Override
-            public Pair<JSONObject, JSONObject> call(JSONObject positions, JSONObject balance) {
-                return new Pair<>(positions, balance);
-            }
-        };
-        return Observable.zip(fetchAccountPositionsResponse(oauthToken, etradeAccount),
-              fetchAccountBalanceResponse(oauthToken, etradeAccount), toPair);
+    private Observable<Pair<JSONObject, JSONObject>> fetchAccountPositionsAndBalanceResponses(OauthToken oauthToken, EtradeAccount etradeAccount) {
+        final Func2<JSONObject, JSONObject, Pair<JSONObject, JSONObject>> toPair =
+              new Func2<JSONObject, JSONObject, Pair<JSONObject, JSONObject>>() {
+                  @Override
+                  public Pair<JSONObject, JSONObject> call(JSONObject positions, JSONObject balance) {
+                      return new Pair<>(positions, balance);
+                  }
+              };
+        return Observable.zip(fetchAccountPositionsResponse(oauthToken, etradeAccount), fetchAccountBalanceResponse(oauthToken, etradeAccount), toPair);
     }
 
     @NonNull
-    private Observable<JSONObject> fetchAccountPositionsResponse(OauthToken oauthToken,
-          final EtradeAccount etradeAccount) {
+    private Observable<JSONObject> fetchAccountPositionsResponse(OauthToken oauthToken, final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountPositionsResponse(etradeAccount.accountId, oauthToken)
                              .retry(1)
                              .map(new Func1<JSONObject, JSONObject>() {
@@ -269,8 +262,8 @@ public class BaseActivity extends AppCompatActivity {
                                      try {
                                          jsonObject.putOpt("accountDescription", etradeAccount.description);
                                          jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
-                                         jsonObject.putOpt("responseArrivalTime",
-                                               DateFormat.getInstance().format(new Date()));
+                                         jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
+                                                                                            .format(new Date()));
                                      } catch (JSONException e) {
                                          throw new RuntimeException(e);
                                      }
@@ -280,8 +273,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private Observable<JSONObject> fetchAccountBalanceResponse(OauthToken oauthToken,
-          final EtradeAccount etradeAccount) {
+    private Observable<JSONObject> fetchAccountBalanceResponse(OauthToken oauthToken, final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountBalanceResponse(etradeAccount.accountId, oauthToken)
                              .retry(1)
                              .map(new Func1<JSONObject, JSONObject>() {
@@ -290,8 +282,8 @@ public class BaseActivity extends AppCompatActivity {
                                      try {
                                          jsonObject.putOpt("accountDescription", etradeAccount.description);
                                          jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
-                                         jsonObject.putOpt("responseArrivalTime",
-                                               DateFormat.getInstance().format(new Date()));
+                                         jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
+                                                                                            .format(new Date()));
                                      } catch (JSONException e) {
                                          throw new RuntimeException(e);
                                      }

@@ -57,15 +57,13 @@ public class GroupsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Observable.combineLatest(getBaseActivity().getPartitionListStream(),
-              getBaseActivity().getPortfolioAssetsStream(), getStorage().streamAssignments(),
-              new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
-                  @Override
-                  public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets,
-                        Assignments assignments) {
-                      return new Document(partitionList, portfolioAssets, assignments);
-                  }
-              }).subscribe(new Action1<Document>() {
+        Observable.combineLatest(getBaseActivity().getPartitionListStream(), getBaseActivity().getPortfolioAssetsStream(), getStorage()
+              .streamAssignments(), new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
+            @Override
+            public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
+                return new Document(partitionList, portfolioAssets, assignments);
+            }
+        }).subscribe(new Action1<Document>() {
             @Override
             public void call(Document document) {
                 updateViews(document);
@@ -115,6 +113,7 @@ public class GroupsFragment extends BaseFragment {
                     if (prices.size() == 0) {
                         prices.add(new AssetPrice());
                     }
+
                     final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs(), prices, 0);
                     fragment.setCancelable(true);
                     fragment.show(getFragmentManager(), "BuyFragment");

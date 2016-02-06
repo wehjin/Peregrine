@@ -1,14 +1,10 @@
 package com.rubyhuntersky.peregrine.ui;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.rubyhuntersky.peregrine.EtradeApi;
 import com.rubyhuntersky.peregrine.Storage;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 
 import rx.functions.Action1;
 

@@ -50,9 +50,7 @@ public class BuyProgram implements Parcelable, FundingProgram {
             final int selectedFundingOption = in.readInt();
 
             final BuyProgram buyProgram = new BuyProgram(buyAmount, prices, selectedTradingAsset);
-            buyProgram.setFundingAccounts(fundingAccounts, 0, -1);
-            buyProgram.setSelectedFundingAccount(selectedFundingAccount);
-            buyProgram.setSelectedFundingOption(selectedFundingOption);
+            buyProgram.setFundingAccounts(fundingAccounts, selectedFundingAccount, selectedFundingOption);
             return buyProgram;
         }
 
