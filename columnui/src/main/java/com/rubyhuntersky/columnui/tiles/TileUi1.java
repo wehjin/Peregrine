@@ -17,7 +17,7 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
     }
 
     @Override
-    public abstract BoundTui1 bind(C condition);
+    public abstract TileUi bind(C condition);
 
     public ColumnUi1<C> toColumn() {
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
@@ -33,7 +33,7 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
         return new TileUi1<C>() {
 
             @Override
-            public BoundTui1 bind(C condition) {
+            public TileUi bind(C condition) {
                 return onBind.onBind(condition);
             }
         };
@@ -41,6 +41,6 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
 
     public interface OnBind<C> {
         @NonNull
-        BoundTui1 onBind(C condition);
+        TileUi onBind(C condition);
     }
 }
