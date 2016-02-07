@@ -25,6 +25,7 @@ import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
 import com.rubyhuntersky.peregrine.FundingAccount;
+import com.rubyhuntersky.peregrine.FundingOption;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.TradeDialogFragment;
 
@@ -105,50 +106,63 @@ public class BuyDialogFragment extends TradeDialogFragment {
         final TileUi1<String> sharesTile = TileCreator.textTile1(IMPORTANT_DARK);
 
         final FundingAccount fundingAccount = program.getFundingAccount();
-        final String accountName = "Account " + fundingAccount.getAccountName();
+        final String fundingAccountName = "Account " + fundingAccount.getAccountName();
         final BigDecimal fundsNeededToBuy = program.getAdditionalFundsNeededToBuy();
         final String addFunds = fundsNeededToBuy.equals(BigDecimal.ZERO)
                                 ? "Sufficient funds"
                                 : "Add Funds " + UiHelper.getCurrencyDisplayString(fundsNeededToBuy);
+        final FundingOption fundingOption = program.getFundingOption();
+        final String fundingPrice = fundingOption == null
+                                    ? "N/A"
+                                    : DIVISION_SIGN + " " + fundingOption.getAssetName() + " " + UiHelper.getCurrencyDisplayString(fundingOption
+                                          .getSellPrice());
+        final BigDecimal sharesToSellForFunding = program.getSharesToSellForFunding();
+        final String fundingShares = "Sell " + sharesToSellForFunding.setScale(0, BigDecimal.ROUND_CEILING) + " shares";
 
-        final ColumnUi2<Integer, String> content = amountColumn.expandBottom(SPACING)
-                                                               .expandBottom(pricesBar.toColumn(FINGER))
+        final ColumnUi2<Integer, String> purchaseUi = amountColumn.expandBottom(SPACING)
+                                                                  .expandBottom(pricesBar.toColumn(FINGER))
+                                                                  .expandBottom(SPACING)
+                                                                  .expandBottom(DIVIDER)
+                                                                  .expandBottom(SPACING)
+                                                                  .expandBottom(sharesTile.toColumn());
+        final ColumnUi2<Integer, String> contentUi = purchaseUi.expandBottom(gapColumn(Sizelet.FINGER))
+                                                               .expandBottom(textTile(fundingAccountName, TextStylet.READABLE_DARK))
+                                                               .expandBottom(SPACING)
+                                                               .expandBottom(textTile(addFunds, IMPORTANT_DARK))
+                                                               .expandBottom(SPACING)
+                                                               .expandBottom(textTile(fundingPrice, IMPORTANT_DARK))
                                                                .expandBottom(SPACING)
                                                                .expandBottom(DIVIDER)
                                                                .expandBottom(SPACING)
-                                                               .expandBottom(sharesTile.toColumn())
-                                                               .expandBottom(gapColumn(Sizelet.FINGER))
-                                                               .expandBottom(textTile(accountName, TextStylet.READABLE_DARK))
-                                                               .expandBottom(SPACING)
-                                                               .expandBottom(textTile(addFunds, IMPORTANT_DARK));
-        ui = content.expandVertical(TWO_THIRDS_FINGER)
-                    .padHorizontal(THIRD_FINGER)
-                    .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-                    .printReadEval(new ColumnUi2.Repl<Integer, String>() {
+                                                               .expandBottom(textTile(fundingShares, IMPORTANT_DARK));
+        ui = contentUi.expandVertical(TWO_THIRDS_FINGER)
+                      .padHorizontal(THIRD_FINGER)
+                      .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+                      .printReadEval(new ColumnUi2.Repl<Integer, String>() {
 
-                        private int selection = program.getSelectedBuyOption();
+                          private int selection = program.getSelectedBuyOption();
 
-                        @Override
-                        public ColumnUi print(ColumnUi2<Integer, String> ui2) {
-                            final String sharesString = getSharesString(program.getSharesToBuy());
-                            return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
-                        }
+                          @Override
+                          public ColumnUi print(ColumnUi2<Integer, String> ui2) {
+                              final String sharesString = getSharesString(program.getSharesToBuy());
+                              return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
+                          }
 
-                        @Override
-                        public void read(Reaction reaction) {
-                            if (reaction instanceof ItemSelectionReaction) {
-                                selection = (int) ((ItemSelectionReaction) reaction).getItem();
-                            }
-                        }
+                          @Override
+                          public void read(Reaction reaction) {
+                              if (reaction instanceof ItemSelectionReaction) {
+                                  selection = (int) ((ItemSelectionReaction) reaction).getItem();
+                              }
+                          }
 
-                        @Override
-                        public boolean eval() {
-                            if (selection == program.getSelectedBuyOption())
-                                return false;
-                            program.setSelectedBuyOption(selection);
-                            return true;
-                        }
-                    });
+                          @Override
+                          public boolean eval() {
+                              if (selection == program.getSelectedBuyOption())
+                                  return false;
+                              program.setSelectedBuyOption(selection);
+                              return true;
+                          }
+                      });
 
     }
 

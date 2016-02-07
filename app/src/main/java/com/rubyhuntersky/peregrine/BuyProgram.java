@@ -151,14 +151,14 @@ public class BuyProgram implements Parcelable, FundingProgram {
         return buyAmount.subtract(fundedAmount).max(BigDecimal.ZERO);
     }
 
-    private FundingOption getFundingOption() {
+    public FundingOption getFundingOption() {
         final List<FundingOption> fundingOptions = getFundingOptions();
         return selectedBuyOption < 0 || selectedBuyOption >= fundingOptions.size()
                ? null
                : fundingOptions.get(selectedBuyOption);
     }
 
-    private AssetPrice getBuyOption() {
+    public AssetPrice getBuyOption() {
         if (selectedBuyOption < 0)
             return null;
         return buyOptions.get(selectedBuyOption);
