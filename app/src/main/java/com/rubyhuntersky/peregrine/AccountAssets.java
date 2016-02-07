@@ -39,8 +39,7 @@ public class AccountAssets {
     public AccountAssets(JSONObject jsonObject) throws JSONException {
         this.jsonObject = jsonObject;
 
-        final String responseAccountId = jsonObject.optString("accountId");
-        this.accountId = responseAccountId.isEmpty() ? jsonObject.optString("requestAccountId") : responseAccountId;
+        this.accountId = jsonObject.optString("requestAccountId");
         this.accountDescription = jsonObject.optString("accountDescription");
         Date arrivalTime;
         try {

@@ -23,6 +23,27 @@ abstract public class TileUi implements Ui<Tile> {
 
     abstract public Presentation present(Human human, Tile tile, Observer observer);
 
+    public TileUi expandLeft(final TileUi expansion) {
+        return create(new OnPresent<Tile>() {
+            @Override
+            public void onPresent(Presenter<Tile> presenter) {
+                final Human human = presenter.getHuman();
+                final Tile tile = presenter.getDisplay();
+                final ShiftTile baseShift = tile.withShift();
+                final Presentation presentBase = TileUi.this.present(human, baseShift, presenter);
+                final ShiftTile expansionShift = tile.withShift();
+                final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
+                final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
+                baseShift.setShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
+                expansionShift.setShift(0, (height - presentExpansion.getHeight()) * .5f);
+                presenter.addPresentation(presentExpansion);
+                presenter.addPresentation(new ResizePresentation(presentExpansion.getWidth() + presentBase.getWidth(),
+                                                                 height,
+                                                                 presentBase));
+            }
+        });
+    }
+
     public BarUi toBar() {
         return BarUi.create(new OnPresent<Bar>() {
             @Override
@@ -45,17 +66,17 @@ abstract public class TileUi implements Ui<Tile> {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 presenter.addPresentation(presentToColumn(presenter.getHuman(), presenter.getDisplay(), presenter,
-                      new PresentationMaker<Presentation, Tile>() {
-                          @Override
-                          public Presentation present(Human human, Tile display, Observer observer, int index) {
-                              return TileUi.this.present(human, display, observer);
-                          }
+                                                          new PresentationMaker<Presentation, Tile>() {
+                                                              @Override
+                                                              public Presentation present(Human human, Tile display, Observer observer, int index) {
+                                                                  return TileUi.this.present(human, display, observer);
+                                                              }
 
-                          @Override
-                          public Presentation resize(float width, float height, Presentation basis) {
-                              return new ResizePresentation(width, height, basis);
-                          }
-                      }));
+                                                              @Override
+                                                              public Presentation resize(float width, float height, Presentation basis) {
+                                                                  return new ResizePresentation(width, height, basis);
+                                                              }
+                                                          }));
             }
         });
     }

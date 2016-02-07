@@ -13,7 +13,6 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
@@ -21,6 +20,7 @@ import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.TileCreator;
+import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
@@ -47,6 +47,9 @@ import static com.rubyhuntersky.columnui.basics.Sizelet.TWO_THIRDS_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
 import static com.rubyhuntersky.columnui.basics.TextStylet.IMPORTANT_DARK;
 import static com.rubyhuntersky.columnui.material.Android.spinnerBar;
+import static com.rubyhuntersky.columnui.material.Android.spinnerColumn;
+import static com.rubyhuntersky.columnui.material.Android.spinnerTile;
+import static com.rubyhuntersky.peregrine.ui.UiHelper.getCurrencyDisplayString;
 
 /**
  * @author wehjin
@@ -95,29 +98,16 @@ public class BuyDialogFragment extends TradeDialogFragment {
             return;
         }
 
-        final String buyString = "Buy " + UiHelper.getCurrencyDisplayString(program.buyAmount);
+        final String buyString = "Buy " + getCurrencyDisplayString(program.buyAmount);
         final List<String> symbols = new ArrayList<>();
         for (AssetPrice price : program.buyOptions) {
-            symbols.add(price.name + " " + UiHelper.getCurrencyDisplayString(price.price));
+            symbols.add(price.name + " " + getCurrencyDisplayString(price.price));
         }
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
-        final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
+        final TileUi divisionSign = textTile(DIVISION_SIGN, IMPORTANT_DARK);
+        final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(divisionSign);
         final TileUi1<String> sharesTile = TileCreator.textTile1(IMPORTANT_DARK);
-
-        final FundingAccount fundingAccount = program.getFundingAccount();
-        final String fundingAccountName = "Account " + fundingAccount.getAccountName();
-        final BigDecimal fundsNeededToBuy = program.getAdditionalFundsNeededToBuy();
-        final String addFunds = fundsNeededToBuy.equals(BigDecimal.ZERO)
-                                ? "Sufficient funds"
-                                : "Add Funds " + UiHelper.getCurrencyDisplayString(fundsNeededToBuy);
-        final FundingOption fundingOption = program.getFundingOption();
-        final String fundingPrice = fundingOption == null
-                                    ? "N/A"
-                                    : DIVISION_SIGN + " " + fundingOption.getAssetName() + " " + UiHelper.getCurrencyDisplayString(fundingOption
-                                          .getSellPrice());
-        final BigDecimal sharesToSellForFunding = program.getSharesToSellForFunding();
-        final String fundingShares = "Sell " + sharesToSellForFunding.setScale(0, BigDecimal.ROUND_CEILING) + " shares";
 
         final ColumnUi2<Integer, String> purchaseUi = amountColumn.expandBottom(SPACING)
               .expandBottom(pricesBar.toColumn(FINGER))
@@ -126,13 +116,41 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandBottom(SPACING)
               .expandBottom(sharesTile.toColumn());
 
-        final ColumnUi fundingUi = textColumn(fundingAccountName, TextStylet.READABLE_DARK).expandBottom(SPACING)
+        List<String> fundingAccountNames = new ArrayList<>();
+        final List<? extends FundingAccount> fundingAccounts = program.getFundingAccounts();
+        for (FundingAccount fundingAccount : fundingAccounts) {
+            fundingAccountNames.add("Account " + fundingAccount.getAccountName());
+        }
+        int selectedFundingAccount = program.getSelectedFundingAccount();
+
+
+        final BigDecimal fundsNeededToBuy = program.getAdditionalFundsNeededToBuy();
+
+        final List<FundingOption> fundingOptions = program.getFundingOptions();
+        List<String> fundingOptionPrices = new ArrayList<>();
+        for (FundingOption fundingOption : fundingOptions) {
+            fundingOptionPrices.add(fundingOption.getAssetName() + " " + getCurrencyDisplayString(fundingOption.getSellPrice()));
+        }
+        int selectedFundingOption = program.getSelectedFundingOption();
+
+        final String addFunds = fundsNeededToBuy.equals(BigDecimal.ZERO)
+              ? "Sufficient funds"
+              : "Add Funds " + getCurrencyDisplayString(fundsNeededToBuy);
+
+        final ColumnUi fundingOptionsDiv =
+              spinnerTile(fundingOptionPrices, selectedFundingOption).expandLeft(divisionSign).toColumn();
+        final ColumnUi sellUi = fundingOptionsDiv
+              .expandBottom(SPACING)
+              .expandBottom(DIVIDER)
+              .expandBottom(SPACING)
+              .expandBottom(textColumn("Sell " + program.getSharesToSellForFunding()
+                    .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK));
+
+        final ColumnUi fundingUi = spinnerColumn(fundingAccountNames, selectedFundingAccount).expandBottom(SPACING)
               .expandBottom(textColumn(addFunds, IMPORTANT_DARK))
               .expandBottom(SPACING)
-              .expandBottom(textColumn(fundingPrice, IMPORTANT_DARK).expandBottom(SPACING)
-                    .expandBottom(DIVIDER)
-                    .expandBottom(SPACING)
-                    .expandBottom(textColumn(fundingShares, IMPORTANT_DARK)));
+              .expandBottom(sellUi)
+              .isolate();
 
         final ColumnUi2<Integer, String> contentUi = purchaseUi.expandBottom(gapColumn(Sizelet.FINGER))
               .expandBottom(fundingUi);

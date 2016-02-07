@@ -16,6 +16,7 @@ import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
+import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
@@ -48,6 +49,10 @@ public class Android {
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });
+    }
+
+    public static ColumnUi spinnerColumn(final List<String> options, final int selectedOption) {
+        return spinnerTile(options, selectedOption).toColumn();
     }
 
     public static BarUi spinnerBar(final List<String> options, final int selectedOption) {
@@ -112,7 +117,8 @@ public class Android {
             });
             final FrameLayout frameLayout = new FrameLayout(context);
             final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                  LayoutParams.WRAP_CONTENT, Gravity.START | Gravity.CENTER_VERTICAL);
+                                                                                 LayoutParams.WRAP_CONTENT,
+                                                                                 Gravity.START | Gravity.CENTER_VERTICAL);
             frameLayout.addView(spinner, params);
             return frameLayout;
         }

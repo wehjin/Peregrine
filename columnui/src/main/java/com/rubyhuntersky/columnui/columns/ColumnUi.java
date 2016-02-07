@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -29,19 +30,25 @@ public abstract class ColumnUi implements Ui<Column> {
         return create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                presenter.addPresentation(presentWithHorizontalPadding(padlet, presenter.getHuman(), presenter.getDisplay(), presenter, new PresentationMaker<Presentation, Column>() {
+                presenter.addPresentation(presentWithHorizontalPadding(padlet,
+                                                                       presenter.getHuman(),
+                                                                       presenter.getDisplay(),
+                                                                       presenter,
+                                                                       new PresentationMaker<Presentation, Column>() {
 
-                    @Override
-                    public Presentation present(Human human, Column display, Observer observer, int index) {
-                        return ui.present(human, display, observer);
-                    }
+                                                                           @Override
+                                                                           public Presentation present(Human human, Column display, Observer observer, int index) {
+                                                                               return ui.present(human,
+                                                                                                 display,
+                                                                                                 observer);
+                                                                           }
 
-                    @Override
-                    public Presentation resize(float width, float height, Presentation basis) {
-                        return null;
-                    }
+                                                                           @Override
+                                                                           public Presentation resize(float width, float height, Presentation basis) {
+                                                                               return null;
+                                                                           }
 
-                }));
+                                                                       }));
             }
         });
     }
@@ -75,18 +82,24 @@ public abstract class ColumnUi implements Ui<Column> {
         return create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                presenter.addPresentation(presentWithBottomPadding(padlet, presenter.getHuman(), presenter.getDisplay(), presenter, new PresentationMaker<Presentation, Column>() {
-                    @Override
-                    public Presentation present(Human human, Column display, Observer observer, int index) {
-                        return ui.present(human, display, observer);
-                    }
+                presenter.addPresentation(presentWithBottomPadding(padlet,
+                                                                   presenter.getHuman(),
+                                                                   presenter.getDisplay(),
+                                                                   presenter,
+                                                                   new PresentationMaker<Presentation, Column>() {
+                                                                       @Override
+                                                                       public Presentation present(Human human, Column display, Observer observer, int index) {
+                                                                           return ui.present(human, display, observer);
+                                                                       }
 
-                    @Override
-                    public Presentation resize(float width, float height, Presentation basis) {
-                        return new ResizePresentation(width, height, basis);
-                    }
+                                                                       @Override
+                                                                       public Presentation resize(float width, float height, Presentation basis) {
+                                                                           return new ResizePresentation(width,
+                                                                                                         height,
+                                                                                                         basis);
+                                                                       }
 
-                }));
+                                                                   }));
             }
         });
     }
@@ -137,24 +150,25 @@ public abstract class ColumnUi implements Ui<Column> {
         return create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                final Pair<Presentation, Presentation> presentations = presentFirstBeforeSecond(gap, presenter.getHuman(), presenter
-                      .getDisplay(), presenter, new PresentationMaker<Presentation, Column>() {
-                    @Override
-                    public Presentation present(Human human, Column display, Observer observer, int index) {
-                        if (index == 0) {
-                            return ColumnUi.this.present(human, display, observer);
-                        } else if (index == 1) {
-                            return background.present(human, display, observer);
-                        }
-                        return null;
-                    }
+                final Pair<Presentation, Presentation> presentations =
+                      presentFirstBeforeSecond(gap, presenter.getHuman(), presenter
+                            .getDisplay(), presenter, new PresentationMaker<Presentation, Column>() {
+                          @Override
+                          public Presentation present(Human human, Column display, Observer observer, int index) {
+                              if (index == 0) {
+                                  return ColumnUi.this.present(human, display, observer);
+                              } else if (index == 1) {
+                                  return background.present(human, display, observer);
+                              }
+                              return null;
+                          }
 
-                    @Override
-                    public Presentation resize(float width, float height, Presentation basis) {
-                        return null;
-                    }
+                          @Override
+                          public Presentation resize(float width, float height, Presentation basis) {
+                              return null;
+                          }
 
-                });
+                      });
                 presenter.addPresentation(presentations.first);
                 presenter.addPresentation(presentations.second);
             }
@@ -184,8 +198,9 @@ public abstract class ColumnUi implements Ui<Column> {
                 final float topHeight = topPresentation.getHeight();
                 final Column bottomColumn = column.withRelatedHeight(topHeight).withShift(0, topHeight);
                 final Presentation bottomPresentation = expansion.present(human, bottomColumn, presenter);
-                final Presentation bottomResize = new ResizePresentation(bottomPresentation.getWidth(), topHeight + bottomPresentation
-                      .getHeight(), bottomPresentation);
+                final Presentation bottomResize =
+                      new ResizePresentation(bottomPresentation.getWidth(), topHeight + bottomPresentation
+                            .getHeight(), bottomPresentation);
                 delayColumn.endDelay();
                 presenter.addPresentation(bottomResize);
                 presenter.addPresentation(topPresentation);
@@ -204,6 +219,33 @@ public abstract class ColumnUi implements Ui<Column> {
             @Override
             public ColumnUi onBind(final C condition) {
                 return columnUi.expandBottom(expansion.bind(condition));
+            }
+        });
+    }
+
+    public ColumnUi isolate() {
+        return create(new OnPresent<Column>() {
+            @Override
+            public void onPresent(final Presenter<Column> presenter) {
+                final Presentation presentation = ColumnUi.this.present(presenter.getHuman(),
+                                                                        presenter.getDisplay(),
+                                                                        new Observer() {
+                                                                            @Override
+                                                                            public void onReaction(Reaction reaction) {
+                                                                                // Do nothing.
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onEnd() {
+                                                                                // Do nothing.
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onError(Throwable throwable) {
+                                                                                presenter.onError(throwable);
+                                                                            }
+                                                                        });
+                presenter.addPresentation(presentation);
             }
         });
     }

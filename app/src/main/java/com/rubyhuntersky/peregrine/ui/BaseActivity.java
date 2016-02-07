@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
@@ -155,8 +156,8 @@ public class BaseActivity extends AppCompatActivity {
     @NonNull
     private Observable<List<AccountAssets>> fetchAndStoreAccountAssetsList(AllAccounts allAccounts) {
         return (allAccounts == null
-                ? Observable.just((List<AccountAssets>) null)
-                : fetchAccountAssets(allAccounts).toList()).doOnNext(new Action1<List<AccountAssets>>() {
+              ? Observable.just((List<AccountAssets>) null)
+              : fetchAccountAssets(allAccounts).toList()).doOnNext(new Action1<List<AccountAssets>>() {
             @Override
             public void call(List<AccountAssets> accountAssetsList) {
                 getStorage().writeAccountAssetsList(accountAssetsList);
@@ -167,22 +168,24 @@ public class BaseActivity extends AppCompatActivity {
     @NonNull
     private Observable<AccountAssets> fetchAccountAssets(AllAccounts allAccounts) {
         return Observable.from(allAccounts.accounts)
-                         .flatMap(new Func1<EtradeAccount, Observable<Pair<JSONObject, JSONObject>>>() {
-                             @Override
-                             public Observable<Pair<JSONObject, JSONObject>> call(EtradeAccount etradeAccount) {
-                                 return fetchAccountDetails(etradeAccount);
-                             }
-                         })
-                         .map(new Func1<Pair<JSONObject, JSONObject>, AccountAssets>() {
-                             @Override
-                             public AccountAssets call(Pair<JSONObject, JSONObject> jsonPair) {
-                                 try {
-                                     return new AccountAssets(EtradeApi.addBalanceToPositions(jsonPair.first, jsonPair.second));
-                                 } catch (JSONException e) {
-                                     throw new RuntimeException(e);
-                                 }
-                             }
-                         });
+              .flatMap(new Func1<EtradeAccount, Observable<Pair<JSONObject, JSONObject>>>() {
+                  int count = 0;
+
+                  @Override
+                  public Observable<Pair<JSONObject, JSONObject>> call(EtradeAccount etradeAccount) {
+                      return fetchAccountDetails(etradeAccount).delaySubscription(200 * count++, TimeUnit.MILLISECONDS);
+                  }
+              })
+              .map(new Func1<Pair<JSONObject, JSONObject>, AccountAssets>() {
+                  @Override
+                  public AccountAssets call(Pair<JSONObject, JSONObject> jsonPair) {
+                      try {
+                          return new AccountAssets(EtradeApi.addBalanceToPositions(jsonPair.first, jsonPair.second));
+                      } catch (JSONException e) {
+                          throw new RuntimeException(e);
+                      }
+                  }
+              });
     }
 
 
@@ -195,54 +198,54 @@ public class BaseActivity extends AppCompatActivity {
                   }
               };
         return getOauthAccessToken().flatMap(accessTokenToAccountList)
-                                    .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
-                                        @Override
-                                        public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
-                                            if (throwable instanceof EtradeApi.NotAuthorizedException) {
-                                                return renewOauthAccessToken().flatMap(accessTokenToAccountList);
-                                            } else {
-                                                return Observable.error(throwable);
-                                            }
-                                        }
-                                    })
-                                    .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
-                                        @Override
-                                        public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
-                                            if (throwable instanceof EtradeApi.NotAuthorizedException) {
-                                                return fetchOauthAccessToken().flatMap(accessTokenToAccountList)
-                                                                              .doOnSubscribe(new Action0() {
-                                                                                  @Override
-                                                                                  public void call() {
-                                                                                      getStorage().eraseOauthAccessToken();
-                                                                                  }
-                                                                              });
-                                            } else {
-                                                return Observable.error(throwable);
-                                            }
-                                        }
-                                    })
-                                    .map(new Func1<List<EtradeAccount>, AllAccounts>() {
-                                        @Override
-                                        public AllAccounts call(List<EtradeAccount> etradeAccounts) {
-                                            return new AllAccounts(etradeAccounts, new Date());
-                                        }
-                                    })
-                                    .doOnNext(new Action1<AllAccounts>() {
-                                        @Override
-                                        public void call(AllAccounts allAccounts) {
-                                            getStorage().writeAccountList(allAccounts);
-                                        }
-                                    });
+              .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
+                  @Override
+                  public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                      if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                          return renewOauthAccessToken().flatMap(accessTokenToAccountList);
+                      } else {
+                          return Observable.error(throwable);
+                      }
+                  }
+              })
+              .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<EtradeAccount>>>() {
+                  @Override
+                  public Observable<? extends List<EtradeAccount>> call(Throwable throwable) {
+                      if (throwable instanceof EtradeApi.NotAuthorizedException) {
+                          return fetchOauthAccessToken().flatMap(accessTokenToAccountList)
+                                .doOnSubscribe(new Action0() {
+                                    @Override
+                                    public void call() {
+                                        getStorage().eraseOauthAccessToken();
+                                    }
+                                });
+                      } else {
+                          return Observable.error(throwable);
+                      }
+                  }
+              })
+              .map(new Func1<List<EtradeAccount>, AllAccounts>() {
+                  @Override
+                  public AllAccounts call(List<EtradeAccount> etradeAccounts) {
+                      return new AllAccounts(etradeAccounts, new Date());
+                  }
+              })
+              .doOnNext(new Action1<AllAccounts>() {
+                  @Override
+                  public void call(AllAccounts allAccounts) {
+                      getStorage().writeAccountList(allAccounts);
+                  }
+              });
     }
 
     private Observable<Pair<JSONObject, JSONObject>> fetchAccountDetails(final EtradeAccount etradeAccount) {
         return getStorage().readOauthAccessToken()
-                           .flatMap(new Func1<OauthToken, Observable<Pair<JSONObject, JSONObject>>>() {
-                               @Override
-                               public Observable<Pair<JSONObject, JSONObject>> call(OauthToken oauthToken) {
-                                   return fetchAccountPositionsAndBalanceResponses(oauthToken, etradeAccount);
-                               }
-                           });
+              .flatMap(new Func1<OauthToken, Observable<Pair<JSONObject, JSONObject>>>() {
+                  @Override
+                  public Observable<Pair<JSONObject, JSONObject>> call(OauthToken oauthToken) {
+                      return fetchAccountPositionsAndBalanceResponses(oauthToken, etradeAccount);
+                  }
+              });
     }
 
     @NonNull
@@ -254,68 +257,70 @@ public class BaseActivity extends AppCompatActivity {
                       return new Pair<>(positions, balance);
                   }
               };
-        return Observable.zip(fetchAccountPositionsResponse(oauthToken, etradeAccount), fetchAccountBalanceResponse(oauthToken, etradeAccount), toPair);
+        return Observable.zip(fetchAccountPositionsResponse(oauthToken, etradeAccount),
+                              fetchAccountBalanceResponse(oauthToken, etradeAccount),
+                              toPair);
     }
 
     @NonNull
     private Observable<JSONObject> fetchAccountPositionsResponse(OauthToken oauthToken, final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountPositionsResponse(etradeAccount.accountId, oauthToken)
-                             .retry(1)
-                             .map(new Func1<JSONObject, JSONObject>() {
-                                 @Override
-                                 public JSONObject call(JSONObject jsonObject) {
-                                     try {
-                                         jsonObject.putOpt("accountDescription", etradeAccount.description);
-                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
-                                         jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
-                                                                                            .format(new Date()));
-                                     } catch (JSONException e) {
-                                         throw new RuntimeException(e);
-                                     }
-                                     return jsonObject;
-                                 }
-                             });
+              .retry(1)
+              .map(new Func1<JSONObject, JSONObject>() {
+                  @Override
+                  public JSONObject call(JSONObject jsonObject) {
+                      try {
+                          jsonObject.putOpt("accountDescription", etradeAccount.description);
+                          jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
+                          jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
+                                .format(new Date()));
+                      } catch (JSONException e) {
+                          throw new RuntimeException(e);
+                      }
+                      return jsonObject;
+                  }
+              });
     }
 
     @NonNull
     private Observable<JSONObject> fetchAccountBalanceResponse(OauthToken oauthToken, final EtradeAccount etradeAccount) {
         return getEtradeApi().fetchAccountBalanceResponse(etradeAccount.accountId, oauthToken)
-                             .retry(1)
-                             .map(new Func1<JSONObject, JSONObject>() {
-                                 @Override
-                                 public JSONObject call(JSONObject jsonObject) {
-                                     try {
-                                         jsonObject.putOpt("accountDescription", etradeAccount.description);
-                                         jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
-                                         jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
-                                                                                            .format(new Date()));
-                                     } catch (JSONException e) {
-                                         throw new RuntimeException(e);
-                                     }
-                                     return jsonObject;
-                                 }
-                             })
-                             .doOnError(new Action1<Throwable>() {
-                                 @Override
-                                 public void call(Throwable throwable) {
-                                     Log.e(TAG, " v error, account: " + etradeAccount);
-                                 }
-                             });
+              .retry(1)
+              .map(new Func1<JSONObject, JSONObject>() {
+                  @Override
+                  public JSONObject call(JSONObject jsonObject) {
+                      try {
+                          jsonObject.putOpt("accountDescription", etradeAccount.description);
+                          jsonObject.putOpt("requestAccountId", etradeAccount.accountId);
+                          jsonObject.putOpt("responseArrivalTime", DateFormat.getInstance()
+                                .format(new Date()));
+                      } catch (JSONException e) {
+                          throw new RuntimeException(e);
+                      }
+                      return jsonObject;
+                  }
+              })
+              .doOnError(new Action1<Throwable>() {
+                  @Override
+                  public void call(Throwable throwable) {
+                      Log.e(TAG, " v error, account: " + etradeAccount);
+                  }
+              });
     }
 
 
     private Observable<OauthToken> getOauthAccessToken() {
         return getStorage().readOauthAccessToken()
-                           .onErrorResumeNext(new Func1<Throwable, Observable<? extends OauthToken>>() {
-                               @Override
-                               public Observable<? extends OauthToken> call(Throwable throwable) {
-                                   if (throwable instanceof NotStoredException) {
-                                       return fetchOauthAccessToken();
-                                   } else {
-                                       return Observable.error(throwable);
-                                   }
-                               }
-                           });
+              .onErrorResumeNext(new Func1<Throwable, Observable<? extends OauthToken>>() {
+                  @Override
+                  public Observable<? extends OauthToken> call(Throwable throwable) {
+                      if (throwable instanceof NotStoredException) {
+                          return fetchOauthAccessToken();
+                      } else {
+                          return Observable.error(throwable);
+                      }
+                  }
+              });
     }
 
     private Observable<OauthToken> renewOauthAccessToken() {
@@ -349,14 +354,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void alertError(String title, Throwable throwable) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
-               .setMessage(throwable.toString())
-               .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                       dialog.dismiss();
-                   }
-               })
-               .show();
+              .setMessage(throwable.toString())
+              .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      dialog.dismiss();
+                  }
+              })
+              .show();
         logError(title, throwable);
     }
 

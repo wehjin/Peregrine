@@ -15,7 +15,7 @@ public class Sizelet {
     public static final Sizelet QUARTER_FINGER = new Sizelet(0, .25f, Ruler.FINGERTIP);
     public static final Sizelet READABLE = new Sizelet(0, 1f, Ruler.READABLE);
     public static final Sizelet TITLE = new Sizelet(0, 1.8f, Ruler.READABLE);
-    public static final Sizelet IMPORTANT = new Sizelet(0, 1.5f, Ruler.READABLE);
+    public static final Sizelet IMPORTANT = new Sizelet(0, 1.4f, Ruler.READABLE);
     public static final Sizelet PREVIOUS = new Sizelet(0, 1, Ruler.PREVIOUS);
 
     public static Sizelet ZERO = new Sizelet(0, 0, Ruler.ZERO);
