@@ -147,7 +147,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
                   @Override
                   public ColumnUi print(ColumnUi2<Integer, String> ui2) {
                       final String sharesString = getSharesString(program.getSharesToBuy());
-                      return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
+                      return ui2.bind(program.getSelectedBuyOption()).bind(sharesString);
                   }
 
                   @Override

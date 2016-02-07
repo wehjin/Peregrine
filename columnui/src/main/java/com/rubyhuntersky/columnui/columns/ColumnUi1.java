@@ -65,8 +65,8 @@ abstract public class ColumnUi1<C> implements Ui1<Column, C> {
     public <C2> ColumnUi2<C, C2> expandBottom(final ColumnUi1<C2> expansion) {
         return ColumnUi2.create((new ColumnUi2.OnBind<C, C2>() {
             @Override
-            public ColumnUi1<C> onBind(C2 condition) {
-                return ColumnUi1.this.expandBottom(expansion.bind(condition));
+            public ColumnUi1<C2> onBind(C condition) {
+                return ColumnUi1.this.bind(condition).expandBottom(expansion);
             }
         }));
     }

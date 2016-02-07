@@ -15,12 +15,12 @@ import com.rubyhuntersky.columnui.tiles.TileUi;
 
 public abstract class ColumnUi2<C1, C2> {
 
-    public abstract ColumnUi1<C1> bind(C2 condition);
+    public abstract ColumnUi1<C2> bind(C1 condition);
 
     public static <C1, C2> ColumnUi2<C1, C2> create(final OnBind<C1, C2> onBind) {
         return new ColumnUi2<C1, C2>() {
             @Override
-            public ColumnUi1<C1> bind(C2 condition) {
+            public ColumnUi1<C2> bind(C1 condition) {
                 return onBind.onBind(condition);
             }
         };
@@ -29,7 +29,7 @@ public abstract class ColumnUi2<C1, C2> {
     public ColumnUi2<C1, C2> padBottom(final Sizelet heightlet) {
         return create(new OnBind<C1, C2>() {
             @Override
-            public ColumnUi1<C1> onBind(C2 condition) {
+            public ColumnUi1<C2> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).padBottom(heightlet);
             }
         });
@@ -38,7 +38,7 @@ public abstract class ColumnUi2<C1, C2> {
     public ColumnUi2<C1, C2> padHorizontal(final Sizelet padlet) {
         return create(new OnBind<C1, C2>() {
             @Override
-            public ColumnUi1<C1> onBind(C2 condition) {
+            public ColumnUi1<C2> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).padHorizontal(padlet);
             }
         });
@@ -47,7 +47,7 @@ public abstract class ColumnUi2<C1, C2> {
     public ColumnUi2<C1, C2> placeBefore(final ColumnUi columnUi, final int gap) {
         return create(new OnBind<C1, C2>() {
             @Override
-            public ColumnUi1<C1> onBind(C2 condition) {
+            public ColumnUi1<C2> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).placeBefore(columnUi, gap);
             }
         });
@@ -56,7 +56,7 @@ public abstract class ColumnUi2<C1, C2> {
     public ColumnUi2<C1, C2> expandBottom(final ColumnUi expansion) {
         return create(new OnBind<C1, C2>() {
             @Override
-            public ColumnUi1<C1> onBind(C2 condition) {
+            public ColumnUi1<C2> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).expandBottom(expansion);
             }
         });
@@ -69,7 +69,7 @@ public abstract class ColumnUi2<C1, C2> {
     public ColumnUi2<C1, C2> expandVertical(final Sizelet heightlet) {
         return create(new OnBind<C1, C2>() {
             @Override
-            public ColumnUi1<C1> onBind(C2 condition) {
+            public ColumnUi1<C2> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).expandVertical(heightlet);
             }
         });
@@ -81,8 +81,7 @@ public abstract class ColumnUi2<C1, C2> {
 
             @Override
             public void onPresent(final Presenter<Column> presenter) {
-                final SwitchPresenter<Column> switchPresenter =
-                      new SwitchPresenter<>(presenter.getHuman(), presenter.getDisplay(), presenter);
+                final SwitchPresenter<Column> switchPresenter = new SwitchPresenter<>(presenter.getHuman(), presenter.getDisplay(), presenter);
                 presenter.addPresentation(switchPresenter);
                 present(repl, switchPresenter);
             }
@@ -124,7 +123,7 @@ public abstract class ColumnUi2<C1, C2> {
 
 
     public interface OnBind<C1, C2> {
-        ColumnUi1<C1> onBind(C2 condition);
+        ColumnUi1<C2> onBind(C1 condition);
     }
 
 }
