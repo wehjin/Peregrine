@@ -120,49 +120,51 @@ public class BuyDialogFragment extends TradeDialogFragment {
         final String fundingShares = "Sell " + sharesToSellForFunding.setScale(0, BigDecimal.ROUND_CEILING) + " shares";
 
         final ColumnUi2<Integer, String> purchaseUi = amountColumn.expandBottom(SPACING)
-                                                                  .expandBottom(pricesBar.toColumn(FINGER))
-                                                                  .expandBottom(SPACING)
-                                                                  .expandBottom(DIVIDER)
-                                                                  .expandBottom(SPACING)
-                                                                  .expandBottom(sharesTile.toColumn());
+              .expandBottom(pricesBar.toColumn(FINGER))
+              .expandBottom(SPACING)
+              .expandBottom(DIVIDER)
+              .expandBottom(SPACING)
+              .expandBottom(sharesTile.toColumn());
+
+        final ColumnUi fundingUi = textColumn(fundingAccountName, TextStylet.READABLE_DARK).expandBottom(SPACING)
+              .expandBottom(textColumn(addFunds, IMPORTANT_DARK))
+              .expandBottom(SPACING)
+              .expandBottom(textColumn(fundingPrice, IMPORTANT_DARK).expandBottom(SPACING)
+                    .expandBottom(DIVIDER)
+                    .expandBottom(SPACING)
+                    .expandBottom(textColumn(fundingShares, IMPORTANT_DARK)));
+
         final ColumnUi2<Integer, String> contentUi = purchaseUi.expandBottom(gapColumn(Sizelet.FINGER))
-                                                               .expandBottom(textTile(fundingAccountName, TextStylet.READABLE_DARK))
-                                                               .expandBottom(SPACING)
-                                                               .expandBottom(textTile(addFunds, IMPORTANT_DARK))
-                                                               .expandBottom(SPACING)
-                                                               .expandBottom(textTile(fundingPrice, IMPORTANT_DARK))
-                                                               .expandBottom(SPACING)
-                                                               .expandBottom(DIVIDER)
-                                                               .expandBottom(SPACING)
-                                                               .expandBottom(textTile(fundingShares, IMPORTANT_DARK));
+              .expandBottom(fundingUi);
+
         ui = contentUi.expandVertical(TWO_THIRDS_FINGER)
-                      .padHorizontal(THIRD_FINGER)
-                      .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-                      .printReadEval(new ColumnUi2.Repl<Integer, String>() {
+              .padHorizontal(THIRD_FINGER)
+              .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+              .printReadEval(new ColumnUi2.Repl<Integer, String>() {
 
-                          private int selection = program.getSelectedBuyOption();
+                  private int selection = program.getSelectedBuyOption();
 
-                          @Override
-                          public ColumnUi print(ColumnUi2<Integer, String> ui2) {
-                              final String sharesString = getSharesString(program.getSharesToBuy());
-                              return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
-                          }
+                  @Override
+                  public ColumnUi print(ColumnUi2<Integer, String> ui2) {
+                      final String sharesString = getSharesString(program.getSharesToBuy());
+                      return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
+                  }
 
-                          @Override
-                          public void read(Reaction reaction) {
-                              if (reaction instanceof ItemSelectionReaction) {
-                                  selection = (int) ((ItemSelectionReaction) reaction).getItem();
-                              }
-                          }
+                  @Override
+                  public void read(Reaction reaction) {
+                      if (reaction instanceof ItemSelectionReaction) {
+                          selection = (int) ((ItemSelectionReaction) reaction).getItem();
+                      }
+                  }
 
-                          @Override
-                          public boolean eval() {
-                              if (selection == program.getSelectedBuyOption())
-                                  return false;
-                              program.setSelectedBuyOption(selection);
-                              return true;
-                          }
-                      });
+                  @Override
+                  public boolean eval() {
+                      if (selection == program.getSelectedBuyOption())
+                          return false;
+                      program.setSelectedBuyOption(selection);
+                      return true;
+                  }
+              });
 
     }
 
