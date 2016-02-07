@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui.columns;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
+import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
@@ -13,7 +14,6 @@ import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.ui.PresentationMaker;
 import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
@@ -26,37 +26,16 @@ public abstract class ColumnUi implements Ui<Column> {
     public abstract Presentation present(Human human, Column column, Observer observer);
 
     public ColumnUi padHorizontal(final Sizelet padlet) {
-        final ColumnUi ui = this;
         return create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                presenter.addPresentation(presentWithHorizontalPadding(padlet,
-                                                                       presenter.getHuman(),
-                                                                       presenter.getDisplay(),
-                                                                       presenter,
-                                                                       new PresentationMaker<Presentation, Column>() {
-
-                                                                           @Override
-                                                                           public Presentation present(Human human, Column display, Observer observer, int index) {
-                                                                               return ui.present(human,
-                                                                                                 display,
-                                                                                                 observer);
-                                                                           }
-
-                                                                           @Override
-                                                                           public Presentation resize(float width, float height, Presentation basis) {
-                                                                               return null;
-                                                                           }
-
-                                                                       }));
+                Human human = presenter.getHuman();
+                Column column = presenter.getDisplay();
+                final float padding = padlet.toFloat(human, column.fixedWidth);
+                Column newColumn = column.withFixedWidth(column.fixedWidth - 2 * padding).withShift(padding, 0);
+                presenter.addPresentation(ColumnUi.this.present(human, newColumn, presenter));
             }
         });
-    }
-
-    public static <P extends Presentation> P presentWithHorizontalPadding(Sizelet padlet, Human human, Column column, Observer observer, PresentationMaker<P, Column> maker) {
-        final float padding = padlet.toFloat(human, column.fixedWidth);
-        Column newColumn = column.withFixedWidth(column.fixedWidth - 2 * padding).withShift(padding, 0);
-        return maker.present(human, newColumn, observer, 0);
     }
 
     public ColumnUi padTop(final Sizelet padlet) {
@@ -78,38 +57,7 @@ public abstract class ColumnUi implements Ui<Column> {
     }
 
     public ColumnUi padBottom(final Sizelet padlet) {
-        final ColumnUi ui = this;
-        return create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                presenter.addPresentation(presentWithBottomPadding(padlet,
-                                                                   presenter.getHuman(),
-                                                                   presenter.getDisplay(),
-                                                                   presenter,
-                                                                   new PresentationMaker<Presentation, Column>() {
-                                                                       @Override
-                                                                       public Presentation present(Human human, Column display, Observer observer, int index) {
-                                                                           return ui.present(human, display, observer);
-                                                                       }
-
-                                                                       @Override
-                                                                       public Presentation resize(float width, float height, Presentation basis) {
-                                                                           return new ResizePresentation(width,
-                                                                                                         height,
-                                                                                                         basis);
-                                                                       }
-
-                                                                   }));
-            }
-        });
-    }
-
-    public static <P extends Presentation> P presentWithBottomPadding(Sizelet padlet1, Human human, Column column, Observer observer, PresentationMaker<P, Column> maker) {
-        final P presentation = maker.present(human, column, observer, 0);
-        final float height = presentation.getHeight();
-        final float padding = padlet1.toFloat(human, height);
-        final float newHeight = height + padding;
-        return maker.resize(column.fixedWidth, newHeight, presentation);
+        return expandBottom(Creator.gapColumn(padlet));
     }
 
     public ColumnUi padVertical(final Sizelet padlet) {
@@ -150,39 +98,19 @@ public abstract class ColumnUi implements Ui<Column> {
         return create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
+                Human human = presenter.getHuman();
+                Column column = presenter.getDisplay();
+                final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
+                final Presentation frontPresentation = ColumnUi.this.present(human, delayColumn, presenter);
+                final Column backgroundColumn = column.withRelatedHeight(frontPresentation.getHeight());
+                final Presentation backgroundPresentation = background.present(human, backgroundColumn, presenter);
+                delayColumn.endDelay();
                 final Pair<Presentation, Presentation> presentations =
-                      presentFirstBeforeSecond(gap, presenter.getHuman(), presenter
-                            .getDisplay(), presenter, new PresentationMaker<Presentation, Column>() {
-                          @Override
-                          public Presentation present(Human human, Column display, Observer observer, int index) {
-                              if (index == 0) {
-                                  return ColumnUi.this.present(human, display, observer);
-                              } else if (index == 1) {
-                                  return background.present(human, display, observer);
-                              }
-                              return null;
-                          }
-
-                          @Override
-                          public Presentation resize(float width, float height, Presentation basis) {
-                              return null;
-                          }
-
-                      });
+                      new Pair<>(frontPresentation, backgroundPresentation);
                 presenter.addPresentation(presentations.first);
                 presenter.addPresentation(presentations.second);
             }
         });
-    }
-
-    @NonNull
-    public static <P extends Presentation> Pair<P, P> presentFirstBeforeSecond(int gap, Human human, Column column, Observer observer, PresentationMaker<P, Column> maker) {
-        final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
-        final P frontPresentation = maker.present(human, delayColumn, observer, 0);
-        final Column backgroundColumn = column.withRelatedHeight(frontPresentation.getHeight());
-        final P backgroundPresentation = maker.present(human, backgroundColumn, observer, 1);
-        delayColumn.endDelay();
-        return new Pair<>(frontPresentation, backgroundPresentation);
     }
 
     public ColumnUi expandBottom(@NonNull final ColumnUi expansion) {
