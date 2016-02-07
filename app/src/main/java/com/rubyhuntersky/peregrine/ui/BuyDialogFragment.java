@@ -144,9 +144,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
                           .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK));
 
         final ColumnUi fundingUi = spinnerColumn(fundingAccountNames, selectedFundingAccount)
-              .expandBottom(DOUBLE_SPACING)
               .expandBottom(textColumn(addFunds, READABLE_DARK))
-              .expandBottom(DOUBLE_SPACING)
+              .expandBottom(SPACING)
               .expandBottom(sellUi)
               .isolate();
 
