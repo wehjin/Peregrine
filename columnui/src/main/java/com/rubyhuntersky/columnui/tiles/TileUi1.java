@@ -2,13 +2,8 @@ package com.rubyhuntersky.columnui.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.columns.BoundCui1;
-import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
-import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
 /**
@@ -29,13 +24,7 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
             @NonNull
             @Override
             public ColumnUi onBind(final C condition) {
-                return new BoundCui1() {
-
-                    @Override
-                    public Presentation present(Human human, Column display, Observer observer) {
-                        return TileUi1.this.bind(condition).presentToColumn(human, display, observer);
-                    }
-                };
+                return TileUi1.this.bind(condition).toColumn();
             }
         });
     }

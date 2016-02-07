@@ -64,20 +64,19 @@ abstract public class TileUi implements Ui<Tile> {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
-                presenter.addPresentation(presentToColumn(presenter.getHuman(), presenter.getDisplay(), presenter));
+                Column column = presenter.getDisplay();
+                final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
+                final ShiftTile frameShiftTile = tile.withShift();
+                final Presentation presentation = TileUi.this.present(presenter.getHuman(), frameShiftTile, presenter);
+                final float presentationWidth = presentation.getWidth();
+                final float extraWidth = column.fixedWidth - presentationWidth;
+                final float anchor = .5f;
+                frameShiftTile.setShift(extraWidth * anchor, 0);
+                presenter.addPresentation(new ResizePresentation(column.fixedWidth,
+                                                                 presentation.getHeight(),
+                                                                 presentation));
             }
         });
-    }
-
-    public Presentation presentToColumn(Human human, Column column, Observer observer) {
-        final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
-        final ShiftTile frameShiftTile = tile.withShift();
-        final Presentation presentation = TileUi.this.present(human, frameShiftTile, observer);
-        final float presentationWidth = presentation.getWidth();
-        final float extraWidth = column.fixedWidth - presentationWidth;
-        final float anchor = .5f;
-        frameShiftTile.setShift(extraWidth * anchor, 0);
-        return new ResizePresentation(column.fixedWidth, presentation.getHeight(), presentation);
     }
 
     public static TileUi create(final OnPresent<Tile> onPresent) {
