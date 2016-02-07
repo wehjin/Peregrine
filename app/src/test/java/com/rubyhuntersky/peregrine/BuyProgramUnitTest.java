@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -31,10 +32,8 @@ public class BuyProgramUnitTest {
     @Test
     public void program_computesFundsNeeded_whenAccountHasNoPositionsAndNoFunds() throws Exception {
         final BigDecimal cashAmount = BigDecimal.ZERO;
-        final AccountBalance accountBalance = new AccountBalance(cashAmount);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", "test1", "unittest", cashAmount);
-        final List<Asset> assets = emptyList();
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, assets);
+        final List<Asset> assets = Collections.emptyList();
+        final FundingAccount fundingAccount = new AccountAssets("test1", cashAmount, assets).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         final BigDecimal fundsNeeded = buyProgram.getAdditionalFundsNeededToBuy();
@@ -44,10 +43,8 @@ public class BuyProgramUnitTest {
     @Test
     public void program_computesFundsNeeded_whenAccountHasNoPositionsAndInsufficientFunds() throws Exception {
         final BigDecimal cashAmount = BigDecimal.valueOf(40);
-        final AccountBalance accountBalance = new AccountBalance(cashAmount);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", "test1", "unittest", cashAmount);
         final List<Asset> assets = emptyList();
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, assets);
+        final FundingAccount fundingAccount = new AccountAssets("test1", cashAmount, assets).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         final BigDecimal fundsNeeded = buyProgram.getAdditionalFundsNeededToBuy();
@@ -57,10 +54,8 @@ public class BuyProgramUnitTest {
     @Test
     public void program_computesFundsNeeded_whenAccountHasNoPositionsAndSufficientFunds() throws Exception {
         final BigDecimal cashAmount = BigDecimal.valueOf(200);
-        final AccountBalance accountBalance = new AccountBalance(cashAmount);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", "test1", "unittest", cashAmount);
         final List<Asset> assets = emptyList();
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, assets);
+        final FundingAccount fundingAccount = new AccountAssets("test1", cashAmount, assets).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         assertEquals(BigDecimal.ZERO, buyProgram.getAdditionalFundsNeededToBuy());
@@ -69,12 +64,10 @@ public class BuyProgramUnitTest {
     @Test
     public void program_computesFundsNeeded_whenAccountHasNoFundsAndInsufficientSaleableAssets() throws Exception {
         final String accountId = "test1";
-        final AccountBalance accountBalance = new AccountBalance(BigDecimal.ZERO);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", accountId, "unittest", BigDecimal.ZERO);
-
         final BigDecimal assetValue = buyAmount.divide(BigDecimal.valueOf(2), BigDecimal.ROUND_HALF_UP);
         final Asset asset = new Asset(accountId, "saleable", assetValue, BigDecimal.ONE, assetValue);
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, singletonList(asset));
+        final FundingAccount fundingAccount =
+              new AccountAssets(accountId, BigDecimal.ZERO, singletonList(asset)).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
@@ -85,12 +78,10 @@ public class BuyProgramUnitTest {
     @Test
     public void program_computesFundsNeeded_whenAccountHasNoFundsAndSufficientSaleableAssets() throws Exception {
         final String accountId = "test1";
-        final AccountBalance accountBalance = new AccountBalance(BigDecimal.ZERO);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", accountId, "unittest", BigDecimal.ZERO);
-
         final BigDecimal assetValue = buyAmount.multiply(BigDecimal.valueOf(2));
         final Asset asset = new Asset(accountId, "saleable", assetValue, BigDecimal.ONE, assetValue);
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, singletonList(asset));
+        final FundingAccount fundingAccount =
+              new AccountAssets(accountId, BigDecimal.ZERO, singletonList(asset)).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
@@ -103,12 +94,10 @@ public class BuyProgramUnitTest {
         final AssetPrice selectedBuyOption = buyOptions.get(0);
 
         final String accountId = "test1";
-        final AccountBalance accountBalance = new AccountBalance(BigDecimal.ZERO);
-        final EtradeAccount etradeAccount = new EtradeAccount("Test", accountId, "unittest", BigDecimal.ZERO);
-
         final BigDecimal assetValue = buyAmount.multiply(BigDecimal.valueOf(2));
         final Asset asset = new Asset(accountId, selectedBuyOption.name, assetValue, BigDecimal.ONE, assetValue);
-        final FundingAccount fundingAccount = etradeAccount.toFundingAccount(accountBalance, singletonList(asset));
+        final FundingAccount fundingAccount =
+              new AccountAssets(accountId, BigDecimal.ZERO, singletonList(asset)).toFundingAccount();
 
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());

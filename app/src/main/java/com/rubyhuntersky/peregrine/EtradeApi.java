@@ -63,8 +63,8 @@ public class EtradeApi {
         cashPosition.put("longOrShort", "LONG");
         cashPosition.put("marginable", true);
         final JSONObject productId = new JSONObject();
-        productId.put("symbol", "USD");
-        productId.put("typeCode", "CUR");
+        productId.put("symbol", Values.USD);
+        productId.put("typeCode", Values.CUR);
         cashPosition.put("productId", productId);
         cashPosition.put("qty", amount);
         cashPosition.put("currentPrice", 1);
@@ -80,8 +80,8 @@ public class EtradeApi {
     public Observable<JSONObject> fetchAccountPositionsResponse(final String accountId, OauthToken accessToken) {
         Log.d(TAG, "fetchAccountPositionsResponse: " + accountId);
         final String urlString = getEtradeRestUrl("accounts", "accountpositions/" + accountId + ".json");
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken).withToken(accessToken)
-                                                                                               .build();
+        final OauthHttpRequest request =
+              new OauthHttpRequest.Builder(urlString, oauthAppToken).withToken(accessToken).build();
         return getOauthHttpResponseString(request).map(new Func1<String, JSONObject>() {
             @Override
             public JSONObject call(String inputResponse) {
@@ -126,8 +126,8 @@ public class EtradeApi {
 
     public Observable<OauthToken> fetchOauthAccessToken(OauthVerifier verifier) {
         final String urlString = ET_OAUTH_URL + "access_token";
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken).withVerifier(verifier)
-                                                                                               .build();
+        final OauthHttpRequest request =
+              new OauthHttpRequest.Builder(urlString, oauthAppToken).withVerifier(verifier).build();
         return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
             @Override
             public OauthToken call(String s) {
@@ -138,8 +138,8 @@ public class EtradeApi {
 
     public Observable<OauthToken> renewOauthAccessToken(final OauthToken oauthToken) {
         final String urlString = ET_OAUTH_URL + "renew_access_token";
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(urlString, oauthAppToken).withToken(oauthToken)
-                                                                                               .build();
+        final OauthHttpRequest request =
+              new OauthHttpRequest.Builder(urlString, oauthAppToken).withToken(oauthToken).build();
         return getOauthHttpResponseString(request).map(new Func1<String, OauthToken>() {
             @Override
             public OauthToken call(String s) {
@@ -151,8 +151,8 @@ public class EtradeApi {
 
     public Observable<List<EtradeAccount>> fetchAccountList(OauthToken accessToken) {
         final String url = getEtradeRestUrl("accounts", "accountlist");
-        final OauthHttpRequest request = new OauthHttpRequest.Builder(url, oauthAppToken).withToken(accessToken)
-                                                                                         .build();
+        final OauthHttpRequest request =
+              new OauthHttpRequest.Builder(url, oauthAppToken).withToken(accessToken).build();
         return getOauthHttpResponseString(request).map(new Func1<String, List<EtradeAccount>>() {
             @Override
             public List<EtradeAccount> call(String inputResponse) {
@@ -205,8 +205,8 @@ public class EtradeApi {
                                 error = new NotAuthorizedException(urlString + "\n" + responseMessage);
                                 break;
                             default:
-                                final String message = String.format("%s %d %s", urlString, responseCode,
-                                      responseMessage);
+                                final String message =
+                                      String.format("%s %d %s", urlString, responseCode, responseMessage);
                                 error = new RuntimeException(message);
                                 break;
                         }

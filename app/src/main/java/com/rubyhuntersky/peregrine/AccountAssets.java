@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -25,6 +26,15 @@ public class AccountAssets {
     private final String accountDescription;
     private final Date arrivalTime;
     private List<Asset> assets;
+
+    public AccountAssets(String accountId, BigDecimal cashAmount, List<Asset> assets) {
+        jsonObject = new JSONObject();
+        this.accountId = accountId;
+        this.accountDescription = "";
+        this.arrivalTime = new Date();
+        this.assets = new ArrayList<>(assets);
+        this.assets.add(new Asset(accountId, Values.USD, cashAmount, cashAmount, BigDecimal.ONE));
+    }
 
     public AccountAssets(JSONObject jsonObject) throws JSONException {
         this.jsonObject = jsonObject;
@@ -72,4 +82,7 @@ public class AccountAssets {
         return assets;
     }
 
+    public FundingAccount toFundingAccount() {
+        return new EtradeFundingAccount(accountId, assets);
+    }
 }

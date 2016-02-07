@@ -1,7 +1,5 @@
 package com.rubyhuntersky.peregrine;
 
-import android.os.Parcel;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -9,8 +7,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wehjin
@@ -30,10 +26,6 @@ public class EtradeAccount {
 
     public BigDecimal getNetAccountValue() {
         return netAccountValue;
-    }
-
-    public FundingAccount toFundingAccount(final AccountBalance accountBalance, List<Asset> assets) {
-        return new EtradeFundingAccount(this, accountBalance, assets);
     }
 
     public JSONObject toJSONObject() throws JSONException {
@@ -91,70 +83,4 @@ public class EtradeAccount {
         netAccountValue = new BigDecimal(jsonObject.getString(JSONKEY_NET_ACCOUNT_VALUE));
     }
 
-    private static class EtradeFundingAccount implements FundingAccount {
-
-        final private List<FundingOption> fundingOptions;
-        final private BigDecimal cashAvailable;
-        final private String accountName;
-
-        public EtradeFundingAccount(EtradeAccount etradeAccount, AccountBalance accountBalance, List<Asset> assets) {
-            accountName = etradeAccount.accountId;
-            cashAvailable = accountBalance.netCash;
-            fundingOptions = new ArrayList<>();
-            for (Asset asset : assets) {
-                fundingOptions.add(asset.toFundingOption());
-            }
-        }
-
-        @Override
-        public String getAccountName() {
-            return accountName;
-        }
-
-        @Override
-        public BigDecimal getCashAvailable() {
-            return cashAvailable;
-        }
-
-        @Override
-        public List<FundingOption> getFundingOptions(String exclude) {
-            final ArrayList<FundingOption> includedOptions = new ArrayList<>();
-            for (FundingOption option : fundingOptions) {
-                if (option.getAssetName().equals(exclude)) {
-                    continue;
-                }
-                includedOptions.add(option);
-            }
-            return includedOptions;
-        }
-
-        public EtradeFundingAccount(Parcel in) {
-            accountName = in.readString();
-            cashAvailable = (BigDecimal) in.readSerializable();
-            fundingOptions = new ArrayList<>();
-            in.readList(fundingOptions, null);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(accountName);
-            dest.writeSerializable(cashAvailable);
-            dest.writeList(fundingOptions);
-        }
-
-        public static final Creator<EtradeFundingAccount> CREATOR = new Creator<EtradeFundingAccount>() {
-            public EtradeFundingAccount createFromParcel(Parcel in) {
-                return new EtradeFundingAccount(in);
-            }
-
-            public EtradeFundingAccount[] newArray(int size) {
-                return new EtradeFundingAccount[size];
-            }
-        };
-    }
 }
