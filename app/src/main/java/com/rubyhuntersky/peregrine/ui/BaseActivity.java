@@ -99,6 +99,11 @@ public class BaseActivity extends AppCompatActivity {
         return storage.streamAccountsList();
     }
 
+
+    public Observable<List<AccountAssets>> getAccountAssetsListStream() {
+        return storage.streamAccountAssetsList();
+    }
+
     public Observable<PortfolioAssets> getPortfolioAssetsStream() {
         return storage.streamAccountAssetsList().map(new Func1<List<AccountAssets>, PortfolioAssets>() {
             @Override

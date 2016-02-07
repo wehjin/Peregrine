@@ -164,7 +164,7 @@ public class BuyProgram implements Parcelable, FundingProgram {
         return buyOptions.get(selectedBuyOption);
     }
 
-    private FundingAccount getFundingAccount() {
+    public FundingAccount getFundingAccount() {
         if (selectedFundingAccount < 0)
             return null;
         return fundingAccounts.get(selectedFundingAccount);

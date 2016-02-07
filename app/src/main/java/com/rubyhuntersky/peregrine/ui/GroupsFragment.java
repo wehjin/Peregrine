@@ -16,9 +16,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rubyhuntersky.peregrine.AccountAssets;
 import com.rubyhuntersky.peregrine.Asset;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.Assignments;
+import com.rubyhuntersky.peregrine.FundingAccount;
 import com.rubyhuntersky.peregrine.Group;
 import com.rubyhuntersky.peregrine.PartitionList;
 import com.rubyhuntersky.peregrine.PortfolioAssets;
@@ -32,6 +34,7 @@ import java.util.Set;
 
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func3;
 
 public class GroupsFragment extends BaseFragment {
@@ -109,14 +112,31 @@ public class GroupsFragment extends BaseFragment {
                     final DialogFragment fragment = SellDialogFragment.create(sellAmount, prices, selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
                 } else if (direction < 0) {
-                    List<AssetPrice> prices = getPrices(group);
+                    final List<AssetPrice> prices = getPrices(group);
                     if (prices.size() == 0) {
                         prices.add(new AssetPrice());
                     }
 
-                    final DialogFragment fragment = BuyDialogFragment.create(sellAmount.abs(), prices, 0);
-                    fragment.setCancelable(true);
-                    fragment.show(getFragmentManager(), "BuyFragment");
+                    getBaseActivity().getAccountAssetsListStream()
+                                     .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
+                                         @Override
+                                         public List<FundingAccount> call(List<AccountAssets> accountAssetsList) {
+                                             List<FundingAccount> fundingAccounts = new ArrayList<>();
+                                             for (AccountAssets accountAssets : accountAssetsList) {
+                                                 fundingAccounts.add(accountAssets.toFundingAccount());
+                                             }
+                                             return fundingAccounts;
+                                         }
+                                     })
+                                     .subscribe(new Action1<List<FundingAccount>>() {
+                                         @Override
+                                         public void call(List<FundingAccount> fundingAccounts) {
+                                             final DialogFragment fragment =
+                                                   BuyDialogFragment.create(sellAmount.abs(), prices, 0, fundingAccounts);
+                                             fragment.setCancelable(true);
+                                             fragment.show(getFragmentManager(), "BuyFragment");
+                                         }
+                                     });
                 }
             }
         });

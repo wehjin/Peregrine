@@ -89,6 +89,10 @@ public class Creator {
         return textTile(textString, textStylet).toColumn();
     }
 
+    static public ColumnUi gapColumn(final Sizelet heightlet) {
+        return colorColumn(heightlet, null);
+    }
+
     static public ColumnUi colorColumn(final Sizelet heightlet, @Nullable final Coloret coloret) {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override

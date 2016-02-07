@@ -13,6 +13,7 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
@@ -23,6 +24,7 @@ import com.rubyhuntersky.columnui.tiles.TileCreator;
 import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
+import com.rubyhuntersky.peregrine.FundingAccount;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.TradeDialogFragment;
 
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rubyhuntersky.columnui.Creator.colorColumn;
+import static com.rubyhuntersky.columnui.Creator.gapColumn;
 import static com.rubyhuntersky.columnui.Creator.textColumn;
 import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
@@ -51,7 +54,7 @@ import static com.rubyhuntersky.columnui.material.Android.spinnerBar;
 public class BuyDialogFragment extends TradeDialogFragment {
 
     public static final String DIVISION_SIGN = "\u00f7";
-    public static final ColumnUi SPACING = colorColumn(Sizelet.QUARTER_FINGER, null);
+    public static final ColumnUi SPACING = gapColumn(Sizelet.QUARTER_FINGER);
     public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
     public static final String PROGRAM_KEY = "programKey";
@@ -61,8 +64,11 @@ public class BuyDialogFragment extends TradeDialogFragment {
     private ColumnUi ui;
     private BuyProgram program;
 
-    public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, int selectedPrice) {
+    public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, int selectedPrice, List<FundingAccount> fundingAccounts) {
         final BuyProgram buyProgram = new BuyProgram(amount, prices, selectedPrice);
+        if (fundingAccounts != null) {
+            buyProgram.setFundingAccounts(fundingAccounts, 0, 0);
+        }
 
         final Bundle arguments = new Bundle();
         arguments.putParcelable(PROGRAM_KEY, buyProgram);
@@ -96,41 +102,53 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
         final ColumnUi amountColumn = textColumn(buyString, IMPORTANT_DARK);
         final BarUi1<Integer> pricesBar = spinnerBar(symbols).expandStart(textTile(DIVISION_SIGN, IMPORTANT_DARK));
-        final TileUi1<String> sharedTile = TileCreator.textTile1(IMPORTANT_DARK);
-        ui = amountColumn.expandBottom(SPACING)
-                         .expandBottom(pricesBar.toColumn(FINGER))
-                         .expandBottom(SPACING)
-                         .expandBottom(DIVIDER)
-                         .expandBottom(SPACING)
-                         .expandBottom(sharedTile.toColumn())
-                         .expandVertical(TWO_THIRDS_FINGER)
-                         .padHorizontal(THIRD_FINGER)
-                         .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-                         .printReadEval(new ColumnUi2.Repl<Integer, String>() {
+        final TileUi1<String> sharesTile = TileCreator.textTile1(IMPORTANT_DARK);
 
-                             private int selection = program.getSelectedBuyOption();
+        final FundingAccount fundingAccount = program.getFundingAccount();
+        final String accountName = "Account " + fundingAccount.getAccountName();
+        final BigDecimal fundsNeededToBuy = program.getAdditionalFundsNeededToBuy();
+        final String addFunds = fundsNeededToBuy.equals(BigDecimal.ZERO)
+                                ? "Sufficient funds"
+                                : "Add Funds " + UiHelper.getCurrencyDisplayString(fundsNeededToBuy);
 
-                             @Override
-                             public ColumnUi print(ColumnUi2<Integer, String> ui2) {
-                                 final String sharesString = getSharesString(program.getSharesToBuy());
-                                 return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
-                             }
+        final ColumnUi2<Integer, String> content = amountColumn.expandBottom(SPACING)
+                                                               .expandBottom(pricesBar.toColumn(FINGER))
+                                                               .expandBottom(SPACING)
+                                                               .expandBottom(DIVIDER)
+                                                               .expandBottom(SPACING)
+                                                               .expandBottom(sharesTile.toColumn())
+                                                               .expandBottom(gapColumn(Sizelet.FINGER))
+                                                               .expandBottom(textTile(accountName, TextStylet.READABLE_DARK))
+                                                               .expandBottom(SPACING)
+                                                               .expandBottom(textTile(addFunds, IMPORTANT_DARK));
+        ui = content.expandVertical(TWO_THIRDS_FINGER)
+                    .padHorizontal(THIRD_FINGER)
+                    .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+                    .printReadEval(new ColumnUi2.Repl<Integer, String>() {
 
-                             @Override
-                             public void read(Reaction reaction) {
-                                 if (reaction instanceof ItemSelectionReaction) {
-                                     selection = (int) ((ItemSelectionReaction) reaction).getItem();
-                                 }
-                             }
+                        private int selection = program.getSelectedBuyOption();
 
-                             @Override
-                             public boolean eval() {
-                                 if (selection == program.getSelectedBuyOption())
-                                     return false;
-                                 program.setSelectedBuyOption(selection);
-                                 return true;
-                             }
-                         });
+                        @Override
+                        public ColumnUi print(ColumnUi2<Integer, String> ui2) {
+                            final String sharesString = getSharesString(program.getSharesToBuy());
+                            return ui2.bind(sharesString).bind(program.getSelectedBuyOption());
+                        }
+
+                        @Override
+                        public void read(Reaction reaction) {
+                            if (reaction instanceof ItemSelectionReaction) {
+                                selection = (int) ((ItemSelectionReaction) reaction).getItem();
+                            }
+                        }
+
+                        @Override
+                        public boolean eval() {
+                            if (selection == program.getSelectedBuyOption())
+                                return false;
+                            program.setSelectedBuyOption(selection);
+                            return true;
+                        }
+                    });
 
     }
 

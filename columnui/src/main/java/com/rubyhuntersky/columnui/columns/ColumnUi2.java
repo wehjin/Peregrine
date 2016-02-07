@@ -6,6 +6,7 @@ import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.presenters.SwitchPresenter;
+import com.rubyhuntersky.columnui.tiles.TileUi;
 
 /**
  * @author wehjin
@@ -52,6 +53,19 @@ public abstract class ColumnUi2<C1, C2> {
         });
     }
 
+    public ColumnUi2<C1, C2> expandBottom(final ColumnUi expansion) {
+        return create(new OnBind<C1, C2>() {
+            @Override
+            public ColumnUi1<C1> onBind(C2 condition) {
+                return ColumnUi2.this.bind(condition).expandBottom(expansion);
+            }
+        });
+    }
+
+    public ColumnUi2<C1, C2> expandBottom(TileUi tileUi) {
+        return expandBottom(tileUi.toColumn());
+    }
+
     public ColumnUi2<C1, C2> expandVertical(final Sizelet heightlet) {
         return create(new OnBind<C1, C2>() {
             @Override
@@ -67,19 +81,21 @@ public abstract class ColumnUi2<C1, C2> {
 
             @Override
             public void onPresent(final Presenter<Column> presenter) {
-                final SwitchPresenter<Column> switchPresenter = new SwitchPresenter<>(presenter.getHuman(),
-                      presenter.getDisplay(), presenter);
+                final SwitchPresenter<Column> switchPresenter =
+                      new SwitchPresenter<>(presenter.getHuman(), presenter.getDisplay(), presenter);
                 presenter.addPresentation(switchPresenter);
                 present(repl, switchPresenter);
             }
 
             void present(final Repl<C1, C2> repl, final SwitchPresenter<Column> presenter) {
-                if (presenter.isCancelled()) return;
+                if (presenter.isCancelled())
+                    return;
                 final ColumnUi print = repl.print(columnUi2);
                 presenter.addPresentation(print.present(presenter.getHuman(), presenter.getDisplay(), new Observer() {
                     @Override
                     public void onReaction(Reaction reaction) {
-                        if (presenter.isCancelled()) return;
+                        if (presenter.isCancelled())
+                            return;
                         repl.read(reaction);
                         if (repl.eval()) {
                             present(repl, presenter);
