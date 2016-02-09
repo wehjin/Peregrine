@@ -12,7 +12,8 @@ import com.rubyhuntersky.columnui.Reaction;
 public class ItemSelectionReaction<T> extends Reaction {
     private final T item;
 
-    public ItemSelectionReaction(@Nullable T item) {
+    public ItemSelectionReaction(String source, @Nullable T item) {
+        super(source);
         this.item = item;
     }
 

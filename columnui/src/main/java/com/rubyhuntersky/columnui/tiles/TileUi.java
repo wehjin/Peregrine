@@ -1,11 +1,12 @@
 package com.rubyhuntersky.columnui.tiles;
 
 import com.rubyhuntersky.columnui.Observer;
+import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
-import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.operations.ToColumnOperation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
@@ -22,6 +23,34 @@ abstract public class TileUi implements Ui<Tile> {
 
     abstract public Presentation present(Human human, Tile tile, Observer observer);
 
+    public TileUi name(final String name) {
+        return create(new OnPresent<Tile>() {
+            @Override
+            public void onPresent(final Presenter<Tile> presenter) {
+                final Presentation presentation = TileUi.this.present(presenter.getHuman(),
+                                                                      presenter.getDisplay(),
+                                                                      new Observer() {
+                                                                          @Override
+                                                                          public void onReaction(Reaction reaction) {
+                                                                              reaction.setSource(name);
+                                                                              presenter.onReaction(reaction);
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onEnd() {
+                                                                              presenter.onEnd();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onError(Throwable throwable) {
+                                                                              presenter.onError(throwable);
+                                                                          }
+                                                                      });
+                presenter.addPresentation(presentation);
+            }
+        });
+    }
+
     public TileUi expandLeft(final TileUi expansion) {
         return create(new OnPresent<Tile>() {
             @Override
@@ -29,8 +58,8 @@ abstract public class TileUi implements Ui<Tile> {
                 final Human human = presenter.getHuman();
                 final Tile tile = presenter.getDisplay();
                 final ShiftTile baseShift = tile.withShift();
-                final Presentation presentBase = TileUi.this.present(human, baseShift, presenter);
                 final ShiftTile expansionShift = tile.withShift();
+                final Presentation presentBase = TileUi.this.present(human, baseShift, presenter);
                 final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
                 final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
                 baseShift.setShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
@@ -61,22 +90,7 @@ abstract public class TileUi implements Ui<Tile> {
     }
 
     public ColumnUi toColumn() {
-        return ColumnUi.create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                Column column = presenter.getDisplay();
-                final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
-                final ShiftTile frameShiftTile = tile.withShift();
-                final Presentation presentation = TileUi.this.present(presenter.getHuman(), frameShiftTile, presenter);
-                final float presentationWidth = presentation.getWidth();
-                final float extraWidth = column.fixedWidth - presentationWidth;
-                final float anchor = .5f;
-                frameShiftTile.setShift(extraWidth * anchor, 0);
-                presenter.addPresentation(new ResizePresentation(column.fixedWidth,
-                                                                 presentation.getHeight(),
-                                                                 presentation));
-            }
-        });
+        return new ToColumnOperation().applyTo(this);
     }
 
     public static TileUi create(final OnPresent<Tile> onPresent) {

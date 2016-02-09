@@ -13,7 +13,7 @@ public interface FundingProgram {
     int getSelectedFundingAccount();
     void setSelectedFundingAccount(int selection);
 
-    boolean areAdditionalFundsNeededToBuy();
+    boolean fundingAccountHasSufficientFundsToBuy();
     BigDecimal getAdditionalFundsNeededToBuy();
     List<? extends FundingOption> getFundingOptions();
     int getSelectedFundingOption();

@@ -2,8 +2,8 @@ package com.rubyhuntersky.columnui.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
+import com.rubyhuntersky.columnui.operations.ToColumnOperation;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
 /**
@@ -19,6 +19,16 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
     @Override
     public abstract TileUi bind(C condition);
 
+    public TileUi1<C> name(final String name) {
+        return create(new OnBind<C>() {
+            @NonNull
+            @Override
+            public TileUi onBind(C condition) {
+                return TileUi1.this.bind(condition).name(name);
+            }
+        });
+    }
+
     public TileUi1<C> expandLeft(final TileUi expansion) {
         return create(new OnBind<C>() {
             @NonNull
@@ -30,13 +40,7 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
     }
 
     public ColumnUi1<C> toColumn() {
-        return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
-            @NonNull
-            @Override
-            public ColumnUi onBind(final C condition) {
-                return TileUi1.this.bind(condition).toColumn();
-            }
-        });
+        return new ToColumnOperation().applyTo(this);
     }
 
     public static <C> TileUi1<C> create(final OnBind<C> onBind) {

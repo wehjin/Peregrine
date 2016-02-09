@@ -3,6 +3,9 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
+import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
+import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.presenters.SwitchPresenter;
@@ -36,21 +39,11 @@ public abstract class ColumnUi2<C1, C2> {
     }
 
     public ColumnUi2<C1, C2> padHorizontal(final Sizelet padlet) {
-        return create(new OnBind<C1, C2>() {
-            @Override
-            public ColumnUi1<C2> onBind(C1 condition) {
-                return ColumnUi2.this.bind(condition).padHorizontal(padlet);
-            }
-        });
+        return new PadHorizontalOperation(padlet).applyTo(this);
     }
 
-    public ColumnUi2<C1, C2> placeBefore(final ColumnUi columnUi, final int gap) {
-        return create(new OnBind<C1, C2>() {
-            @Override
-            public ColumnUi1<C2> onBind(C1 condition) {
-                return ColumnUi2.this.bind(condition).placeBefore(columnUi, gap);
-            }
-        });
+    public ColumnUi2<C1, C2> placeBefore(final ColumnUi background, final int gap) {
+        return new PlaceBeforeOperation(background, gap).applyTo(this);
     }
 
     public ColumnUi2<C1, C2> expandBottom(final ColumnUi expansion) {
@@ -66,13 +59,26 @@ public abstract class ColumnUi2<C1, C2> {
         return expandBottom(tileUi.toColumn());
     }
 
-    public ColumnUi2<C1, C2> expandVertical(final Sizelet heightlet) {
-        return create(new OnBind<C1, C2>() {
+    public <C3> ColumnUi3<C1, C2, C3> expandBottom(final ColumnUi1<C3> expansion) {
+        return ColumnUi3.create(new ColumnUi3.OnBind<C1, C2, C3>() {
             @Override
-            public ColumnUi1<C2> onBind(C1 condition) {
-                return ColumnUi2.this.bind(condition).expandVertical(heightlet);
+            public ColumnUi2<C2, C3> onBind(C1 condition) {
+                return ColumnUi2.this.bind(condition).expandBottom(expansion);
             }
         });
+    }
+
+    public <C3, C4> ColumnUi4<C1, C2, C3, C4> expandBottom(final ColumnUi2<C3, C4> expansion) {
+        return ColumnUi4.create(new ColumnUi4.OnBind<C1, C2, C3, C4>() {
+            @Override
+            public ColumnUi3<C2, C3, C4> onBind(C1 condition) {
+                return ColumnUi2.this.bind(condition).expandBottom(expansion);
+            }
+        });
+    }
+
+    public ColumnUi2<C1, C2> expandVertical(final Sizelet heightlet) {
+        return new ExpandVerticalOperation(heightlet).applyTo(this);
     }
 
     public ColumnUi printReadEval(final Repl<C1, C2> repl) {
@@ -81,7 +87,9 @@ public abstract class ColumnUi2<C1, C2> {
 
             @Override
             public void onPresent(final Presenter<Column> presenter) {
-                final SwitchPresenter<Column> switchPresenter = new SwitchPresenter<>(presenter.getHuman(), presenter.getDisplay(), presenter);
+                final SwitchPresenter<Column> switchPresenter = new SwitchPresenter<>(presenter.getHuman(),
+                                                                                      presenter.getDisplay(),
+                                                                                      presenter);
                 presenter.addPresentation(switchPresenter);
                 present(repl, switchPresenter);
             }

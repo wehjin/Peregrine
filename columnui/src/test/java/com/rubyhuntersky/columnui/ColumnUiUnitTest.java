@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static com.rubyhuntersky.columnui.Creator.colorColumn;
+import static com.rubyhuntersky.columnui.Creator.gapColumn;
 import static com.rubyhuntersky.columnui.basics.Sizelet.pixels;
 import static org.junit.Assert.assertEquals;
 
@@ -103,6 +104,24 @@ public class ColumnUiUnitTest {
         assertEquals(25, height, .001);
     }
 
+    @Test
+    public void expandBottomWithColumn_expandsPresentationHeight() throws Exception {
+        final ColumnUi expandBottomWithColumn = colorColumn(Sizelet.pixels(10), Coloret.BLACK)
+              .expandBottom(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+
+        presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
+        final float height = presentation.getHeight();
+        assertEquals(15, height, .001);
+    }
+
+    @Test
+    public void expandBottomWithColumn_movesExpansionFrameDown() throws Exception {
+        final ColumnUi expandBottomWithColumn = gapColumn(Sizelet.pixels(10))
+              .expandBottom(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+
+        presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
+        assertEquals(10, frames.get(0).vertical.start, .001);
+    }
 
     @Test
     public void presentation_takesWidthFromColumn() throws Exception {

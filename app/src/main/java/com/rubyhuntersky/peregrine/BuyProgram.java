@@ -95,8 +95,8 @@ public class BuyProgram implements Parcelable, FundingProgram {
     }
 
     @Override
-    public boolean areAdditionalFundsNeededToBuy() {
-        return getAdditionalFundsNeededToBuy().compareTo(BigDecimal.ZERO) > 0;
+    public boolean fundingAccountHasSufficientFundsToBuy() {
+        return getAdditionalFundsNeededToBuy().compareTo(BigDecimal.ZERO) <= 0;
     }
 
     @Override
@@ -154,8 +154,8 @@ public class BuyProgram implements Parcelable, FundingProgram {
     public FundingOption getFundingOption() {
         final List<FundingOption> fundingOptions = getFundingOptions();
         return selectedBuyOption < 0 || selectedBuyOption >= fundingOptions.size()
-               ? null
-               : fundingOptions.get(selectedBuyOption);
+              ? null
+              : fundingOptions.get(selectedBuyOption);
     }
 
     public AssetPrice getBuyOption() {

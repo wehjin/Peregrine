@@ -1,13 +1,15 @@
 package com.rubyhuntersky.columnui.columns;
 
 import android.support.annotation.NonNull;
-import android.util.Pair;
 
 import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
+import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
+import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
@@ -27,16 +29,7 @@ public abstract class ColumnUi implements Ui<Column> {
     public abstract Presentation present(Human human, Column column, Observer observer);
 
     public ColumnUi padHorizontal(final Sizelet padlet) {
-        return create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                Human human = presenter.getHuman();
-                Column column = presenter.getDisplay();
-                final float padding = padlet.toFloat(human, column.fixedWidth);
-                Column newColumn = column.withFixedWidth(column.fixedWidth - 2 * padding).withShift(padding, 0);
-                presenter.addPresentation(ColumnUi.this.present(human, newColumn, presenter));
-            }
-        });
+        return new PadHorizontalOperation(padlet).applyTo(this);
     }
 
     public ColumnUi padTop(final Sizelet padlet) {
@@ -80,38 +73,11 @@ public abstract class ColumnUi implements Ui<Column> {
     }
 
     public ColumnUi expandVertical(final Sizelet heightlet) {
-        return create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                final Human human = presenter.getHuman();
-                final Column column = presenter.getDisplay();
-                final float expansion = heightlet.toFloat(human, column.relatedHeight);
-                final Column shiftColumn = column.withShift(0, expansion);
-                final Presentation present = ColumnUi.this.present(human, shiftColumn, presenter);
-                final float expanded = present.getHeight() + 2 * expansion;
-                final Presentation resize = new ResizePresentation(column.fixedWidth, expanded, present);
-                presenter.addPresentation(resize);
-            }
-        });
+        return new ExpandVerticalOperation(heightlet).applyTo(this);
     }
 
     public ColumnUi placeBefore(@NonNull final ColumnUi background, final int gap) {
-        return create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                Human human = presenter.getHuman();
-                Column column = presenter.getDisplay();
-                final DelayColumn delayColumn = column.withElevation(column.elevation + gap).withDelay();
-                final Presentation frontPresentation = ColumnUi.this.present(human, delayColumn, presenter);
-                final Column backgroundColumn = column.withRelatedHeight(frontPresentation.getHeight());
-                final Presentation backgroundPresentation = background.present(human, backgroundColumn, presenter);
-                delayColumn.endDelay();
-                final Pair<Presentation, Presentation> presentations =
-                      new Pair<>(frontPresentation, backgroundPresentation);
-                presenter.addPresentation(presentations.first);
-                presenter.addPresentation(presentations.second);
-            }
-        });
+        return new PlaceBeforeOperation(background, gap).applyTo(this);
     }
 
     public ColumnUi expandBottom(@NonNull final ColumnUi expansion) {
@@ -142,12 +108,20 @@ public abstract class ColumnUi implements Ui<Column> {
     }
 
     public <C> ColumnUi1<C> expandBottom(final ColumnUi1<C> expansion) {
-        final ColumnUi columnUi = this;
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
             @NonNull
             @Override
             public ColumnUi onBind(final C condition) {
-                return columnUi.expandBottom(expansion.bind(condition));
+                return ColumnUi.this.expandBottom(expansion.bind(condition));
+            }
+        });
+    }
+
+    public <C1, C2> ColumnUi2<C1, C2> expandBottom(final ColumnUi2<C1, C2> expansion) {
+        return ColumnUi2.create(new ColumnUi2.OnBind<C1, C2>() {
+            @Override
+            public ColumnUi1<C2> onBind(C1 condition) {
+                return ColumnUi.this.expandBottom(expansion.bind(condition));
             }
         });
     }
