@@ -25,6 +25,7 @@ import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
 import com.rubyhuntersky.columnui.tiles.Tile;
 import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.TileUi1;
 
 import java.util.List;
 
@@ -47,6 +48,16 @@ public class Android {
                 final SpinnerViewShape shape = new SpinnerViewShape(options, selectedOption, presenter);
                 final Patch patch = tile.addPatch(frame, shape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
+            }
+        });
+    }
+
+    public static TileUi1<Integer> spinnerTile(final List<String> options) {
+        return TileUi1.create(new TileUi1.OnBind<Integer>() {
+            @NonNull
+            @Override
+            public TileUi onBind(Integer condition) {
+                return spinnerTile(options, condition);
             }
         });
     }

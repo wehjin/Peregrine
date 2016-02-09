@@ -19,6 +19,16 @@ abstract public class TileUi1<C> implements Ui1<Tile, C> {
     @Override
     public abstract TileUi bind(C condition);
 
+    public TileUi1<C> expandLeft(final TileUi expansion) {
+        return create(new OnBind<C>() {
+            @NonNull
+            @Override
+            public TileUi onBind(C condition) {
+                return TileUi1.this.bind(condition).expandLeft(expansion);
+            }
+        });
+    }
+
     public ColumnUi1<C> toColumn() {
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
             @NonNull

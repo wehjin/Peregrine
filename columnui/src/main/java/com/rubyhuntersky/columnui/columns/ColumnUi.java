@@ -14,6 +14,7 @@ import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.TileUi1;
 import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
@@ -149,6 +150,10 @@ public abstract class ColumnUi implements Ui<Column> {
                 return columnUi.expandBottom(expansion.bind(condition));
             }
         });
+    }
+
+    public <C> ColumnUi1<C> expandBottom(TileUi1<C> expansion) {
+        return expandBottom(expansion.toColumn());
     }
 
     public ColumnUi isolate() {
