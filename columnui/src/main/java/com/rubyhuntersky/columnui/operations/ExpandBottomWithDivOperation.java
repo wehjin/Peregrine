@@ -14,10 +14,10 @@ import com.rubyhuntersky.columnui.presenters.Presenter;
  * @since 2/9/16.
  */
 
-public class ExpandBottomOperation extends Operation {
+public class ExpandBottomWithDivOperation extends Operation {
     private final ColumnUi expansion;
 
-    public ExpandBottomOperation(ColumnUi expansion) {
+    public ExpandBottomWithDivOperation(ColumnUi expansion) {
         this.expansion = expansion;
     }
 

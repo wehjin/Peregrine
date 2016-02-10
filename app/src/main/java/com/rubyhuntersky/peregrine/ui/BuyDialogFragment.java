@@ -13,11 +13,14 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
-import com.rubyhuntersky.columnui.columns.ColumnUi4;
+import com.rubyhuntersky.columnui.columns.ColumnUi3;
+import com.rubyhuntersky.columnui.columns.ColumnUi5;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.reactions.HeightChangedReaction;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.peregrine.AssetPrice;
@@ -104,20 +107,23 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandVertical(TWO_THIRDS_FINGER)
               .padHorizontal(THIRD_FINGER)
               .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-              .printReadEval(new ColumnUi4.Repl<Integer, String, Integer, String>() {
+              .printReadEval(new ColumnUi5.Repl<Integer, String, Integer, String, ColumnUi>() {
 
                   private int fundingAccountSelection = program.getSelectedFundingAccount();
                   private int buyPriceSelection = program.getSelectedBuyOption();
 
                   @Override
-                  public ColumnUi print(ColumnUi4<Integer, String, Integer, String> div4) {
+                  public ColumnUi print(ColumnUi5<Integer, String, Integer, String, ColumnUi> div4) {
                       return div4.bind(program.getSelectedBuyOption())
                             .bind(getSharesString(program.getSharesToBuy()))
                             .bind(program.getSelectedFundingAccount())
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
                                         ? "Sufficient funds " + getCurrencyDisplayString(program.getFundingAccount()
                                                                                                .getCashAvailable())
-                                        : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy()));
+                                        : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy()))
+                            .bind(program.fundingAccountHasSufficientFundsToBuy()
+                                        ? ColumnUi.EMPTY
+                                        : SPACING.expandBottom(getSellUi()));
                   }
 
                   @Override
@@ -162,16 +168,16 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandBottom(textTile1(IMPORTANT_DARK).toColumn());
     }
 
-    private ColumnUi2<Integer, String> getFundingUi() {
+    private ColumnUi3<Integer, String, ColumnUi> getFundingUi() {
         List<String> fundingAccountNames = new ArrayList<>();
         for (FundingAccount fundingAccount : program.getFundingAccounts()) {
             fundingAccountNames.add("Account " + fundingAccount.getAccountName());
         }
 
-        return spinnerTile(fundingAccountNames).name(FUNDING_ACCOUNT_SPINNER).toColumn()
-              .expandBottom(textTile1(READABLE_DARK).toColumn())
-              .expandBottom(SPACING)
-              .expandBottom(getSellUi());
+        final ColumnUi1<Integer> fundingAccountDiv = spinnerTile(fundingAccountNames).name(FUNDING_ACCOUNT_SPINNER)
+              .toColumn();
+        final ColumnUi1<String> fundingAccountStatusDiv = textTile1(READABLE_DARK).toColumn();
+        return fundingAccountDiv.expandBottom(fundingAccountStatusDiv).expandBottom();
     }
 
     private ColumnUi getSellUi() {
@@ -210,6 +216,9 @@ public class BuyDialogFragment extends TradeDialogFragment {
             @Override
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
+                if (reaction instanceof HeightChangedReaction) {
+                    columnUiView.getParent().requestLayout();
+                }
             }
 
             @Override

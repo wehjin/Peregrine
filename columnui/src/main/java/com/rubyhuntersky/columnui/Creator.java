@@ -50,7 +50,7 @@ public class Creator {
                 final Frame frame = new Frame(textSize.textWidth, textSize.textHeight.height, tile.elevation);
                 final TextHeight textHeight = textSize.textHeight;
                 final Frame textFrame = frame.withVerticalShift(-textHeight.topPadding)
-                                             .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
+                      .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
                 final ViewShape viewShape = new ViewShape() {
                     @Override
                     public View createView(Context context) {

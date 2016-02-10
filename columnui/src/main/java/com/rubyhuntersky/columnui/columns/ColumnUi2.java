@@ -3,7 +3,8 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
+import com.rubyhuntersky.columnui.operations.ExpandBottomWithDivOperation;
+import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -48,7 +49,7 @@ public abstract class ColumnUi2<C1, C2> {
     }
 
     public ColumnUi2<C1, C2> expandBottom(final ColumnUi expansion) {
-        return new ExpandBottomOperation(expansion).applyTo(this);
+        return new ExpandBottomWithDivOperation(expansion).applyTo(this);
     }
 
     public ColumnUi2<C1, C2> expandBottom(TileUi tileUi) {
@@ -64,10 +65,23 @@ public abstract class ColumnUi2<C1, C2> {
         });
     }
 
+    public ColumnUi3<C1, C2, ColumnUi> expandBottom() {
+        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+    }
+
     public <C3, C4> ColumnUi4<C1, C2, C3, C4> expandBottom(final ColumnUi2<C3, C4> expansion) {
         return ColumnUi4.create(new ColumnUi4.OnBind<C1, C2, C3, C4>() {
             @Override
             public ColumnUi3<C2, C3, C4> onBind(C1 condition) {
+                return ColumnUi2.this.bind(condition).expandBottom(expansion);
+            }
+        });
+    }
+
+    public <C3, C4, C5> ColumnUi5<C1, C2, C3, C4, C5> expandBottom(final ColumnUi3<C3, C4, C5> expansion) {
+        return ColumnUi5.create(new ColumnUi5.OnBind<C1, C2, C3, C4, C5>() {
+            @Override
+            public ColumnUi4<C2, C3, C4, C5> onBind(C1 condition) {
                 return ColumnUi2.this.bind(condition).expandBottom(expansion);
             }
         });

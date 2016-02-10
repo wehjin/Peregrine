@@ -7,7 +7,8 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
+import com.rubyhuntersky.columnui.operations.ExpandBottomWithDivOperation;
+import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -26,6 +27,41 @@ import com.rubyhuntersky.columnui.ui.Ui;
  */
 
 public abstract class ColumnUi implements Ui<Column> {
+
+    static final public ColumnUi EMPTY = new ColumnUi() {
+        @Override
+        public Presentation present(Human human, Column column, Observer observer) {
+            return Presentation.EMPTY;
+        }
+    };
+
+    private ColumnUi() {
+    }
+
+    public static ColumnUi create(final OnPresent<Column> onPresent) {
+        return new ColumnUi() {
+            @Override
+            public Presentation present(Human human, final Column column, Observer observer) {
+                final BasePresenter<Column> presenter = new BasePresenter<Column>(human, column, observer) {
+                    @Override
+                    public float getWidth() {
+                        return display.fixedWidth;
+                    }
+
+                    @Override
+                    public float getHeight() {
+                        float union = 0;
+                        for (Presentation presentation : presentations) {
+                            union = Math.max(union, presentation.getHeight());
+                        }
+                        return union;
+                    }
+                };
+                onPresent.onPresent(presenter);
+                return presenter;
+            }
+        };
+    }
 
     public abstract Presentation present(Human human, Column column, Observer observer);
 
@@ -82,7 +118,7 @@ public abstract class ColumnUi implements Ui<Column> {
     }
 
     public ColumnUi expandBottom(@NonNull final ColumnUi expansion) {
-        return new ExpandBottomOperation(expansion).applyTo(this);
+        return new ExpandBottomWithDivOperation(expansion).applyTo(this);
     }
 
     public ColumnUi expandBottom(@NonNull final TileUi expansion) {
@@ -99,10 +135,23 @@ public abstract class ColumnUi implements Ui<Column> {
         });
     }
 
+    public ColumnUi1<ColumnUi> expandBottom() {
+        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+    }
+
     public <C1, C2> ColumnUi2<C1, C2> expandBottom(final ColumnUi2<C1, C2> expansion) {
         return ColumnUi2.create(new ColumnUi2.OnBind<C1, C2>() {
             @Override
             public ColumnUi1<C2> onBind(C1 condition) {
+                return ColumnUi.this.expandBottom(expansion.bind(condition));
+            }
+        });
+    }
+
+    public <C1, C2, C3> ColumnUi3<C1, C2, C3> expandBottom(final ColumnUi3<C1, C2, C3> expansion) {
+        return ColumnUi3.create(new ColumnUi3.OnBind<C1, C2, C3>() {
+            @Override
+            public ColumnUi2<C2, C3> onBind(C1 condition) {
                 return ColumnUi.this.expandBottom(expansion.bind(condition));
             }
         });
@@ -137,30 +186,5 @@ public abstract class ColumnUi implements Ui<Column> {
                 presenter.addPresentation(presentation);
             }
         });
-    }
-
-    public static ColumnUi create(final OnPresent<Column> onPresent) {
-        return new ColumnUi() {
-            @Override
-            public Presentation present(Human human, final Column column, Observer observer) {
-                final BasePresenter<Column> presenter = new BasePresenter<Column>(human, column, observer) {
-                    @Override
-                    public float getWidth() {
-                        return display.fixedWidth;
-                    }
-
-                    @Override
-                    public float getHeight() {
-                        float union = 0;
-                        for (Presentation presentation : presentations) {
-                            union = Math.max(union, presentation.getHeight());
-                        }
-                        return union;
-                    }
-                };
-                onPresent.onPresent(presenter);
-                return presenter;
-            }
-        };
     }
 }

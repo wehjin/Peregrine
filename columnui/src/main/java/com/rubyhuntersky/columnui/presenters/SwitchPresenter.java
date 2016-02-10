@@ -1,9 +1,12 @@
 package com.rubyhuntersky.columnui.presenters;
 
+import android.util.Log;
+
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
+import com.rubyhuntersky.columnui.reactions.HeightChangedReaction;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +17,13 @@ import java.util.List;
  */
 public class SwitchPresenter<T> implements Presenter<T> {
 
+    public static final String TAG = SwitchPresenter.class.getSimpleName();
     private final Human human;
     private final T display;
     private final Observer observer;
     boolean isCancelled;
     Presentation presentation;
+    int presentationCount = 0;
 
     public SwitchPresenter(Human human, T display, Observer observer) {
         this.human = human;
@@ -34,6 +39,7 @@ public class SwitchPresenter<T> implements Presenter<T> {
 
     @Override
     public float getHeight() {
+        Log.d(TAG, "getHeight");
         return presentation.getHeight();
     }
 
@@ -44,7 +50,8 @@ public class SwitchPresenter<T> implements Presenter<T> {
 
     @Override
     public void cancel() {
-        if (isCancelled) return;
+        if (isCancelled)
+            return;
         isCancelled = true;
         presentation.cancel();
     }
@@ -84,8 +91,16 @@ public class SwitchPresenter<T> implements Presenter<T> {
             presentation.cancel();
             return;
         }
+        final float previousHeight = this.presentation.getHeight();
         this.presentation.cancel();
         this.presentation = presentation;
+        presentationCount++;
+        final float height = presentation.getHeight();
+        Log.d(TAG, "Height: " + height + ", previous height: " + previousHeight);
+        if (height != previousHeight && presentationCount > 1) {
+            Log.d(TAG, "Height changed: " + height);
+            observer.onReaction(new HeightChangedReaction(TAG, height));
+        }
     }
 
     @Override
