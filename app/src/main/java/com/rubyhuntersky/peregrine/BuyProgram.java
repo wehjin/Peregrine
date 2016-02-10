@@ -148,7 +148,8 @@ public class BuyProgram implements Parcelable, FundingProgram {
         }
 
         final BigDecimal fundedAmount = getSharesToSellForFunding().multiply(fundingOption.getSellPrice());
-        return buyAmount.subtract(fundedAmount).max(BigDecimal.ZERO);
+        BigDecimal additionalFundsNeededToBuy = getAdditionalFundsNeededToBuy();
+        return additionalFundsNeededToBuy.subtract(fundedAmount).max(BigDecimal.ZERO);
     }
 
     public FundingOption getFundingOption() {

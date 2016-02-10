@@ -102,7 +102,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
             return;
         }
 
-        ui = getBuyUi()
+        ui = getBuyUi(program.buyAmount, getBuyPrices(program.buyOptions))
               .expandBottom(gapColumn(Sizelet.FINGER))
               .expandBottom(getFundingUi())
               .expandVertical(TWO_THIRDS_FINGER)
@@ -127,7 +127,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
                                         ? ColumnUi.EMPTY
                                         : SPACING.expandBottom(getSellUi(getFundingPrices(program.getFundingOptions()),
                                                                          program.getSelectedFundingOption(),
-                                                                         program.getSharesToSellForFunding())));
+                                                                         program.getSharesToSellForFunding(),
+                                                                         program.getAdditionalFundsNeededAfterSale())));
                   }
 
                   @Override
@@ -162,13 +163,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
     }
 
-    private ColumnUi2<Integer, String> getBuyUi() {
-        final List<String> buyPrices = new ArrayList<>();
-        for (AssetPrice price : program.buyOptions) {
-            buyPrices.add(price.name + " " + getCurrencyDisplayString(price.price));
-        }
-
-        return textColumn("Buy " + getCurrencyDisplayString(program.buyAmount), READABLE_DARK)
+    private ColumnUi2<Integer, String> getBuyUi(BigDecimal buyAmount, List<String> buyPrices) {
+        return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK)
               .expandBottom(SPACING)
               .expandBottom(spinnerTile(buyPrices)
                                   .name(BUY_PRICES_SPINNER)
@@ -178,6 +174,15 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandBottom(DIVIDER)
               .expandBottom(SPACING)
               .expandBottom(textTile1(IMPORTANT_DARK).toColumn());
+    }
+
+    @NonNull
+    private List<String> getBuyPrices(List<AssetPrice> buyOptions) {
+        final List<String> buyPrices = new ArrayList<>();
+        for (AssetPrice price : buyOptions) {
+            buyPrices.add(price.name + " " + getCurrencyDisplayString(price.price));
+        }
+        return buyPrices;
     }
 
     private ColumnUi3<Integer, String, ColumnUi> getFundingUi() {
@@ -201,7 +206,11 @@ public class BuyDialogFragment extends TradeDialogFragment {
         return fundingOptionPrices;
     }
 
-    private ColumnUi getSellUi(List<String> sellOptions, int selectedSellOption, BigDecimal sharesToSell) {
+    private ColumnUi getSellUi(List<String> sellOptions, int selectedSellOption, BigDecimal sharesToSell, BigDecimal shortfall) {
+        ColumnUi shortfallExpansion = shortfall.compareTo(BigDecimal.ZERO) <= 0
+              ? ColumnUi.EMPTY
+              : SPACING.expandBottom(textColumn("Shortfall " + getCurrencyDisplayString(shortfall), READABLE_DARK));
+
         return spinnerTile(sellOptions, selectedSellOption).name(FUNDING_OPTION_SPINNER)
               .expandLeft(DIVISION_SIGN_TILE)
               .toColumn()
@@ -209,7 +218,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandBottom(DIVIDER)
               .expandBottom(SPACING)
               .expandBottom(textColumn("Sell " + sharesToSell
-                    .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK));
+                    .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK))
+              .expandBottom(shortfallExpansion);
     }
 
     @Nullable

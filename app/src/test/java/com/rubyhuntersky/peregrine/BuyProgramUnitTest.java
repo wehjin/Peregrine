@@ -122,4 +122,18 @@ public class BuyProgramUnitTest {
         FundingOption fundingOption = buyProgram.getFundingOption();
         assertEquals(BigDecimal.TEN, fundingOption.getSharesAvailableToSell());
     }
+
+    @Test
+    public void program_producesShortfall() throws Exception {
+        final String accountId = "testAccount1";
+        List<Asset> assets = new ArrayList<>();
+        assets.add(new Asset(accountId, "stock1", BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE));
+        assets.add(new Asset(accountId, "stock2", BigDecimal.TEN, BigDecimal.TEN, BigDecimal.ONE));
+        assets.add(new Asset(accountId, "USD", BigDecimal.TEN, BigDecimal.TEN, BigDecimal.ONE));
+        FundingAccount fundingAccount = new AccountAssets(accountId, BigDecimal.TEN, assets).toFundingAccount();
+        buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
+        buyProgram.setSelectedFundingOption(1);
+        BigDecimal shortfall = buyProgram.getAdditionalFundsNeededAfterSale();
+        assertEquals(BigDecimal.valueOf(80), shortfall);
+    }
 }
