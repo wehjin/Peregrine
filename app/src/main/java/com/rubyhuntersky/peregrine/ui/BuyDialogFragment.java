@@ -217,7 +217,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
             public void onReaction(Reaction reaction) {
                 Log.d(TAG, "onReaction: " + reaction);
                 if (reaction instanceof HeightChangedReaction) {
-                    columnUiView.getParent().requestLayout();
+                    columnUiView.clearVariableDimensions();
+                    columnUiView.requestLayout();
                 }
             }
 

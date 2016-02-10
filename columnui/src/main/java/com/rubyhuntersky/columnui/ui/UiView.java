@@ -73,26 +73,30 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
 
     private void init() {
         human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
-              getResources().getDimensionPixelSize(R.dimen.readingText));
+                          getResources().getDimensionPixelSize(R.dimen.readingText));
         Log.d(TAG, "Human: " + human);
         elevationPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);
         setContentDescription(TAG);
+    }
+
+    public void clearVariableDimensions() {
+        variableDimensions.clear();
     }
 
     public Presentation present(Ui<T> ui, Observer observer) {
         multiDisplayPresentation.cancel();
         this.ui = ui;
         final MultiDisplayPresentation<T> presentation1 = ui == null
-                                                          ? new MultiDisplayPresentation<T>()
-                                                          : new MultiDisplayPresentation<T>(ui, human, display,
-                                                                observer) {
-                                                              @Override
-                                                              protected void onCancel() {
-                                                                  super.onCancel();
-                                                                  UiView.this.ui = null;
-                                                                  requestLayout();
-                                                              }
-                                                          };
+              ? new MultiDisplayPresentation<T>()
+              : new MultiDisplayPresentation<T>(ui, human, display,
+                                                observer) {
+                  @Override
+                  protected void onCancel() {
+                      super.onCancel();
+                      UiView.this.ui = null;
+                      requestLayout();
+                  }
+              };
         multiDisplayPresentation = presentation1;
         requestLayout();
         return presentation1;
@@ -179,7 +183,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         textView.setTextSize(typeheight);
         textView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         final Bitmap bitmap = Bitmap.createBitmap(textView.getMeasuredWidth(), textView.getMeasuredHeight(),
-              Bitmap.Config.ARGB_8888);
+                                                  Bitmap.Config.ARGB_8888);
         Log.d(TAG, "Bitmap: " + bitmap.getWidth() + ", " + bitmap.getHeight());
         textView.layout(0, 0, bitmap.getWidth(), bitmap.getHeight());
         final Canvas canvas = new Canvas(bitmap);
@@ -267,7 +271,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         textView.setIncludeFontPadding(false);
         final TextHeight textHeight = textShape.textSize.textHeight;
         Frame newFrame = frame.withVerticalShift(-textHeight.topPadding)
-                              .withVerticalLength(textHeight.topPadding + textHeight.height);
+              .withVerticalLength(textHeight.topPadding + textHeight.height);
         return getViewPatch(textView, newFrame, textHeight.height / 2);
     }
 
@@ -301,7 +305,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     @NonNull
     private LayoutParams getPatchLayoutParams(Frame frame, float additionalHeight) {
         final LayoutParams layoutParams = new FrameLayout.LayoutParams((int) frame.horizontal.toLength(),
-              (int) (frame.vertical.toLength() + additionalHeight));
+                                                                       (int) (frame.vertical.toLength() + additionalHeight));
         layoutParams.leftMargin = (int) frame.horizontal.start;
         layoutParams.topMargin = (int) frame.vertical.start;
         return layoutParams;
