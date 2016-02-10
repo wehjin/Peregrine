@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +73,9 @@ public class BuyProgramUnitTest {
         buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
         assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
         assertEquals("shares to sell", BigDecimal.ONE, buyProgram.getSharesToSellForFunding());
-        assertEquals("funds needed after sale", buyAmount.subtract(assetValue), buyProgram.getAdditionalFundsNeededAfterSale());
+        assertEquals("funds needed after sale",
+                     buyAmount.subtract(assetValue),
+                     buyProgram.getAdditionalFundsNeededAfterSale());
     }
 
     @Test
@@ -103,5 +106,20 @@ public class BuyProgramUnitTest {
         assertEquals("funds needed", buyAmount, buyProgram.getAdditionalFundsNeededToBuy());
         assertEquals("shares to sell", BigDecimal.ZERO, buyProgram.getSharesToSellForFunding());
         assertEquals("funds needed after sale", buyAmount, buyProgram.getAdditionalFundsNeededAfterSale());
+    }
+
+    @Test
+    public void program_retrievesFundingOption_whenSelectedFundingOptionChanges() throws Exception {
+        final String accountId = "testAccount1";
+        final Asset asset1 = new Asset(accountId, "stock1", BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+        final Asset asset2 = new Asset(accountId, "stock2", BigDecimal.TEN, BigDecimal.TEN, BigDecimal.ONE);
+        List<Asset> assets = new ArrayList<>();
+        assets.add(asset1);
+        assets.add(asset2);
+        FundingAccount fundingAccount = new AccountAssets(accountId, BigDecimal.valueOf(11), assets).toFundingAccount();
+        buyProgram.setFundingAccounts(singletonList(fundingAccount), 0, 0);
+        buyProgram.setSelectedFundingOption(1);
+        FundingOption fundingOption = buyProgram.getFundingOption();
+        assertEquals(BigDecimal.TEN, fundingOption.getSharesAvailableToSell());
     }
 }

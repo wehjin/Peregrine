@@ -65,6 +65,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
     public static final TileUi DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK);
     public static final String BUY_PRICES_SPINNER = "buyPricesSpinner";
     public static final String FUNDING_ACCOUNT_SPINNER = "fundingAccountSpinner";
+    public static final String FUNDING_OPTION_SPINNER = "fundingOptionSpinner";
 
     private ColumnUiView columnUiView;
     private Presentation presentation = new EmptyPresentation();
@@ -111,6 +112,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
                   private int fundingAccountSelection = program.getSelectedFundingAccount();
                   private int buyPriceSelection = program.getSelectedBuyOption();
+                  private int fundingPriceSelection = program.getSelectedFundingOption();
 
                   @Override
                   public ColumnUi print(ColumnUi5<Integer, String, Integer, String, ColumnUi> div4) {
@@ -123,27 +125,37 @@ public class BuyDialogFragment extends TradeDialogFragment {
                                         : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy()))
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
                                         ? ColumnUi.EMPTY
-                                        : SPACING.expandBottom(getSellUi()));
+                                        : SPACING.expandBottom(getSellUi(getFundingPrices(program.getFundingOptions()),
+                                                                         program.getSelectedFundingOption(),
+                                                                         program.getSharesToSellForFunding())));
                   }
 
                   @Override
                   public void read(Reaction reaction) {
-                      if (reaction.getSource().equals(BUY_PRICES_SPINNER)) {
+                      Log.d(TAG, "Repl reaction: " + reaction);
+                      if (BUY_PRICES_SPINNER.equals(reaction.getSource())) {
+
                           buyPriceSelection = (int) ((ItemSelectionReaction) reaction).getItem();
                       }
-                      if (reaction.getSource().equals(FUNDING_ACCOUNT_SPINNER)) {
+                      if (FUNDING_ACCOUNT_SPINNER.equals(reaction.getSource())) {
+
                           fundingAccountSelection = (int) ((ItemSelectionReaction) reaction).getItem();
+                      }
+                      if (FUNDING_OPTION_SPINNER.equals(reaction.getSource())) {
+                          fundingPriceSelection = (int) ((ItemSelectionReaction) reaction).getItem();
                       }
                   }
 
                   @Override
                   public boolean eval() {
                       if (buyPriceSelection == program.getSelectedBuyOption()
-                            && fundingAccountSelection == program.getSelectedFundingAccount())
+                            && fundingAccountSelection == program.getSelectedFundingAccount()
+                            && fundingPriceSelection == program.getSelectedFundingOption())
                           return false;
 
                       program.setSelectedBuyOption(buyPriceSelection);
                       program.setSelectedFundingAccount(fundingAccountSelection);
+                      program.setSelectedFundingOption(fundingPriceSelection);
                       return true;
                   }
               });
@@ -180,19 +192,23 @@ public class BuyDialogFragment extends TradeDialogFragment {
         return fundingAccountDiv.expandBottom(fundingAccountStatusDiv).expandBottom();
     }
 
-    private ColumnUi getSellUi() {
-        final List<FundingOption> fundingOptions = program.getFundingOptions();
+    @NonNull
+    private List<String> getFundingPrices(List<FundingOption> fundingOptions) {
         List<String> fundingOptionPrices = new ArrayList<>();
         for (FundingOption fundingOption : fundingOptions) {
             fundingOptionPrices.add(fundingOption.getAssetName() + " " + getCurrencyDisplayString(fundingOption.getSellPrice()));
         }
-        int selectedFundingOption = program.getSelectedFundingOption();
+        return fundingOptionPrices;
+    }
 
-        return spinnerTile(fundingOptionPrices, selectedFundingOption).expandLeft(DIVISION_SIGN_TILE).toColumn()
+    private ColumnUi getSellUi(List<String> sellOptions, int selectedSellOption, BigDecimal sharesToSell) {
+        return spinnerTile(sellOptions, selectedSellOption).name(FUNDING_OPTION_SPINNER)
+              .expandLeft(DIVISION_SIGN_TILE)
+              .toColumn()
               .expandBottom(SPACING)
               .expandBottom(DIVIDER)
               .expandBottom(SPACING)
-              .expandBottom(textColumn("Sell " + program.getSharesToSellForFunding()
+              .expandBottom(textColumn("Sell " + sharesToSell
                     .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK));
     }
 

@@ -25,6 +25,6 @@ public class ItemSelectionReaction<T> extends Reaction {
     public String toString() {
         return "ItemSelectionReaction{" +
               "item=" + item +
-              '}';
+              "} " + super.toString();
     }
 }
