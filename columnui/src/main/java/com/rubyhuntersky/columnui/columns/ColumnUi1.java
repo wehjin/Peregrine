@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui.columns;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
@@ -54,13 +55,7 @@ abstract public class ColumnUi1<C> implements Ui1<Column, C> {
 
 
     public ColumnUi1<C> expandBottom(final ColumnUi expansion) {
-        return ColumnUi1.create(new OnBind<C>() {
-            @NonNull
-            @Override
-            public ColumnUi onBind(C condition) {
-                return ColumnUi1.this.bind(condition).expandBottom(expansion);
-            }
-        });
+        return new ExpandBottomOperation(expansion).applyTo(this);
     }
 
     public <C2> ColumnUi2<C, C2> expandBottom(final ColumnUi1<C2> expansion) {

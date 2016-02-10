@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -47,12 +48,7 @@ public abstract class ColumnUi2<C1, C2> {
     }
 
     public ColumnUi2<C1, C2> expandBottom(final ColumnUi expansion) {
-        return create(new OnBind<C1, C2>() {
-            @Override
-            public ColumnUi1<C2> onBind(C1 condition) {
-                return ColumnUi2.this.bind(condition).expandBottom(expansion);
-            }
-        });
+        return new ExpandBottomOperation(expansion).applyTo(this);
     }
 
     public ColumnUi2<C1, C2> expandBottom(TileUi tileUi) {

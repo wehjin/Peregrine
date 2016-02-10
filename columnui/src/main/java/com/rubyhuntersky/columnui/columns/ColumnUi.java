@@ -7,6 +7,7 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -81,26 +82,7 @@ public abstract class ColumnUi implements Ui<Column> {
     }
 
     public ColumnUi expandBottom(@NonNull final ColumnUi expansion) {
-        final ColumnUi ui = this;
-        return ColumnUi.create(new OnPresent<Column>() {
-            @Override
-            public void onPresent(Presenter<Column> presenter) {
-                Human human = presenter.getHuman();
-                Column column = presenter.getDisplay();
-
-                final DelayColumn delayColumn = column.withDelay();
-                final Presentation topPresentation = ui.present(human, delayColumn, presenter);
-                final float topHeight = topPresentation.getHeight();
-                final Column bottomColumn = column.withRelatedHeight(topHeight).withShift(0, topHeight);
-                final Presentation bottomPresentation = expansion.present(human, bottomColumn, presenter);
-                final Presentation bottomResize =
-                      new ResizePresentation(bottomPresentation.getWidth(), topHeight + bottomPresentation
-                            .getHeight(), bottomPresentation);
-                delayColumn.endDelay();
-                presenter.addPresentation(bottomResize);
-                presenter.addPresentation(topPresentation);
-            }
-        });
+        return new ExpandBottomOperation(expansion).applyTo(this);
     }
 
     public ColumnUi expandBottom(@NonNull final TileUi expansion) {

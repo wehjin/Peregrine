@@ -98,7 +98,9 @@ public class BuyDialogFragment extends TradeDialogFragment {
             return;
         }
 
-        ui = getBuyUi().expandBottom(gapColumn(Sizelet.FINGER)).expandBottom(getFundingUi())
+        ui = getBuyUi()
+              .expandBottom(gapColumn(Sizelet.FINGER))
+              .expandBottom(getFundingUi())
               .expandVertical(TWO_THIRDS_FINGER)
               .padHorizontal(THIRD_FINGER)
               .placeBefore(colorColumn(PREVIOUS, WHITE), 0)

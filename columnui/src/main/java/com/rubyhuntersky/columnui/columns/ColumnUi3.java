@@ -3,6 +3,7 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.operations.ExpandBottomOperation;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -38,6 +39,10 @@ public abstract class ColumnUi3<C1, C2, C3> {
 
     public ColumnUi3<C1, C2, C3> placeBefore(ColumnUi behind, int gap) {
         return new PlaceBeforeOperation(behind, gap).applyTo(this);
+    }
+
+    public ColumnUi3<C1, C2, C3> expandBottom(ColumnUi expansion) {
+        return new ExpandBottomOperation(expansion).applyTo(this);
     }
 
     public ColumnUi printReadEval(final Repl<C1, C2, C3> repl) {
