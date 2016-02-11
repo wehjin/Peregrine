@@ -60,13 +60,16 @@ public class GroupsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Observable.combineLatest(getBaseActivity().getPartitionListStream(), getBaseActivity().getPortfolioAssetsStream(), getStorage()
-              .streamAssignments(), new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
-            @Override
-            public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
-                return new Document(partitionList, portfolioAssets, assignments);
-            }
-        }).subscribe(new Action1<Document>() {
+        Observable.combineLatest(getBaseActivity().getPartitionListStream(),
+                                 getBaseActivity().getPortfolioAssetsStream(),
+                                 getStorage()
+                                       .streamAssignments(),
+                                 new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
+                                     @Override
+                                     public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
+                                         return new Document(partitionList, portfolioAssets, assignments);
+                                     }
+                                 }).subscribe(new Action1<Document>() {
             @Override
             public void call(Document document) {
                 updateViews(document);
@@ -117,26 +120,26 @@ public class GroupsFragment extends BaseFragment {
                         prices.add(new AssetPrice());
                     }
 
-                    getBaseActivity().getAccountAssetsListStream()
-                                     .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
-                                         @Override
-                                         public List<FundingAccount> call(List<AccountAssets> accountAssetsList) {
-                                             List<FundingAccount> fundingAccounts = new ArrayList<>();
-                                             for (AccountAssets accountAssets : accountAssetsList) {
-                                                 fundingAccounts.add(accountAssets.toFundingAccount());
-                                             }
-                                             return fundingAccounts;
-                                         }
-                                     })
-                                     .subscribe(new Action1<List<FundingAccount>>() {
-                                         @Override
-                                         public void call(List<FundingAccount> fundingAccounts) {
-                                             final DialogFragment fragment =
-                                                   BuyDialogFragment.create(sellAmount.abs(), prices, 0, fundingAccounts);
-                                             fragment.setCancelable(true);
-                                             fragment.show(getFragmentManager(), "BuyFragment");
-                                         }
-                                     });
+                    getBaseActivity().getAccountAssetsListStream().first()
+                          .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
+                              @Override
+                              public List<FundingAccount> call(List<AccountAssets> accountAssetsList) {
+                                  List<FundingAccount> fundingAccounts = new ArrayList<>();
+                                  for (AccountAssets accountAssets : accountAssetsList) {
+                                      fundingAccounts.add(accountAssets.toFundingAccount());
+                                  }
+                                  return fundingAccounts;
+                              }
+                          })
+                          .subscribe(new Action1<List<FundingAccount>>() {
+                              @Override
+                              public void call(List<FundingAccount> fundingAccounts) {
+                                  final DialogFragment fragment =
+                                        BuyDialogFragment.create(sellAmount.abs(), prices, 0, fundingAccounts);
+                                  fragment.setCancelable(true);
+                                  fragment.show(getFragmentManager(), "BuyFragment");
+                              }
+                          });
                 }
             }
         });
