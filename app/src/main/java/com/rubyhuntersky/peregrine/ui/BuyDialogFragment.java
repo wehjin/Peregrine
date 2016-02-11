@@ -124,6 +124,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
                                                                                                .getCashAvailable())
                                         : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy()))
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
+                                        || program.getFundingOptions().size() == 0
                                         ? ColumnUi.EMPTY
                                         : SPACING.expandBottom(getSellUi(getFundingPrices(program.getFundingOptions()),
                                                                          program.getSelectedFundingOption(),
