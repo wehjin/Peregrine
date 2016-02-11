@@ -1,18 +1,12 @@
 package com.rubyhuntersky.columnui.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -36,8 +30,6 @@ import com.rubyhuntersky.columnui.shapes.ViewShape;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
 /**
  * @author wehjin
  * @since 1/23/16.
@@ -51,27 +43,29 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
     private Ui<T> ui;
     public int elevationPixels;
-    private TextView textView;
-    private final HashMap<Pair<Typeface, Integer>, TextHeight> textHeightCache = new HashMap<>();
     private Ui<T> measuredUi;
     private Map<Integer, Integer> variableDimensions = new HashMap<>();
+    private TextRuler textRuler;
+    private ShapeRuler shapeRuler;
 
     public UiView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public UiView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public UiView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
+        textRuler = new TextRuler(context);
+        shapeRuler = new ShapeRuler(context);
         human = new Human(getResources().getDimensionPixelSize(R.dimen.fingerTip),
                           getResources().getDimensionPixelSize(R.dimen.readingText));
         Log.d(TAG, "Human: " + human);
@@ -161,66 +155,6 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
         });
     }
 
-    public float getTextWidth(String textString, TextStyle textStyle) {
-        TextView ruler = getTextRuler();
-        ruler.setTypeface(textStyle.typeface);
-        ruler.setTextSize(textStyle.typeheight);
-        ruler.setText(textString);
-        ruler.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-        return ruler.getMeasuredWidth();
-    }
-
-    @NonNull
-    public TextHeight getTextHeight(Typeface typeface, int typeheight) {
-        final Pair<Typeface, Integer> typePair = new Pair<>(typeface, typeheight);
-        if (textHeightCache.containsKey(typePair)) {
-            return textHeightCache.get(typePair);
-        }
-
-        TextView textView = getTextRuler();
-        textView.setText("E");
-        textView.setTypeface(typeface);
-        textView.setTextSize(typeheight);
-        textView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-        final Bitmap bitmap = Bitmap.createBitmap(textView.getMeasuredWidth(), textView.getMeasuredHeight(),
-                                                  Bitmap.Config.ARGB_8888);
-        Log.d(TAG, "Bitmap: " + bitmap.getWidth() + ", " + bitmap.getHeight());
-        textView.layout(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(Color.BLACK);
-        textView.draw(canvas);
-        final int rowCount = bitmap.getHeight();
-        final int columnCount = bitmap.getWidth();
-        int topRow = rowCount;
-        int bottomRow = 0;
-        int col = columnCount / 2;
-        for (int row = 0; row < rowCount; row++) {
-            final int pixel = bitmap.getPixel(col, row);
-            if ((pixel & 0xff) > 128) {
-                topRow = Math.min(topRow, row);
-                bottomRow = Math.max(bottomRow, row);
-            }
-        }
-        Log.d(TAG, "E limits: " + topRow + ", " + bottomRow);
-        final float topPadding = topRow;
-        final float height = Math.max(0, bottomRow - topRow + 1);
-        final TextHeight textHeight = new TextHeight(height, topPadding);
-        textHeightCache.put(typePair, textHeight);
-        return textHeight;
-    }
-
-    private TextView getTextRuler() {
-        if (textView == null) {
-            textView = new TextView(getContext());
-            textView.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-            textView.setMinHeight(0);
-            textView.setGravity(Gravity.TOP);
-            textView.setBackgroundColor(Color.BLACK);
-            textView.setTextColor(Color.BLUE);
-            textView.setIncludeFontPadding(false);
-        }
-        return textView;
-    }
 
     @NonNull
     @Override
@@ -240,24 +174,13 @@ abstract public class UiView<T extends FixedDisplay<T>> extends FrameLayout impl
     @NonNull
     @Override
     public TextSize measureText(String text, TextStyle textStyle) {
-        Log.d(TAG, "measureText: " + textStyle);
-        return new TextSize(getTextWidth(text, textStyle), getTextHeight(textStyle.typeface, textStyle.typeheight));
+        return textRuler.measure(text, textStyle);
     }
 
     @NonNull
     @Override
     public ShapeSize measureShape(Shape shape) {
-        if (shape instanceof ViewShape) {
-            final ViewShape viewShape = (ViewShape) shape;
-            final View view = viewShape.createView(getContext());
-            view.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-            view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-            final int measuredWidth = view.getMeasuredWidth();
-            final int measuredHeight = view.getMeasuredHeight();
-            return new ShapeSize(measuredWidth, measuredHeight);
-        } else {
-            return ShapeSize.ZERO;
-        }
+        return shapeRuler.measure(shape);
     }
 
     @NonNull

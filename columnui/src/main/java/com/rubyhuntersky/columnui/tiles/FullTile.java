@@ -19,6 +19,10 @@ public abstract class FullTile extends Tile {
         super(relatedWidth, relatedHeight, elevation, null);
     }
 
+    public FullTile() {
+        this(0, 0, 0);
+    }
+
     @NonNull
     @Override
     public abstract Patch addPatch(Frame frame, Shape shape);

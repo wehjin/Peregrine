@@ -4,6 +4,7 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
+import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
@@ -68,6 +69,38 @@ abstract public class TileUi implements Ui<Tile> {
                 presenter.addPresentation(new ResizePresentation(presentExpansion.getWidth() + presentBase.getWidth(),
                                                                  height,
                                                                  presentBase));
+            }
+        });
+    }
+
+    public TileUi expandVertical(final Sizelet padlet) {
+        return create(new OnPresent<Tile>() {
+            @Override
+            public void onPresent(Presenter<Tile> presenter) {
+                final Human human = presenter.getHuman();
+                final ShiftTile shiftingDisplay = presenter.getDisplay().withShift();
+                final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
+                final float baseHeight = basePresentation.getHeight();
+                final float padding = padlet.toFloat(human, baseHeight);
+                shiftingDisplay.setShift(0, padding);
+                presenter.addPresentation(new ResizePresentation(basePresentation.getWidth(), baseHeight + 2 * padding,
+                                                                 basePresentation));
+            }
+        });
+    }
+
+    public TileUi expandHorizontal(final Sizelet padlet) {
+        return create(new OnPresent<Tile>() {
+            @Override
+            public void onPresent(Presenter<Tile> presenter) {
+                final Human human = presenter.getHuman();
+                final ShiftTile shiftingDisplay = presenter.getDisplay().withShift();
+                final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
+                final float baseWidth = basePresentation.getWidth();
+                final float padding = padlet.toFloat(human, baseWidth);
+                shiftingDisplay.setShift(padding, 0);
+                presenter.addPresentation(new ResizePresentation(baseWidth + 2 * padding, basePresentation.getHeight(),
+                                                                 basePresentation));
             }
         });
     }

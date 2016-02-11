@@ -33,6 +33,10 @@ public class Sizelet {
         return ofPortion(pixels, Ruler.PIXEL);
     }
 
+    public static Sizelet readables(float count) {
+        return ofPortion(count, Ruler.READABLE);
+    }
+
     private final float value;
     private final float portion;
 
