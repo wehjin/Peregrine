@@ -23,8 +23,7 @@ import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.FullTile;
 import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.ui.ShapeRuler;
-import com.rubyhuntersky.columnui.ui.TextRuler;
+import com.rubyhuntersky.columnui.ui.ShapeDisplayView;
 
 import java.util.List;
 
@@ -71,25 +70,24 @@ public class SpinnerViewShape extends ViewShape {
                       .expandHorizontal(READABLE).expandVertical(READABLE);
                 final FullTile fullTile = new FullTile() {
 
-                    private ShapeRuler shapeRuler = new ShapeRuler(context);
-                    private TextRuler textRuler = new TextRuler(context);
+                    private ShapeDisplayView shapeDisplayView = new ShapeDisplayView(context);
 
                     @NonNull
                     @Override
                     public Patch addPatch(Frame frame, Shape shape) {
-                        return null;
+                        return shapeDisplayView.addPatch(frame, shape);
                     }
 
                     @NonNull
                     @Override
                     public TextSize measureText(String text, TextStyle textStyle) {
-                        return textRuler.measure(text, textStyle);
+                        return shapeDisplayView.measureText(text, textStyle);
                     }
 
                     @NonNull
                     @Override
                     public ShapeSize measureShape(Shape shape) {
-                        return shapeRuler.measure(shape);
+                        return shapeDisplayView.measureShape(shape);
                     }
                 };
                 return null;
