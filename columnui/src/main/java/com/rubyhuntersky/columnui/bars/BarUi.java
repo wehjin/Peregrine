@@ -12,7 +12,7 @@ import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
@@ -50,7 +50,7 @@ abstract public class BarUi implements Ui<Bar> {
         return new ResizePresentation(column.fixedWidth, bar.fixedHeight, presentation);
     }
 
-    public BarUi expandStart(final TileUi startUi) {
+    public BarUi expandStart(final Tile0 startUi) {
         return expandStart(startUi.toBar());
     }
 

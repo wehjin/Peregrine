@@ -17,8 +17,8 @@ import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
-import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.tiles.TileUi1;
+import com.rubyhuntersky.columnui.tiles.Tile0;
+import com.rubyhuntersky.columnui.tiles.Tile1;
 import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
@@ -121,7 +121,7 @@ public abstract class ColumnUi implements Ui<Column> {
         return new ExpandBottomWithDivOperation(expansion).applyTo(this);
     }
 
-    public ColumnUi expandBottom(@NonNull final TileUi expansion) {
+    public ColumnUi expandBottom(@NonNull final Tile0 expansion) {
         return expandBottom(expansion.toColumn());
     }
 
@@ -157,7 +157,7 @@ public abstract class ColumnUi implements Ui<Column> {
         });
     }
 
-    public <C> ColumnUi1<C> expandBottom(TileUi1<C> expansion) {
+    public <C> ColumnUi1<C> expandBottom(Tile1<C> expansion) {
         return expandBottom(expansion.toColumn());
     }
 

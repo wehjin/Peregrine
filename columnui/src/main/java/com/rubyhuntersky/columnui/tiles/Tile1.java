@@ -11,30 +11,30 @@ import com.rubyhuntersky.columnui.ui.Ui1;
  * @since 1/30/16.
  */
 
-abstract public class TileUi1<C> implements Ui1<Mosaic, C> {
+abstract public class Tile1<C> implements Ui1<Mosaic, C> {
 
-    private TileUi1() {
+    private Tile1() {
     }
 
     @Override
-    public abstract TileUi bind(C condition);
+    public abstract Tile0 bind(C condition);
 
-    public TileUi1<C> name(final String name) {
+    public Tile1<C> name(final String name) {
         return create(new OnBind<C>() {
             @NonNull
             @Override
-            public TileUi onBind(C condition) {
-                return TileUi1.this.bind(condition).name(name);
+            public Tile0 onBind(C condition) {
+                return Tile1.this.bind(condition).name(name);
             }
         });
     }
 
-    public TileUi1<C> expandLeft(final TileUi expansion) {
+    public Tile1<C> expandLeft(final Tile0 expansion) {
         return create(new OnBind<C>() {
             @NonNull
             @Override
-            public TileUi onBind(C condition) {
-                return TileUi1.this.bind(condition).expandLeft(expansion);
+            public Tile0 onBind(C condition) {
+                return Tile1.this.bind(condition).expandLeft(expansion);
             }
         });
     }
@@ -43,11 +43,11 @@ abstract public class TileUi1<C> implements Ui1<Mosaic, C> {
         return new ToColumnOperation().applyTo(this);
     }
 
-    public static <C> TileUi1<C> create(final OnBind<C> onBind) {
-        return new TileUi1<C>() {
+    public static <C> Tile1<C> create(final OnBind<C> onBind) {
+        return new Tile1<C>() {
 
             @Override
-            public TileUi bind(C condition) {
+            public Tile0 bind(C condition) {
                 return onBind.onBind(condition);
             }
         };
@@ -55,6 +55,6 @@ abstract public class TileUi1<C> implements Ui1<Mosaic, C> {
 
     public interface OnBind<C> {
         @NonNull
-        TileUi onBind(C condition);
+        Tile0 onBind(C condition);
     }
 }

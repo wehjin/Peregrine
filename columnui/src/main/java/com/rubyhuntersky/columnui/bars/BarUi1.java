@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
 /**
@@ -26,11 +26,11 @@ public abstract class BarUi1<C> implements Ui1<Bar, C> {
         };
     }
 
-    public BarUi1<C> expandStart(final TileUi tileUi) {
+    public BarUi1<C> expandStart(final Tile0 tile0) {
         return BarUi1.create(new OnBind<C>() {
             @Override
             public BarUi onBind(C condition) {
-                return BarUi1.this.bind(condition).expandStart(tileUi);
+                return BarUi1.this.bind(condition).expandStart(tile0);
             }
         });
     }

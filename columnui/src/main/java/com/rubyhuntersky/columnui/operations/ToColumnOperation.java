@@ -11,8 +11,8 @@ import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.tiles.ShiftMosaic;
 import com.rubyhuntersky.columnui.tiles.Mosaic;
-import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.tiles.TileUi1;
+import com.rubyhuntersky.columnui.tiles.Tile0;
+import com.rubyhuntersky.columnui.tiles.Tile1;
 
 /**
  * @author wehjin
@@ -21,14 +21,14 @@ import com.rubyhuntersky.columnui.tiles.TileUi1;
 
 public class ToColumnOperation {
 
-    public ColumnUi applyTo(final TileUi tileUi) {
+    public ColumnUi applyTo(final Tile0 tile0) {
         return ColumnUi.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 Column column = presenter.getDisplay();
                 final Mosaic mosaic = new Mosaic(column.fixedWidth, column.relatedHeight, column.elevation, column);
                 final ShiftMosaic frameShiftTile = mosaic.withShift();
-                final Presentation presentation = tileUi.present(presenter.getHuman(), frameShiftTile, presenter);
+                final Presentation presentation = tile0.present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationWidth = presentation.getWidth();
                 final float extraWidth = column.fixedWidth - presentationWidth;
                 final float anchor = .5f;
@@ -40,12 +40,12 @@ public class ToColumnOperation {
         });
     }
 
-    public <C> ColumnUi1<C> applyTo(final TileUi1<C> tileUi1) {
+    public <C> ColumnUi1<C> applyTo(final Tile1<C> tile1) {
         return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
             @NonNull
             @Override
             public ColumnUi onBind(final C condition) {
-                return ToColumnOperation.this.applyTo(tileUi1.bind(condition));
+                return ToColumnOperation.this.applyTo(tile1.bind(condition));
             }
         });
     }

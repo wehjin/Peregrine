@@ -22,7 +22,7 @@ import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.FullMosaic;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.columnui.ui.ShapeDisplayView;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class SpinnerViewShape extends ViewShape {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                final TileUi tileUi = Creator.textTile(getItem(position), TextStylet.READABLE_DARK)
+                final Tile0 tile0 = Creator.textTile(getItem(position), TextStylet.READABLE_DARK)
                       .expandHorizontal(READABLE).expandVertical(READABLE);
                 final FullMosaic fullTile = new FullMosaic() {
 

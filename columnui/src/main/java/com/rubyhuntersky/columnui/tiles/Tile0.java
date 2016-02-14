@@ -20,15 +20,15 @@ import com.rubyhuntersky.columnui.ui.Ui;
  * @since 1/28/16.
  */
 
-abstract public class TileUi implements Ui<Mosaic> {
+abstract public class Tile0 implements Ui<Mosaic> {
 
     abstract public Presentation present(Human human, Mosaic mosaic, Observer observer);
 
-    public TileUi name(final String name) {
+    public Tile0 name(final String name) {
         return create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(final Presenter<Mosaic> presenter) {
-                final Presentation presentation = TileUi.this.present(presenter.getHuman(),
+                final Presentation presentation = Tile0.this.present(presenter.getHuman(),
                                                                       presenter.getDisplay(),
                                                                       new Observer() {
                                                                           @Override
@@ -52,7 +52,7 @@ abstract public class TileUi implements Ui<Mosaic> {
         });
     }
 
-    public TileUi expandLeft(final TileUi expansion) {
+    public Tile0 expandLeft(final Tile0 expansion) {
         return create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
@@ -60,7 +60,7 @@ abstract public class TileUi implements Ui<Mosaic> {
                 final Mosaic mosaic = presenter.getDisplay();
                 final ShiftMosaic baseShift = mosaic.withShift();
                 final ShiftMosaic expansionShift = mosaic.withShift();
-                final Presentation presentBase = TileUi.this.present(human, baseShift, presenter);
+                final Presentation presentBase = Tile0.this.present(human, baseShift, presenter);
                 final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
                 final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
                 baseShift.setShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
@@ -73,13 +73,13 @@ abstract public class TileUi implements Ui<Mosaic> {
         });
     }
 
-    public TileUi expandVertical(final Sizelet padlet) {
+    public Tile0 expandVertical(final Sizelet padlet) {
         return create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
                 final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
-                final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
+                final Presentation basePresentation = Tile0.this.present(human, shiftingDisplay, presenter);
                 final float baseHeight = basePresentation.getHeight();
                 final float padding = padlet.toFloat(human, baseHeight);
                 shiftingDisplay.setShift(0, padding);
@@ -89,13 +89,13 @@ abstract public class TileUi implements Ui<Mosaic> {
         });
     }
 
-    public TileUi expandHorizontal(final Sizelet padlet) {
+    public Tile0 expandHorizontal(final Sizelet padlet) {
         return create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
                 final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
-                final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
+                final Presentation basePresentation = Tile0.this.present(human, shiftingDisplay, presenter);
                 final float baseWidth = basePresentation.getWidth();
                 final float padding = padlet.toFloat(human, baseWidth);
                 shiftingDisplay.setShift(padding, 0);
@@ -126,8 +126,8 @@ abstract public class TileUi implements Ui<Mosaic> {
         return new ToColumnOperation().applyTo(this);
     }
 
-    public static TileUi create(final OnPresent<Mosaic> onPresent) {
-        return new TileUi() {
+    public static Tile0 create(final OnPresent<Mosaic> onPresent) {
+        return new Tile0() {
             @Override
             public Presentation present(Human human, final Mosaic mosaic, Observer observer) {
                 final BasePresenter<Mosaic> presenter = new BasePresenter<Mosaic>(human, mosaic, observer) {

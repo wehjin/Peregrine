@@ -27,7 +27,7 @@ import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
 import com.rubyhuntersky.columnui.tiles.Mosaic;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.Tile0;
 
 /**
  * @author wehjin
@@ -39,8 +39,8 @@ public class Creator {
 
     public static final String TAG = Creator.class.getSimpleName();
 
-    static public TileUi textTile(final String textString, final TextStylet textStylet) {
-        return TileUi.create(new OnPresent<Mosaic>() {
+    static public Tile0 textTile(final String textString, final TextStylet textStylet) {
+        return Tile0.create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();

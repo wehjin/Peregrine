@@ -14,8 +14,8 @@ import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.shapes.SpinnerViewShape;
 import com.rubyhuntersky.columnui.tiles.Mosaic;
-import com.rubyhuntersky.columnui.tiles.TileUi;
-import com.rubyhuntersky.columnui.tiles.TileUi1;
+import com.rubyhuntersky.columnui.tiles.Tile0;
+import com.rubyhuntersky.columnui.tiles.Tile1;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ import java.util.List;
 
 public class Android {
 
-    public static TileUi spinnerTile(final List<String> options, final int selectedOption) {
-        return TileUi.create(new OnPresent<Mosaic>() {
+    public static Tile0 spinnerTile(final List<String> options, final int selectedOption) {
+        return Tile0.create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Mosaic mosaic = presenter.getDisplay();
@@ -42,11 +42,11 @@ public class Android {
         });
     }
 
-    public static TileUi1<Integer> spinnerTile(final List<String> options) {
-        return TileUi1.create(new TileUi1.OnBind<Integer>() {
+    public static Tile1<Integer> spinnerTile(final List<String> options) {
+        return Tile1.create(new Tile1.OnBind<Integer>() {
             @NonNull
             @Override
-            public TileUi onBind(Integer condition) {
+            public Tile0 onBind(Integer condition) {
                 return spinnerTile(options, condition);
             }
         });

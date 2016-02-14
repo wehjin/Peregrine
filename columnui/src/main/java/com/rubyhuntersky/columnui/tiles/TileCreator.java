@@ -12,11 +12,11 @@ import com.rubyhuntersky.columnui.basics.TextStylet;
 
 public class TileCreator {
 
-    public static TileUi1<String> textTile1(final TextStylet textStylet) {
-        return TileUi1.create(new TileUi1.OnBind<String>() {
+    public static Tile1<String> textTile1(final TextStylet textStylet) {
+        return Tile1.create(new Tile1.OnBind<String>() {
             @NonNull
             @Override
-            public TileUi onBind(final String condition) {
+            public Tile0 onBind(final String condition) {
                 return Creator.textTile(condition, textStylet);
             }
         });

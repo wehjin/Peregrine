@@ -22,7 +22,7 @@ import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.reactions.HeightChangedReaction;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.columnui.tiles.TileUi;
+import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
 import com.rubyhuntersky.peregrine.FundingAccount;
@@ -62,7 +62,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
     public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
     public static final String PROGRAM_KEY = "programKey";
-    public static final TileUi DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK);
+    public static final Tile0 DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK);
     public static final String BUY_PRICES_SPINNER = "buyPricesSpinner";
     public static final String FUNDING_ACCOUNT_SPINNER = "fundingAccountSpinner";
     public static final String FUNDING_OPTION_SPINNER = "fundingOptionSpinner";
