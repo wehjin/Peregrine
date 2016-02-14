@@ -26,7 +26,7 @@ import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.shapes.RectangleShape;
 import com.rubyhuntersky.columnui.shapes.ViewShape;
-import com.rubyhuntersky.columnui.tiles.Tile;
+import com.rubyhuntersky.columnui.tiles.Mosaic;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 
 /**
@@ -40,14 +40,14 @@ public class Creator {
     public static final String TAG = Creator.class.getSimpleName();
 
     static public TileUi textTile(final String textString, final TextStylet textStylet) {
-        return TileUi.create(new OnPresent<Tile>() {
+        return TileUi.create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(Presenter<Tile> presenter) {
+            public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final Tile tile = presenter.getDisplay();
-                final TextStyle textStyle = textStylet.toStyle(human, tile.relatedHeight);
-                final TextSize textSize = tile.measureText(textString, textStyle);
-                final Frame frame = new Frame(textSize.textWidth, textSize.textHeight.height, tile.elevation);
+                final Mosaic mosaic = presenter.getDisplay();
+                final TextStyle textStyle = textStylet.toStyle(human, mosaic.relatedHeight);
+                final TextSize textSize = mosaic.measureText(textString, textStyle);
+                final Frame frame = new Frame(textSize.textWidth, textSize.textHeight.height, mosaic.elevation);
                 final TextHeight textHeight = textSize.textHeight;
                 final Frame textFrame = frame.withVerticalShift(-textHeight.topPadding)
                       .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
@@ -66,7 +66,7 @@ public class Creator {
                         return textView;
                     }
                 };
-                final Patch patch = tile.addPatch(textFrame, viewShape);
+                final Patch patch = mosaic.addPatch(textFrame, viewShape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });

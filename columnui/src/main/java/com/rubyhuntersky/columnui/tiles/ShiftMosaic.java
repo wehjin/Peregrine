@@ -15,20 +15,20 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class ShiftTile extends Tile implements ShiftDisplay<Tile> {
+public class ShiftMosaic extends Mosaic implements ShiftDisplay<Mosaic> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
     private float horizontalShift;
 
-    public ShiftTile(@NonNull Tile original) {
+    public ShiftMosaic(@NonNull Mosaic original) {
         super(original);
     }
 
     @NonNull
     @Override
-    public ShiftTile setShift(float horizontal, float vertical) {
+    public ShiftMosaic setShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontal;

@@ -11,7 +11,7 @@ import com.rubyhuntersky.columnui.ui.Ui1;
  * @since 1/30/16.
  */
 
-abstract public class TileUi1<C> implements Ui1<Tile, C> {
+abstract public class TileUi1<C> implements Ui1<Mosaic, C> {
 
     private TileUi1() {
     }

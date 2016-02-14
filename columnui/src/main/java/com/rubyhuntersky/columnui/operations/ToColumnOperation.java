@@ -9,8 +9,8 @@ import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
-import com.rubyhuntersky.columnui.tiles.ShiftTile;
-import com.rubyhuntersky.columnui.tiles.Tile;
+import com.rubyhuntersky.columnui.tiles.ShiftMosaic;
+import com.rubyhuntersky.columnui.tiles.Mosaic;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.columnui.tiles.TileUi1;
 
@@ -26,8 +26,8 @@ public class ToColumnOperation {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 Column column = presenter.getDisplay();
-                final Tile tile = new Tile(column.fixedWidth, column.relatedHeight, column.elevation, column);
-                final ShiftTile frameShiftTile = tile.withShift();
+                final Mosaic mosaic = new Mosaic(column.fixedWidth, column.relatedHeight, column.elevation, column);
+                final ShiftMosaic frameShiftTile = mosaic.withShift();
                 final Presentation presentation = tileUi.present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationWidth = presentation.getWidth();
                 final float extraWidth = column.fixedWidth - presentationWidth;

@@ -14,12 +14,12 @@ import com.rubyhuntersky.columnui.patches.Patch;
  * @since 1/30/16.
  */
 
-public abstract class FullTile extends Tile {
-    public FullTile(float relatedWidth, float relatedHeight, int elevation) {
+public abstract class FullMosaic extends Mosaic {
+    public FullMosaic(float relatedWidth, float relatedHeight, int elevation) {
         super(relatedWidth, relatedHeight, elevation, null);
     }
 
-    public FullTile() {
+    public FullMosaic() {
         this(0, 0, 0);
     }
 

@@ -20,14 +20,14 @@ import com.rubyhuntersky.columnui.ui.Ui;
  * @since 1/28/16.
  */
 
-abstract public class TileUi implements Ui<Tile> {
+abstract public class TileUi implements Ui<Mosaic> {
 
-    abstract public Presentation present(Human human, Tile tile, Observer observer);
+    abstract public Presentation present(Human human, Mosaic mosaic, Observer observer);
 
     public TileUi name(final String name) {
-        return create(new OnPresent<Tile>() {
+        return create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(final Presenter<Tile> presenter) {
+            public void onPresent(final Presenter<Mosaic> presenter) {
                 final Presentation presentation = TileUi.this.present(presenter.getHuman(),
                                                                       presenter.getDisplay(),
                                                                       new Observer() {
@@ -53,13 +53,13 @@ abstract public class TileUi implements Ui<Tile> {
     }
 
     public TileUi expandLeft(final TileUi expansion) {
-        return create(new OnPresent<Tile>() {
+        return create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(Presenter<Tile> presenter) {
+            public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final Tile tile = presenter.getDisplay();
-                final ShiftTile baseShift = tile.withShift();
-                final ShiftTile expansionShift = tile.withShift();
+                final Mosaic mosaic = presenter.getDisplay();
+                final ShiftMosaic baseShift = mosaic.withShift();
+                final ShiftMosaic expansionShift = mosaic.withShift();
                 final Presentation presentBase = TileUi.this.present(human, baseShift, presenter);
                 final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
                 final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
@@ -74,11 +74,11 @@ abstract public class TileUi implements Ui<Tile> {
     }
 
     public TileUi expandVertical(final Sizelet padlet) {
-        return create(new OnPresent<Tile>() {
+        return create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(Presenter<Tile> presenter) {
+            public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final ShiftTile shiftingDisplay = presenter.getDisplay().withShift();
+                final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
                 final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
                 final float baseHeight = basePresentation.getHeight();
                 final float padding = padlet.toFloat(human, baseHeight);
@@ -90,11 +90,11 @@ abstract public class TileUi implements Ui<Tile> {
     }
 
     public TileUi expandHorizontal(final Sizelet padlet) {
-        return create(new OnPresent<Tile>() {
+        return create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(Presenter<Tile> presenter) {
+            public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final ShiftTile shiftingDisplay = presenter.getDisplay().withShift();
+                final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
                 final Presentation basePresentation = TileUi.this.present(human, shiftingDisplay, presenter);
                 final float baseWidth = basePresentation.getWidth();
                 final float padding = padlet.toFloat(human, baseWidth);
@@ -110,8 +110,8 @@ abstract public class TileUi implements Ui<Tile> {
             @Override
             public void onPresent(Presenter<Bar> presenter) {
                 final Bar bar = presenter.getDisplay();
-                final Tile tile = new Tile(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
-                final ShiftTile frameShiftTile = tile.withShift();
+                final Mosaic mosaic = new Mosaic(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
+                final ShiftMosaic frameShiftTile = mosaic.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);
                 final float presentationHeight = presentation.getHeight();
                 final float extraHeight = bar.fixedHeight - presentationHeight;
@@ -126,11 +126,11 @@ abstract public class TileUi implements Ui<Tile> {
         return new ToColumnOperation().applyTo(this);
     }
 
-    public static TileUi create(final OnPresent<Tile> onPresent) {
+    public static TileUi create(final OnPresent<Mosaic> onPresent) {
         return new TileUi() {
             @Override
-            public Presentation present(Human human, final Tile tile, Observer observer) {
-                final BasePresenter<Tile> presenter = new BasePresenter<Tile>(human, tile, observer) {
+            public Presentation present(Human human, final Mosaic mosaic, Observer observer) {
+                final BasePresenter<Mosaic> presenter = new BasePresenter<Mosaic>(human, mosaic, observer) {
                     @Override
                     public float getWidth() {
                         float union = 0;

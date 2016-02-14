@@ -12,44 +12,44 @@ import com.rubyhuntersky.columnui.displays.ShapeDisplayWrapper;
  * @since 1/28/16.
  */
 
-public class Tile extends ShapeDisplayWrapper implements CoreDisplay<Tile> {
+public class Mosaic extends ShapeDisplayWrapper implements CoreDisplay<Mosaic> {
 
     public final float relatedWidth;
     public final float relatedHeight;
     public final int elevation;
 
-    public Tile(float relatedWidth, float relatedHeight, int elevation, ShapeDisplay shapeDisplay) {
+    public Mosaic(float relatedWidth, float relatedHeight, int elevation, ShapeDisplay shapeDisplay) {
         super(shapeDisplay);
         this.relatedWidth = relatedWidth;
         this.relatedHeight = relatedHeight;
         this.elevation = elevation;
     }
 
-    protected Tile(Tile basis) {
+    protected Mosaic(Mosaic basis) {
         this(basis.relatedWidth, basis.relatedHeight, basis.elevation, basis);
     }
 
     @NonNull
     @Override
-    public ShiftTile withShift() {
-        return new ShiftTile(this);
+    public ShiftMosaic withShift() {
+        return new ShiftMosaic(this);
     }
 
     @NonNull
     @Override
-    public DelayDisplay<Tile> withDelay() {
+    public DelayDisplay<Mosaic> withDelay() {
         return null;
     }
 
     @NonNull
     @Override
-    public Tile withElevation(int elevation) {
-        return elevation == this.elevation ? this : new Tile(relatedWidth, relatedHeight, elevation, this);
+    public Mosaic withElevation(int elevation) {
+        return elevation == this.elevation ? this : new Mosaic(relatedWidth, relatedHeight, elevation, this);
     }
 
     @NonNull
     @Override
-    public Tile asType() {
+    public Mosaic asType() {
         return this;
     }
 

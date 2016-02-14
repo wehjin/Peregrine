@@ -13,7 +13,7 @@ import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.shapes.SpinnerViewShape;
-import com.rubyhuntersky.columnui.tiles.Tile;
+import com.rubyhuntersky.columnui.tiles.Mosaic;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.columnui.tiles.TileUi1;
 
@@ -27,16 +27,16 @@ import java.util.List;
 public class Android {
 
     public static TileUi spinnerTile(final List<String> options, final int selectedOption) {
-        return TileUi.create(new OnPresent<Tile>() {
+        return TileUi.create(new OnPresent<Mosaic>() {
             @Override
-            public void onPresent(Presenter<Tile> presenter) {
-                final Tile tile = presenter.getDisplay();
+            public void onPresent(Presenter<Mosaic> presenter) {
+                final Mosaic mosaic = presenter.getDisplay();
                 final SpinnerViewShape spinnerViewShape = new SpinnerViewShape(options, selectedOption, Observer.EMPTY);
-                final ShapeSize shapeSize = tile.measureShape(spinnerViewShape);
+                final ShapeSize shapeSize = mosaic.measureShape(spinnerViewShape);
                 final int adjustedWidth = shapeSize.measuredWidth + 2; // A few pixels short causes ellipsis.
-                final Frame frame = new Frame(adjustedWidth, shapeSize.measuredHeight, tile.elevation);
+                final Frame frame = new Frame(adjustedWidth, shapeSize.measuredHeight, mosaic.elevation);
                 final SpinnerViewShape shape = new SpinnerViewShape(options, selectedOption, presenter);
-                final Patch patch = tile.addPatch(frame, shape);
+                final Patch patch = mosaic.addPatch(frame, shape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });

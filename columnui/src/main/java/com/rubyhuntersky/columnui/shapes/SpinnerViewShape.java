@@ -21,7 +21,7 @@ import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.columnui.tiles.FullTile;
+import com.rubyhuntersky.columnui.tiles.FullMosaic;
 import com.rubyhuntersky.columnui.tiles.TileUi;
 import com.rubyhuntersky.columnui.ui.ShapeDisplayView;
 
@@ -65,10 +65,15 @@ public class SpinnerViewShape extends ViewShape {
             }
 
             @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                return super.getDropDownView(position, convertView, parent);
+            }
+
+            @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final TileUi tileUi = Creator.textTile(getItem(position), TextStylet.READABLE_DARK)
                       .expandHorizontal(READABLE).expandVertical(READABLE);
-                final FullTile fullTile = new FullTile() {
+                final FullMosaic fullTile = new FullMosaic() {
 
                     private ShapeDisplayView shapeDisplayView = new ShapeDisplayView(context);
 
