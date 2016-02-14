@@ -8,25 +8,21 @@ import com.rubyhuntersky.columnui.conditions.Human;
  */
 
 public class Sizelet {
-    public static final Sizelet FINGER = new Sizelet(0, 1, Ruler.FINGERTIP);
-    public static final Sizelet TWO_THIRDS_FINGER = new Sizelet(0, .6666f, Ruler.FINGERTIP);
-    public static final Sizelet HALF_FINGER = new Sizelet(0, .5f, Ruler.FINGERTIP);
-    public static final Sizelet THIRD_FINGER = new Sizelet(0, .3333f, Ruler.FINGERTIP);
-    public static final Sizelet QUARTER_FINGER = new Sizelet(0, .25f, Ruler.FINGERTIP);
-    public static final Sizelet READABLE = new Sizelet(0, 1f, Ruler.READABLE);
-    public static final Sizelet TITLE = new Sizelet(0, 1.8f, Ruler.READABLE);
-    public static final Sizelet IMPORTANT = new Sizelet(0, 1.4f, Ruler.READABLE);
-    public static final Sizelet PREVIOUS = new Sizelet(0, 1, Ruler.PREVIOUS);
+    public static final Sizelet FINGER = new Sizelet(1, Ruler.FINGERTIP);
+    public static final Sizelet TWO_THIRDS_FINGER = new Sizelet(.6666f, Ruler.FINGERTIP);
+    public static final Sizelet HALF_FINGER = new Sizelet(.5f, Ruler.FINGERTIP);
+    public static final Sizelet THIRD_FINGER = new Sizelet(.3333f, Ruler.FINGERTIP);
+    public static final Sizelet QUARTER_FINGER = new Sizelet(.25f, Ruler.FINGERTIP);
+    public static final Sizelet READABLE = new Sizelet(1f, Ruler.READABLE);
+    public static final Sizelet TITLE = new Sizelet(1.8f, Ruler.READABLE);
+    public static final Sizelet IMPORTANT = new Sizelet(1.4f, Ruler.READABLE);
+    public static final Sizelet PREVIOUS = new Sizelet(1, Ruler.PREVIOUS);
 
-    public static Sizelet ZERO = new Sizelet(0, 0, Ruler.ZERO);
-    public static Sizelet FULL = new Sizelet(0, 1, Ruler.PREVIOUS);
-
-    public static Sizelet ofValue(float value) {
-        return new Sizelet(value, 0, Ruler.ZERO);
-    }
+    public static Sizelet ZERO = new Sizelet(0, Ruler.ZERO);
+    public static Sizelet FULL = new Sizelet(1, Ruler.PREVIOUS);
 
     public static Sizelet ofPortion(float portion, Ruler ruler) {
-        return new Sizelet(0, portion, ruler);
+        return new Sizelet(portion, ruler);
     }
 
     public static Sizelet pixels(int pixels) {
@@ -37,15 +33,18 @@ public class Sizelet {
         return ofPortion(count, Ruler.READABLE);
     }
 
-    private final float value;
     private final float portion;
 
     private final Ruler ruler;
 
-    public Sizelet(float value, float portion, Ruler ruler) {
-        this.value = value;
+    public Sizelet(float portion, Ruler ruler) {
         this.portion = portion;
         this.ruler = ruler;
+    }
+
+    protected Sizelet() {
+        portion = 0;
+        ruler = Ruler.ZERO;
     }
 
     public float toFloat(Human human, float containerSize) {
@@ -61,7 +60,17 @@ public class Sizelet {
         } else {
             fullSize = 0;
         }
-        return value + portion * fullSize;
+        return portion * fullSize;
+    }
+
+    public Sizelet twice() {
+        final Sizelet previous = this;
+        return new Sizelet() {
+            @Override
+            public float toFloat(Human human, float containerSize) {
+                return previous.toFloat(human, containerSize) * 2;
+            }
+        };
     }
 
     public enum Ruler {

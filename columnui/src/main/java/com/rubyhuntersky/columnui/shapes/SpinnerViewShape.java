@@ -6,28 +6,19 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.Shape;
-import com.rubyhuntersky.columnui.basics.Frame;
-import com.rubyhuntersky.columnui.basics.ShapeSize;
-import com.rubyhuntersky.columnui.basics.TextSize;
-import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
-import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.columnui.tiles.FullMosaic;
-import com.rubyhuntersky.columnui.tiles.Tile0;
-import com.rubyhuntersky.columnui.ui.ShapeDisplayView;
+import com.rubyhuntersky.columnui.tiles.TileView;
 
 import java.util.List;
 
-import static com.rubyhuntersky.columnui.basics.Sizelet.READABLE;
+import static com.rubyhuntersky.columnui.Creator.textTile;
+import static com.rubyhuntersky.columnui.basics.Sizelet.IMPORTANT;
 
 /**
  * @author wehjin
@@ -71,49 +62,19 @@ public class SpinnerViewShape extends ViewShape {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                final Tile0 tile0 = Creator.textTile(getItem(position), TextStylet.READABLE_DARK)
-                      .expandHorizontal(READABLE).expandVertical(READABLE);
-                final FullMosaic fullTile = new FullMosaic() {
-
-                    private ShapeDisplayView shapeDisplayView = new ShapeDisplayView(context);
-
-                    @NonNull
-                    @Override
-                    public Patch addPatch(Frame frame, Shape shape) {
-                        return shapeDisplayView.addPatch(frame, shape);
-                    }
-
-                    @NonNull
-                    @Override
-                    public TextSize measureText(String text, TextStyle textStyle) {
-                        return shapeDisplayView.measureText(text, textStyle);
-                    }
-
-                    @NonNull
-                    @Override
-                    public ShapeSize measureShape(Shape shape) {
-                        return shapeDisplayView.measureShape(shape);
-                    }
-                };
-                return null;
+                final String string = getItem(position);
+                final TileView tileView = new TileView(context);
+                tileView.present(textTile(string, TextStylet.IMPORTANT_DARK)
+                                       .expandHorizontal(IMPORTANT)
+                                       .expandVertical(IMPORTANT.twice()));
+                return tileView;
             }
         };
 
-
-        final int spinnerRes = android.R.layout.simple_spinner_item;
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, spinnerRes, options) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return super.getView(position, convertView, parent);
-            }
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         final Spinner spinner = new Spinner(context);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(customAdapter);
         spinner.setSelection(selectedOption);
-        //spinner.setPadding(50, 50, 50, 50);
-        //spinner.setBackgroundColor(Color.YELLOW);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             private int lastPosition = selectedOption;
