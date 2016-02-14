@@ -38,7 +38,9 @@ public class SpinnerViewShape extends ViewShape {
     @Override
     public View createView(final Context context) {
 
-        BaseAdapter customAdapter = new BaseAdapter() {
+
+        final Spinner spinner = new Spinner(context);
+        spinner.setAdapter(new BaseAdapter() {
 
             @Override
             public int getCount() {
@@ -56,11 +58,6 @@ public class SpinnerViewShape extends ViewShape {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                return super.getDropDownView(position, convertView, parent);
-            }
-
-            @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final String string = getItem(position);
                 final TileView tileView = new TileView(context);
@@ -69,11 +66,7 @@ public class SpinnerViewShape extends ViewShape {
                                        .expandVertical(IMPORTANT.twice()));
                 return tileView;
             }
-        };
-
-
-        final Spinner spinner = new Spinner(context);
-        spinner.setAdapter(customAdapter);
+        });
         spinner.setSelection(selectedOption);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

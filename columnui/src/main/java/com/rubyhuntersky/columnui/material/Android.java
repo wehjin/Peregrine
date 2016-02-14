@@ -2,7 +2,6 @@ package com.rubyhuntersky.columnui.material;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Frame;
@@ -31,11 +30,9 @@ public class Android {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Mosaic mosaic = presenter.getDisplay();
-                final SpinnerViewShape spinnerViewShape = new SpinnerViewShape(options, selectedOption, Observer.EMPTY);
-                final ShapeSize shapeSize = mosaic.measureShape(spinnerViewShape);
-                final int adjustedWidth = shapeSize.measuredWidth + 2; // A few pixels short causes ellipsis.
-                final Frame frame = new Frame(adjustedWidth, shapeSize.measuredHeight, mosaic.elevation);
                 final SpinnerViewShape shape = new SpinnerViewShape(options, selectedOption, presenter);
+                final ShapeSize shapeSize = mosaic.measureShape(shape);
+                final Frame frame = new Frame(shapeSize.measuredWidth, shapeSize.measuredHeight, mosaic.elevation);
                 final Patch patch = mosaic.addPatch(frame, shape);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
