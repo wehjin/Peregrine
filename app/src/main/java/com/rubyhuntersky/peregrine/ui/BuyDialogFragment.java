@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,17 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
-import com.rubyhuntersky.columnui.columns.ColumnUi3;
-import com.rubyhuntersky.columnui.columns.ColumnUi5;
+import com.rubyhuntersky.columnui.columns.ColumnUi4;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.reactions.HeightChangedReaction;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
 import com.rubyhuntersky.columnui.tiles.Tile0;
+import com.rubyhuntersky.columnui.tiles.Tile1;
+import com.rubyhuntersky.columnui.tiles.Tile2;
+import com.rubyhuntersky.columnui.tiles.TileCreator;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
 import com.rubyhuntersky.peregrine.FundingAccount;
@@ -108,28 +110,24 @@ public class BuyDialogFragment extends TradeDialogFragment {
               .expandVertical(TWO_THIRDS_FINGER)
               .padHorizontal(THIRD_FINGER)
               .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-              .printReadEval(new ColumnUi5.Repl<Integer, String, Integer, String, ColumnUi>() {
+              .printReadEval(new ColumnUi4.Repl<Integer, String, Integer, ColumnUi>() {
 
                   private int fundingAccountSelection = program.getSelectedFundingAccount();
                   private int buyPriceSelection = program.getSelectedBuyOption();
                   private int fundingPriceSelection = program.getSelectedFundingOption();
 
                   @Override
-                  public ColumnUi print(ColumnUi5<Integer, String, Integer, String, ColumnUi> div4) {
+                  public ColumnUi print(ColumnUi4<Integer, String, Integer, ColumnUi> div4) {
                       return div4.bind(program.getSelectedBuyOption())
                             .bind(getSharesString(program.getSharesToBuy()))
                             .bind(program.getSelectedFundingAccount())
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
-                                        ? "Sufficient funds " + getCurrencyDisplayString(program.getFundingAccount()
-                                                                                               .getCashAvailable())
-                                        : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy()))
-                            .bind(program.fundingAccountHasSufficientFundsToBuy()
                                         || program.getFundingOptions().size() == 0
                                         ? ColumnUi.EMPTY
-                                        : SPACING.expandBottom(getSellUi(getFundingPrices(program.getFundingOptions()),
-                                                                         program.getSelectedFundingOption(),
-                                                                         program.getSharesToSellForFunding(),
-                                                                         program.getAdditionalFundsNeededAfterSale())));
+                                        : getSellUi(getFundingPrices(program.getFundingOptions()),
+                                                    program.getSelectedFundingOption(),
+                                                    program.getSharesToSellForFunding(),
+                                                    program.getAdditionalFundsNeededAfterSale()));
                   }
 
                   @Override
@@ -164,13 +162,17 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
     }
 
+    @NonNull
+    private String getFundingAccountStatus(FundingAccount fundingAccount) {
+        return program.fundingAccountHasSufficientFundsToBuy(fundingAccount)
+              ? "Sufficient funds " + getCurrencyDisplayString(fundingAccount.getCashAvailable())
+              : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy(fundingAccount));
+    }
+
     private ColumnUi2<Integer, String> getBuyUi(BigDecimal buyAmount, List<String> buyPrices) {
         return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK)
               .expandBottom(SPACING)
-              .expandBottom(spinnerTile(buyPrices)
-                                  .name(BUY_PRICES_SPINNER)
-                                  .expandLeft(DIVISION_SIGN_TILE)
-                                  .toColumn())
+              .expandBottom(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn())
               .expandBottom(SPACING)
               .expandBottom(DIVIDER)
               .expandBottom(SPACING)
@@ -186,16 +188,30 @@ public class BuyDialogFragment extends TradeDialogFragment {
         return buyPrices;
     }
 
-    private ColumnUi3<Integer, String, ColumnUi> getFundingUi() {
-        List<String> fundingAccountNames = new ArrayList<>();
+    private ColumnUi2<Integer, ColumnUi> getFundingUi() {
+        List<Pair<String, String>> accountNamesAndStatus = new ArrayList<>();
         for (FundingAccount fundingAccount : program.getFundingAccounts()) {
-            fundingAccountNames.add("Account " + fundingAccount.getAccountName());
+            final String name = "Account " + fundingAccount.getAccountName();
+            final String status = getFundingAccountStatus(fundingAccount);
+            accountNamesAndStatus.add(Pair.create(name, status));
         }
 
-        final ColumnUi1<Integer> fundingAccountDiv = spinnerTile(fundingAccountNames).name(FUNDING_ACCOUNT_SPINNER)
-              .toColumn();
-        final ColumnUi1<String> fundingAccountStatusDiv = textTile1(READABLE_DARK).toColumn();
-        return fundingAccountDiv.expandBottom(fundingAccountStatusDiv).expandBottom();
+        final Tile1<Pair<String, String>> accountTile = Tile1.create(new Tile1.OnBind<Pair<String, String>>() {
+
+            private Tile2<String, String> tile = textTile1(IMPORTANT_DARK)
+                  .expandBottom(TileCreator.READABLE_GAP)
+                  .expandBottom(textTile1(READABLE_DARK));
+
+            @NonNull
+            @Override
+            public Tile0 onBind(Pair<String, String> condition) {
+                return tile.bind(condition.first).bind(condition.second);
+            }
+        });
+
+
+        final Tile1<Integer> accountSpinnerTile = spinnerTile(accountTile, accountNamesAndStatus);
+        return accountSpinnerTile.name(FUNDING_ACCOUNT_SPINNER).toColumn().expandBottom();
     }
 
     @NonNull

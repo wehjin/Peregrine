@@ -100,8 +100,17 @@ public class BuyProgram implements Parcelable, FundingProgram {
     }
 
     @Override
+    public boolean fundingAccountHasSufficientFundsToBuy(FundingAccount fundingAccount) {
+        return getAdditionalFundsNeededToBuy(fundingAccount).compareTo(BigDecimal.ZERO) <= 0;
+    }
+
+    @Override
     public BigDecimal getAdditionalFundsNeededToBuy() {
-        final FundingAccount fundingAccount = getFundingAccount();
+        return getAdditionalFundsNeededToBuy(getFundingAccount());
+    }
+
+    @Override
+    public BigDecimal getAdditionalFundsNeededToBuy(FundingAccount fundingAccount) {
         if (fundingAccount == null)
             return null;
         final BigDecimal cashAvailableInFundingAccount = fundingAccount.getCashAvailable();

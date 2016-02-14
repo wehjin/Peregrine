@@ -39,6 +39,26 @@ abstract public class Tile1<C> implements Ui1<Mosaic, C> {
         });
     }
 
+    public Tile1<C> expandBottom(final Tile0 expansion) {
+        return create(new OnBind<C>() {
+            @NonNull
+            @Override
+            public Tile0 onBind(C condition) {
+                return Tile1.this.bind(condition).expandBottom(expansion);
+            }
+        });
+    }
+
+    public <C2> Tile2<C, C2> expandBottom(final Tile1<C2> expansion) {
+        return Tile2.create(new Tile2.OnBind<C, C2>() {
+            @NonNull
+            @Override
+            public Tile1<C2> onBind(C condition) {
+                return Tile1.this.bind(condition).expandBottom(expansion);
+            }
+        });
+    }
+
     public ColumnUi1<C> toColumn() {
         return new ToColumnOperation().applyTo(this);
     }

@@ -5,14 +5,16 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
+import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
-import com.rubyhuntersky.columnui.tiles.ShiftMosaic;
 import com.rubyhuntersky.columnui.tiles.Mosaic;
+import com.rubyhuntersky.columnui.tiles.ShiftMosaic;
 import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.columnui.tiles.Tile1;
+import com.rubyhuntersky.columnui.tiles.Tile2;
 
 /**
  * @author wehjin
@@ -46,6 +48,16 @@ public class ToColumnOperation {
             @Override
             public ColumnUi onBind(final C condition) {
                 return ToColumnOperation.this.applyTo(tile1.bind(condition));
+            }
+        });
+    }
+
+    public <C1, C2> ColumnUi2<C1, C2> applyTo(final Tile2<C1, C2> tile) {
+        return ColumnUi2.create(new ColumnUi2.OnBind<C1, C2>() {
+            @NonNull
+            @Override
+            public ColumnUi1<C2> onBind(final C1 condition) {
+                return ToColumnOperation.this.applyTo(tile.bind(condition));
             }
         });
     }

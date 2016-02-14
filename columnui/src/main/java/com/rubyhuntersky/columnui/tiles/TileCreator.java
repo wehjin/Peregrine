@@ -16,6 +16,8 @@ import com.rubyhuntersky.columnui.presenters.Presenter;
 
 public class TileCreator {
 
+    public static Tile0 READABLE_GAP = gapTile(Sizelet.ZERO, Sizelet.READABLE);
+
     public static Tile1<String> textTile1(final TextStylet textStylet) {
         return Tile1.create(new Tile1.OnBind<String>() {
             @NonNull

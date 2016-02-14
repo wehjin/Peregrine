@@ -1,5 +1,7 @@
 package com.rubyhuntersky.columnui.tiles;
 
+import android.support.annotation.NonNull;
+
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.Bar;
@@ -106,6 +108,16 @@ abstract public class Tile0 implements Ui<Mosaic> {
                         return basePresentation.getHeight() + expansionPresentation.getHeight();
                     }
                 });
+            }
+        });
+    }
+
+    public <C> Tile1<C> expandBottom(final Tile1<C> expansion) {
+        return Tile1.create(new Tile1.OnBind<C>() {
+            @NonNull
+            @Override
+            public Tile0 onBind(C condition) {
+                return Tile0.this.expandBottom(expansion.bind(condition));
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.rubyhuntersky.columnui.shapes;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,26 +10,28 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.reactions.ItemSelectionReaction;
+import com.rubyhuntersky.columnui.tiles.Tile1;
 import com.rubyhuntersky.columnui.tiles.TileView;
 
 import java.util.List;
 
-import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Sizelet.IMPORTANT;
 
 /**
  * @author wehjin
  * @since 2/9/16.
  */
-public class SpinnerViewShape extends ViewShape {
-    private final List<String> options;
+public class SpinnerViewShape<C> extends ViewShape {
+    private final List<C> options;
+    private final Tile1<C> optionsTile;
     private final int selectedOption;
     private final Observer observer;
 
-    public SpinnerViewShape(List<String> options, int selectedOption, @NonNull Observer observer) {
+    public SpinnerViewShape(List<C> options, Tile1<C> optionsTile, int selectedOption, Observer observer) {
+        super();
         this.options = options;
+        this.optionsTile = optionsTile;
         this.selectedOption = selectedOption;
         this.observer = observer;
     }
@@ -48,7 +49,7 @@ public class SpinnerViewShape extends ViewShape {
             }
 
             @Override
-            public String getItem(int position) {
+            public C getItem(int position) {
                 return options.get(position);
             }
 
@@ -59,11 +60,9 @@ public class SpinnerViewShape extends ViewShape {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                final String string = getItem(position);
+                final C item = getItem(position);
                 final TileView tileView = new TileView(context);
-                tileView.present(textTile(string, TextStylet.IMPORTANT_DARK)
-                                       .expandHorizontal(IMPORTANT)
-                                       .expandVertical(IMPORTANT.twice()));
+                tileView.present(optionsTile.bind(item).expandHorizontal(IMPORTANT).expandVertical(IMPORTANT));
                 return tileView;
             }
         });
