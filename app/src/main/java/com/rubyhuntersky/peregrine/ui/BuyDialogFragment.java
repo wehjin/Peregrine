@@ -199,8 +199,8 @@ public class BuyDialogFragment extends TradeDialogFragment {
         final Tile1<Pair<String, String>> accountTile = Tile1.create(new Tile1.OnBind<Pair<String, String>>() {
 
             private Tile2<String, String> tile = textTile1(IMPORTANT_DARK)
-                  .expandBottom(TileCreator.READABLE_GAP)
-                  .expandBottom(textTile1(READABLE_DARK));
+                  .expandDown(TileCreator.READABLE_GAP)
+                  .expandDown(textTile1(READABLE_DARK));
 
             @NonNull
             @Override

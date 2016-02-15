@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.columns.ColumnUi2;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandDownTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandLeftTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.NameTileOperation0;
 import com.rubyhuntersky.columnui.ui.Ui2;
 
 /**
@@ -20,33 +23,15 @@ abstract public class Tile2<C1, C2> implements Ui2<Mosaic, C1, C2> {
     public abstract Tile1<C2> bind(C1 condition);
 
     public Tile2<C1, C2> name(final String name) {
-        return create(new OnBind<C1, C2>() {
-            @NonNull
-            @Override
-            public Tile1<C2> onBind(C1 condition) {
-                return Tile2.this.bind(condition).name(name);
-            }
-        });
+        return new NameTileOperation0(name).apply0(this);
     }
 
     public Tile2<C1, C2> expandLeft(final Tile0 expansion) {
-        return create(new OnBind<C1, C2>() {
-            @NonNull
-            @Override
-            public Tile1<C2> onBind(C1 condition) {
-                return Tile2.this.bind(condition).expandLeft(expansion);
-            }
-        });
+        return new ExpandLeftTileOperation1().apply0(this, expansion);
     }
 
-    public Tile2<C1, C2> expandBottom(final Tile0 expansion) {
-        return create(new OnBind<C1, C2>() {
-            @NonNull
-            @Override
-            public Tile1<C2> onBind(C1 condition) {
-                return Tile2.this.bind(condition).expandBottom(expansion);
-            }
-        });
+    public Tile2<C1, C2> expandDown(final Tile0 expansion) {
+        return new ExpandDownTileOperation1().apply0(this, expansion);
     }
 
     public ColumnUi2<C1, C2> toColumn() {

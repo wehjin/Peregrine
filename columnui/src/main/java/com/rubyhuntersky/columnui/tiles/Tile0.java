@@ -1,21 +1,21 @@
 package com.rubyhuntersky.columnui.tiles;
 
-import android.support.annotation.NonNull;
-
 import com.rubyhuntersky.columnui.Observer;
-import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.ColumnUi;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
-import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
-import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandDownTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandHorizontalTileOperation0;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandLeftTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandVerticalTileOperation0;
+import com.rubyhuntersky.columnui.tiles.operations.NameTileOperation0;
 import com.rubyhuntersky.columnui.ui.Ui;
 
 /**
@@ -28,131 +28,27 @@ abstract public class Tile0 implements Ui<Mosaic> {
     abstract public Presentation present(Human human, Mosaic mosaic, Observer observer);
 
     public Tile0 name(final String name) {
-        return create(new OnPresent<Mosaic>() {
-            @Override
-            public void onPresent(final Presenter<Mosaic> presenter) {
-                final Presentation presentation = Tile0.this.present(presenter.getHuman(),
-                                                                     presenter.getDisplay(),
-                                                                     new Observer() {
-                                                                         @Override
-                                                                         public void onReaction(Reaction reaction) {
-                                                                             reaction.setSource(name);
-                                                                             presenter.onReaction(reaction);
-                                                                         }
-
-                                                                         @Override
-                                                                         public void onEnd() {
-                                                                             presenter.onEnd();
-                                                                         }
-
-                                                                         @Override
-                                                                         public void onError(Throwable throwable) {
-                                                                             presenter.onError(throwable);
-                                                                         }
-                                                                     });
-                presenter.addPresentation(presentation);
-            }
-        });
+        return new NameTileOperation0(name).apply0(this);
     }
 
     public Tile0 expandLeft(final Tile0 expansion) {
-        return create(new OnPresent<Mosaic>() {
-            @Override
-            public void onPresent(Presenter<Mosaic> presenter) {
-                final Human human = presenter.getHuman();
-                final Mosaic mosaic = presenter.getDisplay();
-                final ShiftMosaic baseShift = mosaic.withShift();
-                final ShiftMosaic expansionShift = mosaic.withShift();
-                final Presentation presentBase = Tile0.this.present(human, baseShift, presenter);
-                final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
-                final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
-                baseShift.setShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
-                expansionShift.setShift(0, (height - presentExpansion.getHeight()) * .5f);
-                presenter.addPresentation(presentExpansion);
-                presenter.addPresentation(new ResizePresentation(presentExpansion.getWidth() + presentBase.getWidth(),
-                                                                 height,
-                                                                 presentBase));
-            }
-        });
+        return new ExpandLeftTileOperation1().apply0(this, expansion);
     }
 
-    public Tile0 expandBottom(final Tile0 expansion) {
-        return create(new OnPresent<Mosaic>() {
-            @Override
-            public void onPresent(Presenter<Mosaic> presenter) {
-                final Human human = presenter.getHuman();
-                final Mosaic mosaic = presenter.getDisplay();
-                final ShiftMosaic baseMosaic = mosaic.withShift();
-                final ShiftMosaic expansionMosaic = mosaic.withShift();
-                final Presentation basePresentation = Tile0.this.present(human, baseMosaic, presenter);
-                final Presentation expansionPresentation = expansion.present(human, expansionMosaic, presenter);
-                final float width = Math.max(basePresentation.getWidth(), expansionPresentation.getWidth());
-                final float baseShiftX = (width - basePresentation.getWidth()) * .5f;
-                final float expansionShiftX = (width - expansionPresentation.getWidth()) * .5f;
-                baseMosaic.setShift(baseShiftX, 0);
-                expansionMosaic.setShift(expansionShiftX, basePresentation.getHeight());
-                presenter.addPresentation(new BooleanPresentation() {
-                    @Override
-                    protected void onCancel() {
-                        basePresentation.cancel();
-                        expansionPresentation.cancel();
-                    }
-
-                    @Override
-                    public float getWidth() {
-                        return width;
-                    }
-
-                    @Override
-                    public float getHeight() {
-                        return basePresentation.getHeight() + expansionPresentation.getHeight();
-                    }
-                });
-            }
-        });
+    public Tile0 expandDown(final Tile0 expansion) {
+        return new ExpandDownTileOperation1().apply0(this, expansion);
     }
 
-    public <C> Tile1<C> expandBottom(final Tile1<C> expansion) {
-        return Tile1.create(new Tile1.OnBind<C>() {
-            @NonNull
-            @Override
-            public Tile0 onBind(C condition) {
-                return Tile0.this.expandBottom(expansion.bind(condition));
-            }
-        });
+    public <C> Tile1<C> expandDown(final Tile1<C> expansion) {
+        return new ExpandDownTileOperation1().apply1(this, expansion);
     }
 
     public Tile0 expandVertical(final Sizelet padlet) {
-        return create(new OnPresent<Mosaic>() {
-            @Override
-            public void onPresent(Presenter<Mosaic> presenter) {
-                final Human human = presenter.getHuman();
-                final ShiftMosaic baseMosaic = presenter.getDisplay().withShift();
-                final Presentation basePresentation = Tile0.this.present(human, baseMosaic, presenter);
-                final float baseHeight = basePresentation.getHeight();
-                final float padding = padlet.toFloat(human, baseHeight);
-                baseMosaic.setShift(0, padding);
-                final float width = basePresentation.getWidth();
-                final float height = baseHeight + 2 * padding;
-                presenter.addPresentation(new ResizePresentation(width, height, basePresentation));
-            }
-        });
+        return new ExpandVerticalTileOperation0(padlet).apply0(this);
     }
 
     public Tile0 expandHorizontal(final Sizelet padlet) {
-        return create(new OnPresent<Mosaic>() {
-            @Override
-            public void onPresent(Presenter<Mosaic> presenter) {
-                final Human human = presenter.getHuman();
-                final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
-                final Presentation basePresentation = Tile0.this.present(human, shiftingDisplay, presenter);
-                final float baseWidth = basePresentation.getWidth();
-                final float padding = padlet.toFloat(human, baseWidth);
-                shiftingDisplay.setShift(padding, 0);
-                presenter.addPresentation(new ResizePresentation(baseWidth + 2 * padding, basePresentation.getHeight(),
-                                                                 basePresentation));
-            }
-        });
+        return new ExpandHorizontalTileOperation0(padlet).apply0(this);
     }
 
     public BarUi toBar() {

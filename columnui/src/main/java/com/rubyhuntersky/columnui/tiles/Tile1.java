@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.columns.ColumnUi1;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandDownTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.ExpandLeftTileOperation1;
+import com.rubyhuntersky.columnui.tiles.operations.NameTileOperation0;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
 /**
@@ -20,43 +23,19 @@ abstract public class Tile1<C> implements Ui1<Mosaic, C> {
     public abstract Tile0 bind(C condition);
 
     public Tile1<C> name(final String name) {
-        return create(new OnBind<C>() {
-            @NonNull
-            @Override
-            public Tile0 onBind(C condition) {
-                return Tile1.this.bind(condition).name(name);
-            }
-        });
+        return new NameTileOperation0(name).apply0(this);
     }
 
     public Tile1<C> expandLeft(final Tile0 expansion) {
-        return create(new OnBind<C>() {
-            @NonNull
-            @Override
-            public Tile0 onBind(C condition) {
-                return Tile1.this.bind(condition).expandLeft(expansion);
-            }
-        });
+        return new ExpandLeftTileOperation1().apply0(this, expansion);
     }
 
-    public Tile1<C> expandBottom(final Tile0 expansion) {
-        return create(new OnBind<C>() {
-            @NonNull
-            @Override
-            public Tile0 onBind(C condition) {
-                return Tile1.this.bind(condition).expandBottom(expansion);
-            }
-        });
+    public Tile1<C> expandDown(final Tile0 expansion) {
+        return new ExpandDownTileOperation1().apply0(this, expansion);
     }
 
-    public <C2> Tile2<C, C2> expandBottom(final Tile1<C2> expansion) {
-        return Tile2.create(new Tile2.OnBind<C, C2>() {
-            @NonNull
-            @Override
-            public Tile1<C2> onBind(C condition) {
-                return Tile1.this.bind(condition).expandBottom(expansion);
-            }
-        });
+    public <C2> Tile2<C, C2> expandDown(final Tile1<C2> expansion) {
+        return new ExpandDownTileOperation1().apply1(this, expansion);
     }
 
     public ColumnUi1<C> toColumn() {
