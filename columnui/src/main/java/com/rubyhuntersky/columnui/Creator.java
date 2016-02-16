@@ -16,7 +16,7 @@ import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.basics.TextStylet;
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.BooleanPresentation;
@@ -85,16 +85,16 @@ public class Creator {
         });
     }
 
-    static public ColumnUi textColumn(final String textString, final TextStylet textStylet) {
+    static public Div0 textColumn(final String textString, final TextStylet textStylet) {
         return textTile(textString, textStylet).toColumn();
     }
 
-    static public ColumnUi gapColumn(final Sizelet heightlet) {
+    static public Div0 gapColumn(final Sizelet heightlet) {
         return colorColumn(heightlet, null);
     }
 
-    static public ColumnUi colorColumn(final Sizelet heightlet, @Nullable final Coloret coloret) {
-        return ColumnUi.create(new OnPresent<Column>() {
+    static public Div0 colorColumn(final Sizelet heightlet, @Nullable final Coloret coloret) {
+        return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 final Column column = presenter.getDisplay();

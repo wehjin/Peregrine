@@ -7,7 +7,7 @@ import com.rubyhuntersky.columnui.bars.BarUi1;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.TextStylet;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.presentations.PatchPresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
@@ -59,7 +59,7 @@ public class Android {
         return spinnerTile(TileCreator.textTile1(TextStylet.IMPORTANT_DARK), options);
     }
 
-    public static ColumnUi spinnerColumn(final List<String> options, final int selectedOption) {
+    public static Div0 spinnerColumn(final List<String> options, final int selectedOption) {
         return spinnerTile(options, selectedOption).toColumn();
     }
 

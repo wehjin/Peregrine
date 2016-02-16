@@ -3,6 +3,8 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
+import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
+import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
 import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
@@ -15,33 +17,41 @@ import com.rubyhuntersky.columnui.presenters.SwitchPresenter;
  * @since 1/30/16.
  */
 
-public abstract class ColumnUi5<C1, C2, C3, C4, C5> {
+public abstract class Div3<C1, C2, C3> {
 
-    public static <C1, C2, C3, C4, C5> ColumnUi5<C1, C2, C3, C4, C5> create(final OnBind<C1, C2, C3, C4, C5> onBind) {
-        return new ColumnUi5<C1, C2, C3, C4, C5>() {
+    public static <C1, C2, C3> Div3<C1, C2, C3> create(final OnBind<C1, C2, C3> onBind) {
+        return new Div3<C1, C2, C3>() {
             @Override
-            public ColumnUi4<C2, C3, C4, C5> bind(C1 condition) {
+            public Div2<C2, C3> bind(C1 condition) {
                 return onBind.onBind(condition);
             }
         };
     }
 
-    public abstract ColumnUi4<C2, C3, C4, C5> bind(C1 condition);
+    public abstract Div2<C2, C3> bind(C1 condition);
 
-    public ColumnUi5<C1, C2, C3, C4, C5> expandVertical(final Sizelet heightlet) {
+    public Div3<C1, C2, C3> expandVertical(final Sizelet heightlet) {
         return new ExpandVerticalOperation(heightlet).applyTo(this);
     }
 
-    public ColumnUi5<C1, C2, C3, C4, C5> padHorizontal(final Sizelet padlet) {
+    public Div3<C1, C2, C3> padHorizontal(final Sizelet padlet) {
         return new PadHorizontalOperation(padlet).applyTo(this);
     }
 
-    public ColumnUi5<C1, C2, C3, C4, C5> placeBefore(ColumnUi behind, int gap) {
+    public Div3<C1, C2, C3> placeBefore(Div0 behind, int gap) {
         return new PlaceBeforeOperation(behind, gap).applyTo(this);
     }
 
-    public ColumnUi printReadEval(final Repl<C1, C2, C3, C4, C5> repl) {
-        return ColumnUi.create(new OnPresent<Column>() {
+    public Div4<C1, C2, C3, Div0> expandDown() {
+        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+    }
+
+    public Div3<C1, C2, C3> expandDown(Div0 expansion) {
+        return new ExpandDownDivOperation1().apply0(this, expansion);
+    }
+
+    public Div0 printReadEval(final Repl<C1, C2, C3> repl) {
+        return Div0.create(new OnPresent<Column>() {
 
             @Override
             public void onPresent(final Presenter<Column> presenter) {
@@ -52,50 +62,48 @@ public abstract class ColumnUi5<C1, C2, C3, C4, C5> {
                 present(repl, switchPresenter);
             }
 
-            void present(final Repl<C1, C2, C3, C4, C5> repl, final SwitchPresenter<Column> switchPresenter) {
-                if (switchPresenter.isCancelled())
+            void present(final Repl<C1, C2, C3> repl, final SwitchPresenter<Column> presenter) {
+                if (presenter.isCancelled())
                     return;
 
-                final ColumnUi ui = repl.print(ColumnUi5.this);
+                final Div0 ui = repl.print(Div3.this);
                 final Observer observer = new Observer() {
                     @Override
                     public void onReaction(Reaction reaction) {
-                        if (switchPresenter.isCancelled())
+                        if (presenter.isCancelled())
                             return;
 
                         repl.read(reaction);
                         if (repl.eval()) {
-                            present(repl, switchPresenter);
+                            present(repl, presenter);
                         }
                     }
 
                     @Override
                     public void onEnd() {
-                        switchPresenter.onEnd();
+                        presenter.onEnd();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
-                        switchPresenter.onError(throwable);
+                        presenter.onError(throwable);
                     }
                 };
-                switchPresenter.addPresentation(ui.present(switchPresenter.getHuman(),
-                                                           switchPresenter.getDisplay(),
-                                                           observer));
+                presenter.addPresentation(ui.present(presenter.getHuman(), presenter.getDisplay(), observer));
             }
         });
     }
 
 
-    public interface Repl<C1, C2, C3, C4, C5> {
-        ColumnUi print(ColumnUi5<C1, C2, C3, C4, C5> unbound);
+    public interface Repl<C1, C2, C3> {
+        Div0 print(Div3<C1, C2, C3> unbound);
         void read(Reaction reaction);
         boolean eval();
     }
 
 
-    public interface OnBind<C1, C2, C3, C4, C5> {
-        ColumnUi4<C2, C3, C4, C5> onBind(C1 condition);
+    public interface OnBind<C1, C2, C3> {
+        Div2<C2, C3> onBind(C1 condition);
     }
 
 }

@@ -2,11 +2,11 @@ package com.rubyhuntersky.columnui.operations;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
-import com.rubyhuntersky.columnui.columns.ColumnUi2;
-import com.rubyhuntersky.columnui.columns.ColumnUi3;
-import com.rubyhuntersky.columnui.columns.ColumnUi4;
+import com.rubyhuntersky.columnui.columns.Div0;
+import com.rubyhuntersky.columnui.columns.Div1;
+import com.rubyhuntersky.columnui.columns.Div2;
+import com.rubyhuntersky.columnui.columns.Div3;
+import com.rubyhuntersky.columnui.columns.Div4;
 
 /**
  * @author wehjin
@@ -15,39 +15,39 @@ import com.rubyhuntersky.columnui.columns.ColumnUi4;
 
 public class ExpandBottomWithFutureDivOperation {
 
-    public ColumnUi1<ColumnUi> applyTo(final ColumnUi div) {
-        return ColumnUi1.create(new ColumnUi1.OnBind<ColumnUi>() {
+    public Div1<Div0> applyTo(final Div0 div) {
+        return Div1.create(new Div1.OnBind<Div0>() {
             @NonNull
             @Override
-            public ColumnUi onBind(ColumnUi condition) {
-                return div.expandBottom(condition);
+            public Div0 onBind(Div0 condition) {
+                return div.expandDown(condition);
             }
         });
     }
 
-    public <C> ColumnUi2<C, ColumnUi> applyTo(final ColumnUi1<C> div1) {
-        return ColumnUi2.create(new ColumnUi2.OnBind<C, ColumnUi>() {
+    public <C> Div2<C, Div0> applyTo(final Div1<C> div1) {
+        return Div2.create(new Div2.OnBind<C, Div0>() {
             @Override
-            public ColumnUi1<ColumnUi> onBind(C condition) {
-                return div1.bind(condition).expandBottom();
+            public Div1<Div0> onBind(C condition) {
+                return div1.bind(condition).expandDown();
             }
         });
     }
 
-    public <C1, C2> ColumnUi3<C1, C2, ColumnUi> applyTo(final ColumnUi2<C1, C2> div2) {
-        return ColumnUi3.create(new ColumnUi3.OnBind<C1, C2, ColumnUi>() {
+    public <C1, C2> Div3<C1, C2, Div0> applyTo(final Div2<C1, C2> div2) {
+        return Div3.create(new Div3.OnBind<C1, C2, Div0>() {
             @Override
-            public ColumnUi2<C2, ColumnUi> onBind(C1 condition) {
-                return div2.bind(condition).expandBottom();
+            public Div2<C2, Div0> onBind(C1 condition) {
+                return div2.bind(condition).expandDown();
             }
         });
     }
 
-    public <C1, C2, C3> ColumnUi4<C1, C2, C3, ColumnUi> applyTo(final ColumnUi3<C1, C2, C3> div3) {
-        return ColumnUi4.create(new ColumnUi4.OnBind<C1, C2, C3, ColumnUi>() {
+    public <C1, C2, C3> Div4<C1, C2, C3, Div0> applyTo(final Div3<C1, C2, C3> div3) {
+        return Div4.create(new Div4.OnBind<C1, C2, C3, Div0>() {
             @Override
-            public ColumnUi3<C2, C3, ColumnUi> onBind(C1 condition) {
-                return div3.bind(condition).expandBottom();
+            public Div3<C2, C3, Div0> onBind(C1 condition) {
+                return div3.bind(condition).expandDown();
             }
         });
     }

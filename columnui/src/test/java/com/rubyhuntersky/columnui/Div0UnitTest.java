@@ -10,7 +10,7 @@ import com.rubyhuntersky.columnui.basics.Sizelet.Ruler;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
@@ -32,12 +32,12 @@ import static org.junit.Assert.assertEquals;
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-public class ColumnUiUnitTest {
+public class Div0UnitTest {
 
     private Human human;
     private Column column;
     private ArrayList<Frame> frames;
-    private ColumnUi padTopUi;
+    private Div0 padTopUi;
     private Presentation presentation;
 
     @Before
@@ -76,14 +76,14 @@ public class ColumnUiUnitTest {
 
     @Test
     public void expandVertical_increasesHeight() throws Exception {
-        final ColumnUi verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
+        final Div0 verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
         presentation = verticalExpansion.present(human, column, Observer.EMPTY);
         assertEquals(27, presentation.getHeight(), .0001);
     }
 
     @Test
     public void expandVertical_movesFrameDown() throws Exception {
-        final ColumnUi verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
+        final Div0 verticalExpansion = colorColumn(pixels(17), Coloret.BLACK).expandVertical(pixels(5));
         presentation = verticalExpansion.present(human, column, Observer.EMPTY);
         assertEquals(5, frames.get(0).vertical.start, .0001);
         assertEquals(22, frames.get(0).vertical.end, .0001);
@@ -106,8 +106,8 @@ public class ColumnUiUnitTest {
 
     @Test
     public void expandBottomWithColumn_expandsPresentationHeight() throws Exception {
-        final ColumnUi expandBottomWithColumn = colorColumn(Sizelet.pixels(10), Coloret.BLACK)
-              .expandBottom(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+        final Div0 expandBottomWithColumn = colorColumn(Sizelet.pixels(10), Coloret.BLACK)
+              .expandDown(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
 
         presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
         final float height = presentation.getHeight();
@@ -116,8 +116,8 @@ public class ColumnUiUnitTest {
 
     @Test
     public void expandBottomWithColumn_movesExpansionFrameDown() throws Exception {
-        final ColumnUi expandBottomWithColumn = gapColumn(Sizelet.pixels(10))
-              .expandBottom(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+        final Div0 expandBottomWithColumn = gapColumn(Sizelet.pixels(10))
+              .expandDown(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
 
         presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
         assertEquals(10, frames.get(0).vertical.start, .001);
@@ -125,13 +125,13 @@ public class ColumnUiUnitTest {
 
     @Test
     public void presentation_takesWidthFromColumn() throws Exception {
-        final ColumnUi columnUi = ColumnUi.create(new OnPresent<Column>() {
+        final Div0 div0 = Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 // Do nothing.
             }
         });
-        final Presentation presentation = columnUi.present(human, column, Observer.EMPTY);
+        final Presentation presentation = div0.present(human, column, Observer.EMPTY);
         assertEquals(100, presentation.getWidth(), .001);
     }
 }

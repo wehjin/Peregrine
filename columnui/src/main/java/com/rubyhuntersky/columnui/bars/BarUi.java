@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
@@ -25,9 +25,9 @@ abstract public class BarUi implements Ui<Bar> {
     @Override
     abstract public Presentation present(Human human, Bar bar, Observer observer);
 
-    public ColumnUi toColumn(final Sizelet heightlet) {
+    public Div0 toColumn(final Sizelet heightlet) {
         final BarUi barUi = this;
-        return ColumnUi.create(new OnPresent<Column>() {
+        return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 presenter.addPresentation(

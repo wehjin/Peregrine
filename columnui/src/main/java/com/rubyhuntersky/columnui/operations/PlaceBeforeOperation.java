@@ -3,7 +3,7 @@ package com.rubyhuntersky.columnui.operations;
 import android.util.Pair;
 
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.columns.DelayColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -16,17 +16,17 @@ import com.rubyhuntersky.columnui.presenters.Presenter;
  */
 
 public class PlaceBeforeOperation extends Operation {
-    private final ColumnUi background;
+    private final Div0 background;
     private final int gap;
 
-    public PlaceBeforeOperation(ColumnUi background, int gap) {
+    public PlaceBeforeOperation(Div0 background, int gap) {
         this.background = background;
         this.gap = gap;
     }
 
     @Override
-    public ColumnUi applyTo(final ColumnUi div) {
-        return ColumnUi.create(new OnPresent<Column>() {
+    public Div0 applyTo(final Div0 div) {
+        return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 Human human = presenter.getHuman();

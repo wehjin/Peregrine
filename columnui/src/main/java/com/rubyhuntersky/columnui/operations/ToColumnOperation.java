@@ -3,9 +3,9 @@ package com.rubyhuntersky.columnui.operations;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
-import com.rubyhuntersky.columnui.columns.ColumnUi2;
+import com.rubyhuntersky.columnui.columns.Div0;
+import com.rubyhuntersky.columnui.columns.Div1;
+import com.rubyhuntersky.columnui.columns.Div2;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
@@ -23,8 +23,8 @@ import com.rubyhuntersky.columnui.tiles.Tile2;
 
 public class ToColumnOperation {
 
-    public ColumnUi applyTo(final Tile0 tile0) {
-        return ColumnUi.create(new OnPresent<Column>() {
+    public Div0 applyTo(final Tile0 tile0) {
+        return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 Column column = presenter.getDisplay();
@@ -42,21 +42,21 @@ public class ToColumnOperation {
         });
     }
 
-    public <C> ColumnUi1<C> applyTo(final Tile1<C> tile1) {
-        return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
+    public <C> Div1<C> applyTo(final Tile1<C> tile1) {
+        return Div1.create(new Div1.OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(final C condition) {
+            public Div0 onBind(final C condition) {
                 return ToColumnOperation.this.applyTo(tile1.bind(condition));
             }
         });
     }
 
-    public <C1, C2> ColumnUi2<C1, C2> applyTo(final Tile2<C1, C2> tile) {
-        return ColumnUi2.create(new ColumnUi2.OnBind<C1, C2>() {
+    public <C1, C2> Div2<C1, C2> applyTo(final Tile2<C1, C2> tile) {
+        return Div2.create(new Div2.OnBind<C1, C2>() {
             @NonNull
             @Override
-            public ColumnUi1<C2> onBind(final C1 condition) {
+            public Div1<C2> onBind(final C1 condition) {
                 return ToColumnOperation.this.applyTo(tile.bind(condition));
             }
         });

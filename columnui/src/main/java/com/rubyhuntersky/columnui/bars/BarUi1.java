@@ -3,8 +3,8 @@ package com.rubyhuntersky.columnui.bars;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
+import com.rubyhuntersky.columnui.columns.Div0;
+import com.rubyhuntersky.columnui.columns.Div1;
 import com.rubyhuntersky.columnui.tiles.Tile0;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
@@ -35,11 +35,11 @@ public abstract class BarUi1<C> implements Ui1<Bar, C> {
         });
     }
 
-    public ColumnUi1<C> toColumn(final Sizelet heightlet) {
-        return ColumnUi1.create(new ColumnUi1.OnBind<C>() {
+    public Div1<C> toColumn(final Sizelet heightlet) {
+        return Div1.create(new Div1.OnBind<C>() {
             @NonNull
             @Override
-            public ColumnUi onBind(final C condition) {
+            public Div0 onBind(final C condition) {
                 return BarUi1.this.bind(condition).toColumn(heightlet);
             }
         });

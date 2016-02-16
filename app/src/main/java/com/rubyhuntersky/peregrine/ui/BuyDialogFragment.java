@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi2;
-import com.rubyhuntersky.columnui.columns.ColumnUi4;
+import com.rubyhuntersky.columnui.columns.Div0;
+import com.rubyhuntersky.columnui.columns.Div2;
+import com.rubyhuntersky.columnui.columns.Div4;
 import com.rubyhuntersky.columnui.columns.ColumnUiView;
 import com.rubyhuntersky.columnui.presentations.EmptyPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -60,8 +60,8 @@ import static com.rubyhuntersky.peregrine.ui.UiHelper.getCurrencyDisplayString;
 public class BuyDialogFragment extends TradeDialogFragment {
 
     public static final String DIVISION_SIGN = "\u00f7";
-    public static final ColumnUi SPACING = gapColumn(Sizelet.QUARTER_FINGER);
-    public static final ColumnUi DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
+    public static final Div0 SPACING = gapColumn(Sizelet.QUARTER_FINGER);
+    public static final Div0 DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
     public static final String PROGRAM_KEY = "programKey";
     public static final Tile0 DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK);
@@ -71,7 +71,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
     private ColumnUiView columnUiView;
     private Presentation presentation = new EmptyPresentation();
-    private ColumnUi ui;
+    private Div0 ui;
     private BuyProgram program;
 
     public static BuyDialogFragment create(BigDecimal amount, List<AssetPrice> prices, int selectedPrice, List<FundingAccount> fundingAccounts) {
@@ -105,25 +105,25 @@ public class BuyDialogFragment extends TradeDialogFragment {
         }
 
         ui = getBuyUi(program.buyAmount, getBuyPrices(program.buyOptions))
-              .expandBottom(gapColumn(Sizelet.FINGER))
-              .expandBottom(getFundingUi())
+              .expandDown(gapColumn(Sizelet.FINGER))
+              .expandDown(getFundingUi())
               .expandVertical(TWO_THIRDS_FINGER)
               .padHorizontal(THIRD_FINGER)
               .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
-              .printReadEval(new ColumnUi4.Repl<Integer, String, Integer, ColumnUi>() {
+              .printReadEval(new Div4.Repl<Integer, String, Integer, Div0>() {
 
                   private int fundingAccountSelection = program.getSelectedFundingAccount();
                   private int buyPriceSelection = program.getSelectedBuyOption();
                   private int fundingPriceSelection = program.getSelectedFundingOption();
 
                   @Override
-                  public ColumnUi print(ColumnUi4<Integer, String, Integer, ColumnUi> div4) {
+                  public Div0 print(Div4<Integer, String, Integer, Div0> div4) {
                       return div4.bind(program.getSelectedBuyOption())
                             .bind(getSharesString(program.getSharesToBuy()))
                             .bind(program.getSelectedFundingAccount())
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
                                         || program.getFundingOptions().size() == 0
-                                        ? ColumnUi.EMPTY
+                                        ? Div0.EMPTY
                                         : getSellUi(getFundingPrices(program.getFundingOptions()),
                                                     program.getSelectedFundingOption(),
                                                     program.getSharesToSellForFunding(),
@@ -169,14 +169,14 @@ public class BuyDialogFragment extends TradeDialogFragment {
               : "Add funds " + getCurrencyDisplayString(program.getAdditionalFundsNeededToBuy(fundingAccount));
     }
 
-    private ColumnUi2<Integer, String> getBuyUi(BigDecimal buyAmount, List<String> buyPrices) {
+    private Div2<Integer, String> getBuyUi(BigDecimal buyAmount, List<String> buyPrices) {
         return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK)
-              .expandBottom(SPACING)
-              .expandBottom(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn())
-              .expandBottom(SPACING)
-              .expandBottom(DIVIDER)
-              .expandBottom(SPACING)
-              .expandBottom(textTile1(IMPORTANT_DARK).toColumn());
+              .expandDown(SPACING)
+              .expandDown(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn())
+              .expandDown(SPACING)
+              .expandDown(DIVIDER)
+              .expandDown(SPACING)
+              .expandDown(textTile1(IMPORTANT_DARK).toColumn());
     }
 
     @NonNull
@@ -188,7 +188,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
         return buyPrices;
     }
 
-    private ColumnUi2<Integer, ColumnUi> getFundingUi() {
+    private Div2<Integer, Div0> getFundingUi() {
         List<Pair<String, String>> accountNamesAndStatus = new ArrayList<>();
         for (FundingAccount fundingAccount : program.getFundingAccounts()) {
             final String name = "Account " + fundingAccount.getAccountName();
@@ -211,7 +211,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
 
         final Tile1<Integer> accountSpinnerTile = spinnerTile(accountTile, accountNamesAndStatus);
-        return accountSpinnerTile.name(FUNDING_ACCOUNT_SPINNER).toColumn().expandBottom();
+        return accountSpinnerTile.name(FUNDING_ACCOUNT_SPINNER).toColumn().expandDown();
     }
 
     @NonNull
@@ -223,20 +223,20 @@ public class BuyDialogFragment extends TradeDialogFragment {
         return fundingOptionPrices;
     }
 
-    private ColumnUi getSellUi(List<String> sellOptions, int selectedSellOption, BigDecimal sharesToSell, BigDecimal shortfall) {
-        ColumnUi shortfallExpansion = shortfall.compareTo(BigDecimal.ZERO) <= 0
-              ? ColumnUi.EMPTY
-              : SPACING.expandBottom(textColumn("Shortfall " + getCurrencyDisplayString(shortfall), READABLE_DARK));
+    private Div0 getSellUi(List<String> sellOptions, int selectedSellOption, BigDecimal sharesToSell, BigDecimal shortfall) {
+        Div0 shortfallExpansion = shortfall.compareTo(BigDecimal.ZERO) <= 0
+              ? Div0.EMPTY
+              : SPACING.expandDown(textColumn("Shortfall " + getCurrencyDisplayString(shortfall), READABLE_DARK));
 
         return spinnerTile(sellOptions, selectedSellOption).name(FUNDING_OPTION_SPINNER)
               .expandLeft(DIVISION_SIGN_TILE)
               .toColumn()
-              .expandBottom(SPACING)
-              .expandBottom(DIVIDER)
-              .expandBottom(SPACING)
-              .expandBottom(textColumn("Sell " + sharesToSell
+              .expandDown(SPACING)
+              .expandDown(DIVIDER)
+              .expandDown(SPACING)
+              .expandDown(textColumn("Sell " + sharesToSell
                     .setScale(0, BigDecimal.ROUND_CEILING) + " shares", IMPORTANT_DARK))
-              .expandBottom(shortfallExpansion);
+              .expandDown(shortfallExpansion);
     }
 
     @Nullable

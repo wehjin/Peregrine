@@ -2,7 +2,7 @@ package com.rubyhuntersky.columnui.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
+import com.rubyhuntersky.columnui.columns.Div1;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
 import com.rubyhuntersky.columnui.tiles.operations.ExpandDownTileOperation1;
 import com.rubyhuntersky.columnui.tiles.operations.ExpandLeftTileOperation1;
@@ -38,7 +38,7 @@ abstract public class Tile1<C> implements Ui1<Mosaic, C> {
         return new ExpandDownTileOperation1().apply1(this, expansion);
     }
 
-    public ColumnUi1<C> toColumn() {
+    public Div1<C> toColumn() {
         return new ToColumnOperation().applyTo(this);
     }
 

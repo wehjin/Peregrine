@@ -9,9 +9,9 @@ import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
-import com.rubyhuntersky.columnui.columns.ColumnUi1;
-import com.rubyhuntersky.columnui.columns.ColumnUi2;
+import com.rubyhuntersky.columnui.columns.Div0;
+import com.rubyhuntersky.columnui.columns.Div1;
+import com.rubyhuntersky.columnui.columns.Div2;
 import com.rubyhuntersky.columnui.columns.FullColumn;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
@@ -27,27 +27,27 @@ import static org.junit.Assert.assertEquals;
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-public class ColumnUi2UnitTest {
+public class Div02UnitTest {
 
     private Human human;
     private Column column;
     private List<Frame> frames = new ArrayList<>();
-    private ColumnUi columnUi;
-    private ColumnUi1<Integer> integerColumnUi1;
+    private Div0 div0;
+    private Div1<Integer> integerDiv1;
 
     @Test
     public void bind_producesColumnUi1() throws Exception {
         final List<String> boundConditions = new ArrayList<>();
-        final ColumnUi2<String, Integer> stringIntegerColumnUi2 = ColumnUi2.create(new ColumnUi2.OnBind<String, Integer>() {
+        final Div2<String, Integer> stringIntegerDiv2 = Div2.create(new Div2.OnBind<String, Integer>() {
             @Override
-            public ColumnUi1<Integer> onBind(String condition) {
+            public Div1<Integer> onBind(String condition) {
                 boundConditions.add(condition);
-                return integerColumnUi1;
+                return integerDiv1;
             }
         });
 
         final String condition = "Hello";
-        final ColumnUi1<Integer> ui1 = stringIntegerColumnUi2.bind(condition);
+        final Div1<Integer> ui1 = stringIntegerDiv2.bind(condition);
         assertEquals("condition", condition, boundConditions.get(0));
         assertEquals("no frame before presentation", 0, frames.size());
         ui1.bind(3).present(human, column, Observer.EMPTY);
@@ -77,12 +77,12 @@ public class ColumnUi2UnitTest {
                 return ShapeSize.ZERO;
             }
         };
-        columnUi = Creator.colorColumn(Sizelet.FINGER, Coloret.BLUE);
-        integerColumnUi1 = ColumnUi1.create(new ColumnUi1.OnBind<Integer>() {
+        div0 = Creator.colorColumn(Sizelet.FINGER, Coloret.BLUE);
+        integerDiv1 = Div1.create(new Div1.OnBind<Integer>() {
             @NonNull
             @Override
-            public ColumnUi onBind(Integer condition) {
-                return columnUi;
+            public Div0 onBind(Integer condition) {
+                return div0;
             }
         });
     }

@@ -4,7 +4,7 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
@@ -68,7 +68,7 @@ abstract public class Tile0 implements Ui<Mosaic> {
         });
     }
 
-    public ColumnUi toColumn() {
+    public Div0 toColumn() {
         return new ToColumnOperation().applyTo(this);
     }
 

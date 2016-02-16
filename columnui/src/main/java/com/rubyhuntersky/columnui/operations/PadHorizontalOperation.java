@@ -2,7 +2,7 @@ package com.rubyhuntersky.columnui.operations;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
-import com.rubyhuntersky.columnui.columns.ColumnUi;
+import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
@@ -20,8 +20,8 @@ public class PadHorizontalOperation extends Operation {
     }
 
     @Override
-    public ColumnUi applyTo(final ColumnUi div) {
-        return ColumnUi.create(new OnPresent<Column>() {
+    public Div0 applyTo(final Div0 div) {
+        return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
                 Human human = presenter.getHuman();
