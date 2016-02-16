@@ -23,7 +23,7 @@ abstract public class Tile2<C1, C2> implements Ui2<Mosaic, C1, C2> {
     public abstract Tile1<C2> bind(C1 condition);
 
     public Tile2<C1, C2> name(final String name) {
-        return new NameTileOperation0(name).apply0(this);
+        return new NameTileOperation0(name).apply(this);
     }
 
     public Tile2<C1, C2> expandLeft(final Tile0 expansion) {

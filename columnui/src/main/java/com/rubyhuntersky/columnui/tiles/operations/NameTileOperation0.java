@@ -22,7 +22,7 @@ public class NameTileOperation0 extends TileOperation0 {
     }
 
     @Override
-    public Tile0 apply0(final Tile0 base) {
+    public Tile0 apply(final Tile0 base) {
         return Tile0.create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(final Presenter<Mosaic> presenter) {

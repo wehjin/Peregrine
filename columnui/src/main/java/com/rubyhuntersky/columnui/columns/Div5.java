@@ -3,9 +3,9 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
-import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
-import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
+import com.rubyhuntersky.columnui.columns.operations.ExpandVerticalDivOperation0;
+import com.rubyhuntersky.columnui.columns.operations.PadHorizontalDivOperation0;
+import com.rubyhuntersky.columnui.columns.operations.PlaceBeforeDivOperation0;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 import com.rubyhuntersky.columnui.presenters.SwitchPresenter;
@@ -29,15 +29,15 @@ public abstract class Div5<C1, C2, C3, C4, C5> {
     public abstract Div4<C2, C3, C4, C5> bind(C1 condition);
 
     public Div5<C1, C2, C3, C4, C5> expandVertical(final Sizelet heightlet) {
-        return new ExpandVerticalOperation(heightlet).applyTo(this);
+        return new ExpandVerticalDivOperation0(heightlet).apply(this);
     }
 
     public Div5<C1, C2, C3, C4, C5> padHorizontal(final Sizelet padlet) {
-        return new PadHorizontalOperation(padlet).applyTo(this);
+        return new PadHorizontalDivOperation0(padlet).apply(this);
     }
 
     public Div5<C1, C2, C3, C4, C5> placeBefore(Div0 behind, int gap) {
-        return new PlaceBeforeOperation(behind, gap).applyTo(this);
+        return new PlaceBeforeDivOperation0(behind, gap).apply(this);
     }
 
     public Div0 printReadEval(final Repl<C1, C2, C3, C4, C5> repl) {

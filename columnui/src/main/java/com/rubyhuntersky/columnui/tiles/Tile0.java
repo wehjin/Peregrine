@@ -28,7 +28,7 @@ abstract public class Tile0 implements Ui<Mosaic> {
     abstract public Presentation present(Human human, Mosaic mosaic, Observer observer);
 
     public Tile0 name(final String name) {
-        return new NameTileOperation0(name).apply0(this);
+        return new NameTileOperation0(name).apply(this);
     }
 
     public Tile0 expandLeft(final Tile0 expansion) {
@@ -44,11 +44,11 @@ abstract public class Tile0 implements Ui<Mosaic> {
     }
 
     public Tile0 expandVertical(final Sizelet padlet) {
-        return new ExpandVerticalTileOperation0(padlet).apply0(this);
+        return new ExpandVerticalTileOperation0(padlet).apply(this);
     }
 
     public Tile0 expandHorizontal(final Sizelet padlet) {
-        return new ExpandHorizontalTileOperation0(padlet).apply0(this);
+        return new ExpandHorizontalTileOperation0(padlet).apply(this);
     }
 
     public BarUi toBar() {

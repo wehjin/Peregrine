@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui.operations;
+package com.rubyhuntersky.columnui.columns.operations;
 
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.Div0;

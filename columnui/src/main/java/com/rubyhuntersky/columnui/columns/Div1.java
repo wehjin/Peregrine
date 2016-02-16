@@ -3,8 +3,8 @@ package com.rubyhuntersky.columnui.columns;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
-import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
+import com.rubyhuntersky.columnui.columns.operations.ExpandDownDivOperation1;
+import com.rubyhuntersky.columnui.columns.operations.ExpandVerticalDivOperation0;
 import com.rubyhuntersky.columnui.ui.Ui1;
 
 /**
@@ -84,7 +84,7 @@ abstract public class Div1<C> implements Ui1<Column, C> {
     }
 
     public Div1<C> expandVertical(final Sizelet heightlet) {
-        return new ExpandVerticalOperation(heightlet).applyTo(this);
+        return new ExpandVerticalDivOperation0(heightlet).apply(this);
     }
 
     public interface OnBind<C> {

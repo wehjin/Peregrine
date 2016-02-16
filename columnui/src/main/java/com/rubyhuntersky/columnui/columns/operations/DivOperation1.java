@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui.operations;
+package com.rubyhuntersky.columnui.columns.operations;
 
 import android.support.annotation.NonNull;
 

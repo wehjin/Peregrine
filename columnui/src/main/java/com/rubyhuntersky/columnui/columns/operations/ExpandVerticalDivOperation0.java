@@ -1,4 +1,4 @@
-package com.rubyhuntersky.columnui.operations;
+package com.rubyhuntersky.columnui.columns.operations;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
@@ -14,16 +14,16 @@ import com.rubyhuntersky.columnui.presenters.Presenter;
  * @since 2/9/16.
  */
 
-public class ExpandVerticalOperation extends Operation {
+public class ExpandVerticalDivOperation0 extends DivOperation0 {
 
     private final Sizelet heightlet;
 
-    public ExpandVerticalOperation(Sizelet heightlet) {
+    public ExpandVerticalDivOperation0(Sizelet heightlet) {
         this.heightlet = heightlet;
     }
 
     @Override
-    public Div0 applyTo(final Div0 div) {
+    public Div0 apply(final Div0 base) {
         return Div0.create(new OnPresent<Column>() {
             @Override
             public void onPresent(Presenter<Column> presenter) {
@@ -31,7 +31,7 @@ public class ExpandVerticalOperation extends Operation {
                 final Column column = presenter.getDisplay();
                 final float expansion = heightlet.toFloat(human, column.relatedHeight);
                 final Column shiftColumn = column.withShift(0, expansion);
-                final Presentation present = div.present(human, shiftColumn, presenter);
+                final Presentation present = base.present(human, shiftColumn, presenter);
                 final float expanded = present.getHeight() + 2 * expansion;
                 final Presentation resize = new ResizePresentation(column.fixedWidth, expanded, present);
                 presenter.addPresentation(resize);

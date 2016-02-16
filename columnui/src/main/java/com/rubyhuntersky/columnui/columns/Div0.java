@@ -7,10 +7,10 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
-import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
-import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
-import com.rubyhuntersky.columnui.operations.PlaceBeforeOperation;
+import com.rubyhuntersky.columnui.columns.operations.ExpandDownDivOperation1;
+import com.rubyhuntersky.columnui.columns.operations.ExpandVerticalDivOperation0;
+import com.rubyhuntersky.columnui.columns.operations.PadHorizontalDivOperation0;
+import com.rubyhuntersky.columnui.columns.operations.PlaceBeforeDivOperation0;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;
@@ -63,7 +63,7 @@ public abstract class Div0 implements Ui<Column> {
     public abstract Presentation present(Human human, Column column, Observer observer);
 
     public Div0 padHorizontal(final Sizelet padlet) {
-        return new PadHorizontalOperation(padlet).applyTo(this);
+        return new PadHorizontalDivOperation0(padlet).apply(this);
     }
 
     public Div0 padTop(final Sizelet padlet) {
@@ -107,11 +107,11 @@ public abstract class Div0 implements Ui<Column> {
     }
 
     public Div0 expandVertical(final Sizelet heightlet) {
-        return new ExpandVerticalOperation(heightlet).applyTo(this);
+        return new ExpandVerticalDivOperation0(heightlet).apply(this);
     }
 
     public Div0 placeBefore(@NonNull final Div0 background, final int gap) {
-        return new PlaceBeforeOperation(background, gap).applyTo(this);
+        return new PlaceBeforeDivOperation0(background, gap).apply(this);
     }
 
     public Div1<Div0> expandDown() {
