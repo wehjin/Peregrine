@@ -145,4 +145,42 @@ abstract public class DivOperation1 {
             }
         });
     }
+
+    public Div1<Div0> applyFuture0(final Div0 base) {
+        return Div1.create(new Div1.OnBind<Div0>() {
+            @NonNull
+            @Override
+            public Div0 onBind(Div0 expansion) {
+                return DivOperation1.this.apply0(base, expansion);
+            }
+        });
+    }
+
+    public <C> Div2<C, Div0> applyFuture0(final Div1<C> base) {
+        return Div2.create(new Div2.OnBind<C, Div0>() {
+            @Override
+            public Div1<Div0> onBind(C condition) {
+                return DivOperation1.this.applyFuture0(base.bind(condition));
+            }
+        });
+    }
+
+    public <C1, C2> Div3<C1, C2, Div0> applyFuture0(final Div2<C1, C2> base) {
+        return Div3.create(new Div3.OnBind<C1, C2, Div0>() {
+            @Override
+            public Div2<C2, Div0> onBind(C1 condition) {
+                return DivOperation1.this.applyFuture0(base.bind(condition));
+            }
+        });
+    }
+
+    public <C1, C2, C3> Div4<C1, C2, C3, Div0> applyFuture0(final Div3<C1, C2, C3> base) {
+        return Div4.create(new Div4.OnBind<C1, C2, C3, Div0>() {
+            @Override
+            public Div3<C2, C3, Div0> onBind(C1 condition) {
+                return DivOperation1.this.applyFuture0(base.bind(condition));
+            }
+        });
+    }
+
 }

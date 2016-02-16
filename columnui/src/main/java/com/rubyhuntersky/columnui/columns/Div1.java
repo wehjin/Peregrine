@@ -3,7 +3,6 @@ package com.rubyhuntersky.columnui.columns;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
 import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.ui.Ui1;
@@ -65,7 +64,7 @@ abstract public class Div1<C> implements Ui1<Column, C> {
     }
 
     public Div2<C, Div0> expandDown() {
-        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+        return new ExpandDownDivOperation1().applyFuture0(this);
     }
 
     public Div1<C> expandDown(final Div0 expansion) {

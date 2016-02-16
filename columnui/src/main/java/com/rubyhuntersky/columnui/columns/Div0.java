@@ -7,7 +7,6 @@ import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.conditions.Human;
-import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
 import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
@@ -116,7 +115,7 @@ public abstract class Div0 implements Ui<Column> {
     }
 
     public Div1<Div0> expandDown() {
-        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+        return new ExpandDownDivOperation1().applyFuture0(this);
     }
 
     public Div0 expandDown(@NonNull final Div0 expansion) {

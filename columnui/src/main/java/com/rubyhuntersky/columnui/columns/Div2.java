@@ -3,7 +3,6 @@ package com.rubyhuntersky.columnui.columns;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.operations.ExpandBottomWithFutureDivOperation;
 import com.rubyhuntersky.columnui.operations.ExpandDownDivOperation1;
 import com.rubyhuntersky.columnui.operations.ExpandVerticalOperation;
 import com.rubyhuntersky.columnui.operations.PadHorizontalOperation;
@@ -39,7 +38,7 @@ public abstract class Div2<C1, C2> {
     }
 
     public Div3<C1, C2, Div0> expandDown() {
-        return new ExpandBottomWithFutureDivOperation().applyTo(this);
+        return new ExpandDownDivOperation1().applyFuture0(this);
     }
 
     public Div2<C1, C2> expandDown(final Div0 expansion) {
