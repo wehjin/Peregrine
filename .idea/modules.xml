@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Peregrine.iml" filepath="$PROJECT_DIR$/Peregrine.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/coloret/coloret.iml" filepath="$PROJECT_DIR$/coloret/coloret.iml" />
       <module fileurl="file://$PROJECT_DIR$/columnui/columnui.iml" filepath="$PROJECT_DIR$/columnui/columnui.iml" />
     </modules>
   </component>
