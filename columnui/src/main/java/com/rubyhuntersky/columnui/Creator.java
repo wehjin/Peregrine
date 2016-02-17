@@ -6,9 +6,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.rubyhuntersky.coloret.Coloret;
 import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
-import com.rubyhuntersky.columnui.basics.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.basics.TextHeight;

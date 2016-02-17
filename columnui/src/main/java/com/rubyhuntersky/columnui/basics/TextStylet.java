@@ -2,9 +2,10 @@ package com.rubyhuntersky.columnui.basics;
 
 import android.graphics.Typeface;
 
+import com.rubyhuntersky.coloret.Coloret;
 import com.rubyhuntersky.columnui.conditions.Human;
 
-import static com.rubyhuntersky.columnui.basics.Coloret.DARK_TEXT;
+import static com.rubyhuntersky.coloret.Coloret.DARK_TEXT;
 import static com.rubyhuntersky.columnui.basics.Sizelet.IMPORTANT;
 import static com.rubyhuntersky.columnui.basics.Sizelet.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.TITLE;

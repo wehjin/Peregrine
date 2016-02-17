@@ -2,6 +2,8 @@ package com.rubyhuntersky.columnui.basics;
 
 import android.graphics.Typeface;
 
+import com.rubyhuntersky.coloret.Coloret;
+
 /**
  * @author wehjin
  * @since 1/23/16.

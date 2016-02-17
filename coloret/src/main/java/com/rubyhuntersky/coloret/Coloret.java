@@ -1,14 +1,26 @@
-package com.rubyhuntersky.columnui.basics;
+package com.rubyhuntersky.coloret;
 
 import android.graphics.Color;
 
 /**
- * @author wehjin
+ * @author Jeffrey Yu
  * @since 1/23/16.
  */
 
 public interface Coloret {
 
+    Coloret WHITE = new Coloret() {
+        @Override
+        public int toArgb() {
+            return Color.WHITE;
+        }
+    };
+    Coloret BLACK = new Coloret() {
+        @Override
+        public int toArgb() {
+            return Color.BLACK;
+        }
+    };
     Coloret GREEN = new Coloret() {
         @Override
         public int toArgb() {
@@ -27,16 +39,23 @@ public interface Coloret {
             return Color.BLUE;
         }
     };
-    Coloret WHITE = new Coloret() {
+    Coloret YELLOW = new Coloret() {
         @Override
         public int toArgb() {
-            return Color.WHITE;
+            return Color.YELLOW;
         }
     };
-    Coloret BLACK = new Coloret() {
+    Coloret CYAN = new Coloret() {
         @Override
         public int toArgb() {
-            return Color.BLACK;
+            return Color.CYAN;
+        }
+    };
+    Coloret MAGENTA = new Coloret() {
+
+        @Override
+        public int toArgb() {
+            return Color.MAGENTA;
         }
     };
     Coloret DARK_TEXT = new Coloret() {
