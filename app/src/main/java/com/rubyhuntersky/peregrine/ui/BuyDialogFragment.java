@@ -43,10 +43,9 @@ import static com.rubyhuntersky.columnui.Creator.gapColumn;
 import static com.rubyhuntersky.columnui.Creator.textColumn;
 import static com.rubyhuntersky.columnui.Creator.textTile;
 import static com.rubyhuntersky.columnui.basics.Sizelet.PREVIOUS;
-import static com.rubyhuntersky.columnui.basics.Sizelet.Ruler.READABLE;
 import static com.rubyhuntersky.columnui.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.columnui.basics.Sizelet.TWO_THIRDS_FINGER;
-import static com.rubyhuntersky.columnui.basics.Sizelet.ofPortion;
+import static com.rubyhuntersky.columnui.basics.Sizelet.readables;
 import static com.rubyhuntersky.columnui.basics.TextStylet.IMPORTANT_DARK;
 import static com.rubyhuntersky.columnui.basics.TextStylet.READABLE_DARK;
 import static com.rubyhuntersky.columnui.material.Android.spinnerTile;
@@ -61,7 +60,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
 
     public static final String DIVISION_SIGN = "\u00f7";
     public static final Div0 SPACING = gapColumn(Sizelet.QUARTER_FINGER);
-    public static final Div0 DIVIDER = colorColumn(ofPortion(.1f, READABLE), BLACK);
+    public static final Div0 DIVIDER = colorColumn(readables(.1f), BLACK);
     public static final String TAG = BuyDialogFragment.class.getSimpleName();
     public static final String PROGRAM_KEY = "programKey";
     public static final Tile0 DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK);

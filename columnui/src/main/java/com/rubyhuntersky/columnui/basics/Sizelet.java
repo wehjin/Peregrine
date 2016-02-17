@@ -21,16 +21,12 @@ public class Sizelet {
     public static Sizelet ZERO = new Sizelet(0, Ruler.ZERO);
     public static Sizelet FULL = new Sizelet(1, Ruler.PREVIOUS);
 
-    public static Sizelet ofPortion(float portion, Ruler ruler) {
-        return new Sizelet(portion, ruler);
-    }
-
     public static Sizelet pixels(int pixels) {
-        return ofPortion(pixels, Ruler.PIXEL);
+        return new Sizelet((float) pixels, Ruler.UNIT);
     }
 
     public static Sizelet readables(float count) {
-        return ofPortion(count, Ruler.READABLE);
+        return new Sizelet(count, Ruler.READABLE);
     }
 
     private final float portion;
@@ -55,7 +51,7 @@ public class Sizelet {
             fullSize = human.textPixels;
         } else if (ruler == Ruler.PREVIOUS) {
             fullSize = containerSize;
-        } else if (ruler == Ruler.PIXEL) {
+        } else if (ruler == Ruler.UNIT) {
             fullSize = 1;
         } else {
             fullSize = 0;
@@ -78,6 +74,6 @@ public class Sizelet {
         FINGERTIP,
         READABLE,
         PREVIOUS,
-        PIXEL
+        UNIT
     }
 }

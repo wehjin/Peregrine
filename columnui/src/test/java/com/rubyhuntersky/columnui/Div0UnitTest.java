@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.coloret.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
-import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.basics.Sizelet.Ruler;
 import com.rubyhuntersky.columnui.basics.TextSize;
 import com.rubyhuntersky.columnui.basics.TextStyle;
 import com.rubyhuntersky.columnui.columns.Column;
@@ -64,8 +62,7 @@ public class Div0UnitTest {
                 return ShapeSize.ZERO;
             }
         };
-        padTopUi = colorColumn(Sizelet.ofPortion(10, Ruler.PIXEL), Coloret.BLACK).padTop(
-              Sizelet.ofPortion(15, Ruler.PIXEL));
+        padTopUi = colorColumn(pixels(10), Coloret.BLACK).padTop(pixels(15));
         presentation = Presentation.EMPTY;
     }
 
@@ -106,8 +103,8 @@ public class Div0UnitTest {
 
     @Test
     public void expandBottomWithColumn_expandsPresentationHeight() throws Exception {
-        final Div0 expandBottomWithColumn = colorColumn(Sizelet.pixels(10), Coloret.BLACK)
-              .expandDown(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+        final Div0 expandBottomWithColumn = colorColumn(pixels(10), Coloret.BLACK)
+              .expandDown(colorColumn(pixels(5), Coloret.GREEN));
 
         presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
         final float height = presentation.getHeight();
@@ -116,8 +113,8 @@ public class Div0UnitTest {
 
     @Test
     public void expandBottomWithColumn_movesExpansionFrameDown() throws Exception {
-        final Div0 expandBottomWithColumn = gapColumn(Sizelet.pixels(10))
-              .expandDown(colorColumn(Sizelet.pixels(5), Coloret.GREEN));
+        final Div0 expandBottomWithColumn = gapColumn(pixels(10))
+              .expandDown(colorColumn(pixels(5), Coloret.GREEN));
 
         presentation = expandBottomWithColumn.present(human, column, Observer.EMPTY);
         assertEquals(10, frames.get(0).vertical.start, .001);
