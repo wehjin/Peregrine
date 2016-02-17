@@ -2,7 +2,7 @@ package com.rubyhuntersky.columnui;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.columnui.basics.Coloret;
+import com.rubyhuntersky.coloret.Coloret;
 import com.rubyhuntersky.columnui.basics.Frame;
 import com.rubyhuntersky.columnui.basics.ShapeSize;
 import com.rubyhuntersky.columnui.basics.Sizelet;

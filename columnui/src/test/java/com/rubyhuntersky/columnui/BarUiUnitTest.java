@@ -22,8 +22,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static com.rubyhuntersky.columnui.Creator.colorBar;
-import static com.rubyhuntersky.columnui.basics.Coloret.BLACK;
-import static com.rubyhuntersky.columnui.basics.Coloret.GREEN;
+import static com.rubyhuntersky.coloret.Coloret.BLACK;
+import static com.rubyhuntersky.coloret.Coloret.GREEN;
 import static com.rubyhuntersky.columnui.basics.Sizelet.pixels;
 import static org.junit.Assert.assertEquals;
 
