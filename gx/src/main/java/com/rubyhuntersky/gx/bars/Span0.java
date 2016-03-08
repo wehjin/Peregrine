@@ -20,10 +20,10 @@ import com.rubyhuntersky.gx.ui.Ui;
  * @since 1/27/16.
  */
 
-abstract public class Span0 implements Ui<BarExtender> {
+abstract public class Span0 implements Ui<Bar> {
 
     @Override
-    abstract public Presentation present(Human human, BarExtender bar, Observer observer);
+    abstract public Presentation present(Human human, Bar bar, Observer observer);
 
     public Div0 toColumn(final Sizelet heightlet) {
         final Span0 span0 = this;
@@ -40,7 +40,7 @@ abstract public class Span0 implements Ui<BarExtender> {
     private Presentation presentBarToColumn(Span0 span0, Sizelet heightlet, Human human, Column column,
           Observer observer) {
         final float height = heightlet.toFloat(human, column.relatedHeight);
-        final BarExtender bar = new BarExtender(height, column.fixedWidth, column.elevation, column);
+        final Bar bar = new Bar(height, column.fixedWidth, column.elevation, column);
         final ShiftBar shiftBar = bar.withShift();
         final Presentation presentation = span0.present(human, shiftBar, observer);
         final float presentationWidth = presentation.getWidth();
@@ -56,14 +56,14 @@ abstract public class Span0 implements Ui<BarExtender> {
 
     public Span0 expandStart(final Span0 startUi) {
         final Span0 ui = this;
-        return create(new OnPresent<BarExtender>() {
+        return create(new OnPresent<Bar>() {
             @Override
-            public void onPresent(Presenter<BarExtender> presenter) {
-                final BarExtender bar = presenter.getDisplay();
+            public void onPresent(Presenter<Bar> presenter) {
+                final Bar bar = presenter.getDisplay();
                 final ShiftBar shiftBar = bar.withShift();
                 final Human human = presenter.getHuman();
                 final Presentation endPresentation = ui.present(human, shiftBar, presenter);
-                final BarExtender startBar = bar.withRelatedWidth(endPresentation.getWidth());
+                final Bar startBar = bar.withRelatedWidth(endPresentation.getWidth());
                 final Presentation startPresentation = startUi.present(human, startBar, presenter);
                 final float startWidth = startPresentation.getWidth();
                 shiftBar.setShift(startWidth, 0);
@@ -76,10 +76,10 @@ abstract public class Span0 implements Ui<BarExtender> {
 
     public Span0 padStart(final Sizelet padlet) {
         final Span0 ui = this;
-        return create(new OnPresent<BarExtender>() {
+        return create(new OnPresent<Bar>() {
             @Override
-            public void onPresent(Presenter<BarExtender> presenter) {
-                final BarExtender bar = presenter.getDisplay();
+            public void onPresent(Presenter<Bar> presenter) {
+                final Bar bar = presenter.getDisplay();
                 final ShiftBar shiftBar = bar.withShift();
                 final Human human = presenter.getHuman();
                 final Presentation presentation = ui.present(human, shiftBar, presenter);
@@ -92,11 +92,11 @@ abstract public class Span0 implements Ui<BarExtender> {
         });
     }
 
-    public static Span0 create(final OnPresent<BarExtender> onPresent) {
+    public static Span0 create(final OnPresent<Bar> onPresent) {
         return new Span0() {
             @Override
-            public Presentation present(Human human, final BarExtender bar, Observer observer) {
-                final BasePresenter<BarExtender> presenter = new BasePresenter<BarExtender>(human, bar, observer) {
+            public Presentation present(Human human, final Bar bar, Observer observer) {
+                final BasePresenter<Bar> presenter = new BasePresenter<Bar>(human, bar, observer) {
                     @Override
                     public float getWidth() {
                         float union = 0;

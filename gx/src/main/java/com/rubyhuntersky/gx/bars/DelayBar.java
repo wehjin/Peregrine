@@ -15,12 +15,12 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class DelayBar extends BarExtender implements DelayDisplay<BarExtender> {
+public class DelayBar extends Bar implements DelayDisplay<Bar> {
 
     protected boolean didEndDelay;
     private List<DelayPatch> pending = new ArrayList<>();
 
-    public DelayBar(@NonNull BarExtender original) {
+    public DelayBar(@NonNull Bar original) {
         super(original);
     }
 

@@ -2,7 +2,7 @@ package com.rubyhuntersky.gx;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.bars.BarExtender;
+import com.rubyhuntersky.gx.bars.Bar;
 import com.rubyhuntersky.gx.bars.BarSeed;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class BarUnitTest {
 
-    private BarExtender bar;
+    private Bar bar;
 
     @Before
     public void setUp() throws Exception {
@@ -48,19 +48,19 @@ public class BarUnitTest {
 
     @Test
     public void withElevation_changesElevation() throws Exception {
-        final BarExtender bar2 = bar.withElevation(2);
+        final Bar bar2 = bar.withElevation(2);
         assertEquals(2, bar2.elevation);
     }
 
     @Test
     public void withHeight_changesHeight() throws Exception {
-        final BarExtender bar2 = this.bar.withFixedHeight(15);
+        final Bar bar2 = this.bar.withFixedHeight(15);
         assertEquals(15, bar2.fixedHeight, .001);
     }
 
     @Test
     public void withRelatedWidth_changesRelatedWidth() throws Exception {
-        final BarExtender bar = this.bar.withRelatedWidth(105);
+        final Bar bar = this.bar.withRelatedWidth(105);
         assertEquals(105, bar.relatedWidth, .001);
     }
 }

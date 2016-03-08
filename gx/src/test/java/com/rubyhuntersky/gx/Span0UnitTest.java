@@ -2,7 +2,7 @@ package com.rubyhuntersky.gx;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.bars.BarExtender;
+import com.rubyhuntersky.gx.bars.Bar;
 import com.rubyhuntersky.gx.bars.Span0;
 import com.rubyhuntersky.gx.bars.BarSeed;
 import com.rubyhuntersky.gx.basics.Frame;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 public class Span0UnitTest {
 
     private Human human;
-    private BarExtender bar;
+    private Bar bar;
     private ArrayList<Frame> frames;
     private Presentation presentation;
 
@@ -101,9 +101,9 @@ public class Span0UnitTest {
 
     @Test
     public void presentation_takesHeightFromBar() throws Exception {
-        final Span0 span0 = Span0.create(new OnPresent<BarExtender>() {
+        final Span0 span0 = Span0.create(new OnPresent<Bar>() {
             @Override
-            public void onPresent(Presenter<BarExtender> presenter) {
+            public void onPresent(Presenter<Bar> presenter) {
                 // Do nothing.
             }
         });

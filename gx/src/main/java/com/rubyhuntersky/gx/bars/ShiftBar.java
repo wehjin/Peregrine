@@ -15,14 +15,14 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class ShiftBar extends BarExtender implements ShiftDisplay<BarExtender> {
+public class ShiftBar extends Bar implements ShiftDisplay<Bar> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();
     private float verticalShift;
     private float horizontalShift;
 
-    public ShiftBar(@NonNull BarExtender original) {
+    public ShiftBar(@NonNull Bar original) {
         super(original);
     }
 

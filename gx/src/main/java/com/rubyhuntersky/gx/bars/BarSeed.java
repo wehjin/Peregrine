@@ -14,7 +14,7 @@ import com.rubyhuntersky.gx.basics.TextStyle;
  * @since 1/29/16.
  */
 
-abstract public class BarSeed extends BarExtender {
+abstract public class BarSeed extends Bar {
     public BarSeed(float fixedHeight, float relatedWidth, int elevation) {
         super(fixedHeight, relatedWidth, elevation, null);
     }

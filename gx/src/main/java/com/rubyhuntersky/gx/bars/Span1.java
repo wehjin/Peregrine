@@ -13,7 +13,7 @@ import com.rubyhuntersky.gx.ui.Ui1;
  * @since 1/30/16.
  */
 
-public abstract class Span1<C> implements Ui1<BarExtender, C> {
+public abstract class Span1<C> implements Ui1<Bar, C> {
 
     public abstract Span0 bind(C condition);
 

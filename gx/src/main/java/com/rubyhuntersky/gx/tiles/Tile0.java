@@ -1,7 +1,7 @@
 package com.rubyhuntersky.gx.tiles;
 
 import com.rubyhuntersky.gx.Observer;
-import com.rubyhuntersky.gx.bars.BarExtender;
+import com.rubyhuntersky.gx.bars.Bar;
 import com.rubyhuntersky.gx.bars.Span0;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.columns.Div0;
@@ -52,10 +52,10 @@ abstract public class Tile0 implements Ui<Mosaic> {
     }
 
     public Span0 toBar() {
-        return Span0.create(new OnPresent<BarExtender>() {
+        return Span0.create(new OnPresent<Bar>() {
             @Override
-            public void onPresent(Presenter<BarExtender> presenter) {
-                final BarExtender bar = presenter.getDisplay();
+            public void onPresent(Presenter<Bar> presenter) {
+                final Bar bar = presenter.getDisplay();
                 final Mosaic mosaic = new Mosaic(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
                 final ShiftMosaic frameShiftTile = mosaic.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);
