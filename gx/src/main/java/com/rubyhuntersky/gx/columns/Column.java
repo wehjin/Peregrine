@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.columns;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.displays.FixedDisplay;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 import com.rubyhuntersky.gx.displays.ShapeDisplayWrapper;
 
 /**
@@ -17,8 +17,8 @@ public class Column extends ShapeDisplayWrapper implements FixedDisplay<Column> 
     public final float relatedHeight;
     public final int elevation;
 
-    public Column(float fixedWidth, float relatedHeight, int elevation, ShapeDisplay shapeDisplay) {
-        super(shapeDisplay);
+    public Column(float fixedWidth, float relatedHeight, int elevation, PatchDevice patchDevice) {
+        super(patchDevice);
         this.fixedWidth = fixedWidth;
         this.relatedHeight = relatedHeight;
         this.elevation = elevation;

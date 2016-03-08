@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 
 /**
  * @author wehjin
@@ -14,12 +14,12 @@ public class FrameShiftPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final ShapeDisplay display;
+    private final PatchDevice display;
     private Patch patch;
     private boolean didShift;
     private boolean didRemove;
 
-    public FrameShiftPatch(Frame frame, Shape shape, @NonNull ShapeDisplay display) {
+    public FrameShiftPatch(Frame frame, Shape shape, @NonNull PatchDevice display) {
         this.frame = frame;
         this.shape = shape;
         this.display = display;

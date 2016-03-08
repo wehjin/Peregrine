@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  * @since 1/28/16.
  */
 
-public interface CoreDisplay<T> extends ShapeDisplay {
+public interface CoreDisplay<T> extends PatchDevice {
     @NonNull
     T asType();
 

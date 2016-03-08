@@ -17,7 +17,7 @@ import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextHeight;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 import com.rubyhuntersky.gx.patches.Patch;
 import com.rubyhuntersky.gx.shapes.RectangleShape;
 import com.rubyhuntersky.gx.shapes.TextShape;
@@ -28,7 +28,7 @@ import com.rubyhuntersky.gx.shapes.ViewShape;
  * @since 2/11/16.
  */
 
-public class ShapeDisplayView extends FrameLayout implements ShapeDisplay {
+public class ShapeDisplayView extends FrameLayout implements PatchDevice {
 
     public static final String TAG = ShapeDisplayView.class.getSimpleName();
     private TextRuler textRuler;

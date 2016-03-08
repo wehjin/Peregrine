@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 
 /**
  * @author wehjin
@@ -14,12 +14,12 @@ public class DelayPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final ShapeDisplay display;
+    private final PatchDevice display;
     private Patch patch;
     private boolean didEndDelay;
     private boolean didRemove;
 
-    public DelayPatch(Frame frame, Shape shape, @NonNull ShapeDisplay display) {
+    public DelayPatch(Frame frame, Shape shape, @NonNull PatchDevice display) {
 
         this.frame = frame;
         this.shape = shape;

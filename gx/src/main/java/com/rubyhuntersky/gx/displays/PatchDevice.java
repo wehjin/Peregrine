@@ -14,7 +14,7 @@ import com.rubyhuntersky.gx.basics.TextStyle;
  * @since 1/29/16.
  */
 
-public interface ShapeDisplay {
+public interface PatchDevice {
     @NonNull
     Patch addPatch(Frame frame, Shape shape);
 

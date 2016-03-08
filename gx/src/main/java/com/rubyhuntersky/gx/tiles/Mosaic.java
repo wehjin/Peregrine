@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.displays.CoreDisplay;
 import com.rubyhuntersky.gx.displays.DelayDisplay;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 import com.rubyhuntersky.gx.displays.ShapeDisplayWrapper;
 
 /**
@@ -18,8 +18,8 @@ public class Mosaic extends ShapeDisplayWrapper implements CoreDisplay<Mosaic> {
     public final float relatedHeight;
     public final int elevation;
 
-    public Mosaic(float relatedWidth, float relatedHeight, int elevation, ShapeDisplay shapeDisplay) {
-        super(shapeDisplay);
+    public Mosaic(float relatedWidth, float relatedHeight, int elevation, PatchDevice patchDevice) {
+        super(patchDevice);
         this.relatedWidth = relatedWidth;
         this.relatedHeight = relatedHeight;
         this.elevation = elevation;

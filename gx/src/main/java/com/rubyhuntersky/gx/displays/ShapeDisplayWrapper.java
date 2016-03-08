@@ -13,10 +13,10 @@ import com.rubyhuntersky.gx.basics.TextStyle;
  * @author wehjin
  * @since 1/29/16.
  */
-public class ShapeDisplayWrapper implements ShapeDisplay {
-    final protected ShapeDisplay basis;
+public class ShapeDisplayWrapper implements PatchDevice {
+    final protected PatchDevice basis;
 
-    public ShapeDisplayWrapper(ShapeDisplay basis) {
+    public ShapeDisplayWrapper(PatchDevice basis) {
         this.basis = basis;
     }
 

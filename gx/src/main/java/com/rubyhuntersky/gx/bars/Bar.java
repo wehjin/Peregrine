@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.bars;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.displays.FixedDisplay;
-import com.rubyhuntersky.gx.displays.ShapeDisplay;
+import com.rubyhuntersky.gx.displays.PatchDevice;
 import com.rubyhuntersky.gx.displays.ShapeDisplayWrapper;
 
 /**
@@ -17,8 +17,8 @@ public class Bar extends ShapeDisplayWrapper implements FixedDisplay<Bar> {
     public final float relatedWidth;
     public final int elevation;
 
-    public Bar(float fixedHeight, float relatedWidth, int elevation, ShapeDisplay shapeDisplay) {
-        super(shapeDisplay);
+    public Bar(float fixedHeight, float relatedWidth, int elevation, PatchDevice patchDevice) {
+        super(patchDevice);
         this.fixedHeight = fixedHeight;
         this.relatedWidth = relatedWidth;
         this.elevation = elevation;
