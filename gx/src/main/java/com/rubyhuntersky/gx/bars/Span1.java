@@ -13,24 +13,24 @@ import com.rubyhuntersky.gx.ui.Ui1;
  * @since 1/30/16.
  */
 
-public abstract class BarUi1<C> implements Ui1<Bar, C> {
+public abstract class Span1<C> implements Ui1<BarExtender, C> {
 
-    public abstract BarUi bind(C condition);
+    public abstract Span0 bind(C condition);
 
-    public static <C> BarUi1<C> create(final OnBind<C> onBind) {
-        return new BarUi1<C>() {
+    public static <C> Span1<C> create(final OnBind<C> onBind) {
+        return new Span1<C>() {
             @Override
-            public BarUi bind(C condition) {
+            public Span0 bind(C condition) {
                 return onBind.onBind(condition);
             }
         };
     }
 
-    public BarUi1<C> expandStart(final Tile0 tile0) {
-        return BarUi1.create(new OnBind<C>() {
+    public Span1<C> expandStart(final Tile0 tile0) {
+        return Span1.create(new OnBind<C>() {
             @Override
-            public BarUi onBind(C condition) {
-                return BarUi1.this.bind(condition).expandStart(tile0);
+            public Span0 onBind(C condition) {
+                return Span1.this.bind(condition).expandStart(tile0);
             }
         });
     }
@@ -40,12 +40,12 @@ public abstract class BarUi1<C> implements Ui1<Bar, C> {
             @NonNull
             @Override
             public Div0 onBind(final C condition) {
-                return BarUi1.this.bind(condition).toColumn(heightlet);
+                return Span1.this.bind(condition).toColumn(heightlet);
             }
         });
     }
 
     public interface OnBind<C> {
-        BarUi onBind(C condition);
+        Span0 onBind(C condition);
     }
 }

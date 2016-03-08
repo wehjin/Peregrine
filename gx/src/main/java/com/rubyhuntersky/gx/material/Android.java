@@ -2,8 +2,8 @@ package com.rubyhuntersky.gx.material;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.bars.BarUi;
-import com.rubyhuntersky.gx.bars.BarUi1;
+import com.rubyhuntersky.gx.bars.Span0;
+import com.rubyhuntersky.gx.bars.Span1;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextStylet;
@@ -63,14 +63,14 @@ public class Android {
         return spinnerTile(options, selectedOption).toColumn();
     }
 
-    public static BarUi spinnerBar(final List<String> options, final int selectedOption) {
+    public static Span0 spinnerBar(final List<String> options, final int selectedOption) {
         return spinnerTile(options, selectedOption).toBar();
     }
 
-    public static BarUi1<Integer> spinnerBar(final List<String> options) {
-        return BarUi1.create(new BarUi1.OnBind<Integer>() {
+    public static Span1<Integer> spinnerBar(final List<String> options) {
+        return Span1.create(new Span1.OnBind<Integer>() {
             @Override
-            public BarUi onBind(Integer condition) {
+            public Span0 onBind(Integer condition) {
                 return spinnerBar(options, condition);
             }
         });

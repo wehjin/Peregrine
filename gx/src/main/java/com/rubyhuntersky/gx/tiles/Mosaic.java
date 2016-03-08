@@ -5,14 +5,14 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.gx.displays.CoreDisplay;
 import com.rubyhuntersky.gx.displays.DelayDisplay;
 import com.rubyhuntersky.gx.displays.PatchDevice;
-import com.rubyhuntersky.gx.displays.ShapeDisplayWrapper;
+import com.rubyhuntersky.gx.displays.PatchDeviceWrapper;
 
 /**
  * @author wehjin
  * @since 1/28/16.
  */
 
-public class Mosaic extends ShapeDisplayWrapper implements CoreDisplay<Mosaic> {
+public class Mosaic extends PatchDeviceWrapper implements CoreDisplay<Mosaic> {
 
     public final float relatedWidth;
     public final float relatedHeight;

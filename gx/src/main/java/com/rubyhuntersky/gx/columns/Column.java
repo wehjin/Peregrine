@@ -4,14 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.displays.FixedDisplay;
 import com.rubyhuntersky.gx.displays.PatchDevice;
-import com.rubyhuntersky.gx.displays.ShapeDisplayWrapper;
+import com.rubyhuntersky.gx.displays.PatchDeviceWrapper;
 
 /**
  * @author wehjin
  * @since 1/23/16.
  */
 
-public class Column extends ShapeDisplayWrapper implements FixedDisplay<Column> {
+public class Column extends PatchDeviceWrapper implements FixedDisplay<Column> {
 
     public final float fixedWidth;
     public final float relatedHeight;

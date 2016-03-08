@@ -14,8 +14,8 @@ import com.rubyhuntersky.gx.basics.TextStyle;
  * @since 1/29/16.
  */
 
-abstract public class FullBar extends Bar {
-    public FullBar(float fixedHeight, float relatedWidth, int elevation) {
+abstract public class BarSeed extends BarExtender {
+    public BarSeed(float fixedHeight, float relatedWidth, int elevation) {
         super(fixedHeight, relatedWidth, elevation, null);
     }
 

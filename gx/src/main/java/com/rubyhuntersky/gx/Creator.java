@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.rubyhuntersky.coloret.Coloret;
-import com.rubyhuntersky.gx.bars.Bar;
-import com.rubyhuntersky.gx.bars.BarUi;
+import com.rubyhuntersky.gx.bars.BarExtender;
+import com.rubyhuntersky.gx.bars.Span0;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.basics.TextHeight;
@@ -71,11 +71,11 @@ public class Creator {
         });
     }
 
-    static public BarUi colorBar(final Coloret coloret, final Sizelet widthlet) {
-        return BarUi.create(new OnPresent<Bar>() {
+    static public Span0 colorBar(final Coloret coloret, final Sizelet widthlet) {
+        return Span0.create(new OnPresent<BarExtender>() {
             @Override
-            public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
+            public void onPresent(Presenter<BarExtender> presenter) {
+                final BarExtender bar = presenter.getDisplay();
                 final float width = widthlet.toFloat(presenter.getHuman(), bar.relatedWidth);
                 final Frame frame = new Frame(width, bar.fixedHeight, bar.elevation);
                 final Patch patch = bar.addPatch(frame, new RectangleShape(coloret));

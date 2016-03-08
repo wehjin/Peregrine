@@ -2,21 +2,21 @@ package com.rubyhuntersky.gx.displays;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.patches.Patch;
 import com.rubyhuntersky.gx.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
+import com.rubyhuntersky.gx.patches.Patch;
 
 /**
  * @author wehjin
  * @since 1/29/16.
  */
-public class ShapeDisplayWrapper implements PatchDevice {
+public class PatchDeviceWrapper implements PatchDevice {
     final protected PatchDevice basis;
 
-    public ShapeDisplayWrapper(PatchDevice basis) {
+    public PatchDeviceWrapper(PatchDevice basis) {
         this.basis = basis;
     }
 
