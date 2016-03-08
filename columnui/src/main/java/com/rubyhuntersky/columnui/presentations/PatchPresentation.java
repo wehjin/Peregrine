@@ -1,7 +1,7 @@
 package com.rubyhuntersky.columnui.presentations;
 
-import com.rubyhuntersky.columnui.patches.Patch;
 import com.rubyhuntersky.columnui.basics.Frame;
+import com.rubyhuntersky.columnui.patches.Patch;
 
 /**
  * @author wehjin
