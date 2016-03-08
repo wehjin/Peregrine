@@ -1,7 +1,7 @@
 package com.rubyhuntersky.columnui.tiles.operations;
 
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presentations.ResizePresentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;

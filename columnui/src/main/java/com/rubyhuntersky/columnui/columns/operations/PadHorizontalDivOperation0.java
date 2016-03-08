@@ -3,7 +3,7 @@ package com.rubyhuntersky.columnui.columns.operations;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.Div0;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;
 

@@ -3,7 +3,7 @@ package com.rubyhuntersky.columnui.basics;
 import android.graphics.Typeface;
 
 import com.rubyhuntersky.coloret.Coloret;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 
 import static com.rubyhuntersky.coloret.Coloret.DARK_TEXT;
 import static com.rubyhuntersky.columnui.basics.Sizelet.IMPORTANT;

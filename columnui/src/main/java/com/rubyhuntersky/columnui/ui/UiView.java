@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.R;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.displays.FixedDisplay;
 import com.rubyhuntersky.columnui.presentations.MultiDisplayPresentation;
 import com.rubyhuntersky.columnui.presentations.Presentation;

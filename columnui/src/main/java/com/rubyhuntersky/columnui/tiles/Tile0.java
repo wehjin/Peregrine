@@ -5,7 +5,7 @@ import com.rubyhuntersky.columnui.bars.Bar;
 import com.rubyhuntersky.columnui.bars.BarUi;
 import com.rubyhuntersky.columnui.basics.Sizelet;
 import com.rubyhuntersky.columnui.columns.Div0;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.operations.ToColumnOperation;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presenters.BasePresenter;

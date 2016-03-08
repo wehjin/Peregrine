@@ -13,7 +13,6 @@ import com.rubyhuntersky.columnui.columns.Div0;
 import com.rubyhuntersky.columnui.columns.Div1;
 import com.rubyhuntersky.columnui.columns.Div2;
 import com.rubyhuntersky.columnui.columns.FullColumn;
-import com.rubyhuntersky.columnui.conditions.Human;
 import com.rubyhuntersky.columnui.patches.Patch;
 
 import org.junit.Before;

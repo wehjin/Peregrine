@@ -6,7 +6,7 @@ import com.rubyhuntersky.columnui.Creator;
 import com.rubyhuntersky.columnui.Observer;
 import com.rubyhuntersky.columnui.Reaction;
 import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.columns.operations.ExpandDownDivOperation1;
 import com.rubyhuntersky.columnui.columns.operations.ExpandVerticalDivOperation0;
 import com.rubyhuntersky.columnui.columns.operations.PadHorizontalDivOperation0;

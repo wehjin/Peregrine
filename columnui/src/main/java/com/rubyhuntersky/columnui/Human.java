@@ -1,8 +1,7 @@
-package com.rubyhuntersky.columnui.conditions;
+package com.rubyhuntersky.columnui;
 
 import android.content.Context;
 
-import com.rubyhuntersky.columnui.Condition;
 import com.rubyhuntersky.columnui.R;
 
 /**
@@ -10,7 +9,7 @@ import com.rubyhuntersky.columnui.R;
  * @since 1/23/16.
  */
 
-public class Human extends Condition {
+public class Human {
     final public float fingerPixels;
     final public float textPixels;
 
@@ -21,7 +20,7 @@ public class Human extends Condition {
 
     public Human(Context context) {
         this(context.getResources().getDimensionPixelSize(R.dimen.fingerTip),
-              context.getResources().getDimensionPixelSize(R.dimen.readingText));
+             context.getResources().getDimensionPixelSize(R.dimen.readingText));
     }
 
     @Override

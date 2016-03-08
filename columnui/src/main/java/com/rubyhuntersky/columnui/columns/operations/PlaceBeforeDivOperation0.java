@@ -5,7 +5,7 @@ import android.util.Pair;
 import com.rubyhuntersky.columnui.columns.Column;
 import com.rubyhuntersky.columnui.columns.DelayColumn;
 import com.rubyhuntersky.columnui.columns.Div0;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 import com.rubyhuntersky.columnui.presentations.Presentation;
 import com.rubyhuntersky.columnui.presenters.OnPresent;
 import com.rubyhuntersky.columnui.presenters.Presenter;

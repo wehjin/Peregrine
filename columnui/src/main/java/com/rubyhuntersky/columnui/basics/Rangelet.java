@@ -1,8 +1,6 @@
 package com.rubyhuntersky.columnui.basics;
 
-import com.rubyhuntersky.columnui.basics.Range;
-import com.rubyhuntersky.columnui.basics.Sizelet;
-import com.rubyhuntersky.columnui.conditions.Human;
+import com.rubyhuntersky.columnui.Human;
 
 /**
  * @author wehjin
