@@ -6,18 +6,18 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.gx.Observer;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.R;
-import com.rubyhuntersky.gx.Human;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.ui.ShapeDisplayView;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.material.PatchDeviceView;
 
 /**
  * @author wehjin
  * @since 2/13/16.
  */
 
-public class TileView extends ShapeDisplayView {
+public class TileView extends PatchDeviceView {
 
     private Human human;
     private Presentation presentation;

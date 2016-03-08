@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.patches.Patch;
-import com.rubyhuntersky.gx.Shape;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.displays.DelayDisplay;
-import com.rubyhuntersky.gx.patches.DelayPatch;
+import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
+import com.rubyhuntersky.gx.internal.devices.patches.DelayPatch;
 
 import java.util.ArrayList;
 import java.util.List;

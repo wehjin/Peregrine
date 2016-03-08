@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.patches.Patch;
-import com.rubyhuntersky.gx.Shape;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.displays.ShiftDisplay;
-import com.rubyhuntersky.gx.patches.FrameShiftPatch;
+import com.rubyhuntersky.gx.internal.devices.ShiftDisplay;
+import com.rubyhuntersky.gx.internal.devices.patches.FrameShiftPatch;
 
 import java.util.ArrayList;
 import java.util.List;

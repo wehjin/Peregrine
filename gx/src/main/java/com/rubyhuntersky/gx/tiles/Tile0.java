@@ -1,22 +1,22 @@
 package com.rubyhuntersky.gx.tiles;
 
-import com.rubyhuntersky.gx.Observer;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.bars.Bar;
 import com.rubyhuntersky.gx.bars.Span0;
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.columns.Div0;
-import com.rubyhuntersky.gx.Human;
-import com.rubyhuntersky.gx.operations.ToColumnOperation;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.presenters.BasePresenter;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.internal.interchange.ToColumnOperation;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.presenters.BasePresenter;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.tiles.operations.ExpandDownTileOperation1;
 import com.rubyhuntersky.gx.tiles.operations.ExpandHorizontalTileOperation0;
 import com.rubyhuntersky.gx.tiles.operations.ExpandLeftTileOperation1;
 import com.rubyhuntersky.gx.tiles.operations.ExpandVerticalTileOperation0;
 import com.rubyhuntersky.gx.tiles.operations.NameTileOperation0;
-import com.rubyhuntersky.gx.ui.Ui;
+import com.rubyhuntersky.gx.internal.Ui;
 
 /**
  * @author wehjin

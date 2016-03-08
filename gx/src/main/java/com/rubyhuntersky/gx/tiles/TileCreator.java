@@ -2,12 +2,12 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.Creator;
+import com.rubyhuntersky.gx.client.Gx;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.basics.TextStylet;
-import com.rubyhuntersky.gx.presentations.BooleanPresentation;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.internal.presentations.BooleanPresentation;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 
 /**
  * @author wehjin
@@ -23,7 +23,7 @@ public class TileCreator {
             @NonNull
             @Override
             public Tile0 onBind(final String condition) {
-                return Creator.textTile(condition, textStylet);
+                return Gx.textTile(condition, textStylet);
             }
         });
     }

@@ -8,12 +8,16 @@ import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.columns.Column;
-import com.rubyhuntersky.gx.columns.Div0;
-import com.rubyhuntersky.gx.columns.Div1;
-import com.rubyhuntersky.gx.columns.Div2;
-import com.rubyhuntersky.gx.columns.FullColumn;
-import com.rubyhuntersky.gx.patches.Patch;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Observer;
+import com.rubyhuntersky.gx.poles.Pole;
+import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.poles.Div1;
+import com.rubyhuntersky.gx.poles.Div2;
+import com.rubyhuntersky.gx.poles.PoleSeed;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
+import com.rubyhuntersky.gx.client.Gx;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 public class Div02UnitTest {
 
     private Human human;
-    private Column column;
+    private Pole pole;
     private List<Frame> frames = new ArrayList<>();
     private Div0 div0;
     private Div1<Integer> integerDiv1;
@@ -49,14 +53,14 @@ public class Div02UnitTest {
         final Div1<Integer> ui1 = stringIntegerDiv2.bind(condition);
         assertEquals("condition", condition, boundConditions.get(0));
         assertEquals("no frame before presentation", 0, frames.size());
-        ui1.bind(3).present(human, column, Observer.EMPTY);
+        ui1.bind(3).present(human, pole, Observer.EMPTY);
         assertEquals("has frame after presentation", 1, frames.size());
     }
 
     @Before
     public void setUp() throws Exception {
         human = new Human(17, 13);
-        column = new FullColumn(100, 27, 5) {
+        pole = new PoleSeed(100, 27, 5) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape) {
@@ -76,7 +80,7 @@ public class Div02UnitTest {
                 return ShapeSize.ZERO;
             }
         };
-        div0 = Creator.colorColumn(Sizelet.FINGER, Coloret.BLUE);
+        div0 = Gx.colorColumn(Sizelet.FINGER, Coloret.BLUE);
         integerDiv1 = Div1.create(new Div1.OnBind<Integer>() {
             @NonNull
             @Override

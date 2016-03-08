@@ -1,6 +1,6 @@
 package com.rubyhuntersky.gx.reactions;
 
-import com.rubyhuntersky.gx.Reaction;
+import com.rubyhuntersky.gx.client.Reaction;
 
 /**
  * @author wehjin

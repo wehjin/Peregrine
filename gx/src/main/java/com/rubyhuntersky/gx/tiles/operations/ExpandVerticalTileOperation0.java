@@ -1,11 +1,11 @@
 package com.rubyhuntersky.gx.tiles.operations;
 
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.Human;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.presentations.ResizePresentation;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.presentations.ResizePresentation;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.tiles.Mosaic;
 import com.rubyhuntersky.gx.tiles.ShiftMosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;

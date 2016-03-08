@@ -2,12 +2,12 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.columns.Div2;
-import com.rubyhuntersky.gx.operations.ToColumnOperation;
+import com.rubyhuntersky.gx.poles.Div2;
+import com.rubyhuntersky.gx.internal.interchange.ToColumnOperation;
 import com.rubyhuntersky.gx.tiles.operations.ExpandDownTileOperation1;
 import com.rubyhuntersky.gx.tiles.operations.ExpandLeftTileOperation1;
 import com.rubyhuntersky.gx.tiles.operations.NameTileOperation0;
-import com.rubyhuntersky.gx.ui.Ui2;
+import com.rubyhuntersky.gx.internal.Ui2;
 
 /**
  * @author wehjin

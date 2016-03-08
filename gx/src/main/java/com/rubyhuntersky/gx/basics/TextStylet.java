@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.basics;
 import android.graphics.Typeface;
 
 import com.rubyhuntersky.coloret.Coloret;
-import com.rubyhuntersky.gx.Human;
+import com.rubyhuntersky.gx.client.Human;
 
 import static com.rubyhuntersky.coloret.Coloret.DARK_TEXT;
 import static com.rubyhuntersky.gx.basics.Sizelet.IMPORTANT;

@@ -2,10 +2,10 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.displays.CoreDisplay;
-import com.rubyhuntersky.gx.displays.DelayDisplay;
-import com.rubyhuntersky.gx.displays.PatchDevice;
-import com.rubyhuntersky.gx.displays.PatchDeviceWrapper;
+import com.rubyhuntersky.gx.internal.devices.CoreDisplay;
+import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
+import com.rubyhuntersky.gx.internal.devices.PatchDevice;
+import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
 
 /**
  * @author wehjin

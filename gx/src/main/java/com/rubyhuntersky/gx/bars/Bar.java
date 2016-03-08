@@ -2,9 +2,9 @@ package com.rubyhuntersky.gx.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.displays.FixedDisplay;
-import com.rubyhuntersky.gx.displays.PatchDevice;
-import com.rubyhuntersky.gx.displays.PatchDeviceWrapper;
+import com.rubyhuntersky.gx.internal.devices.FixedDisplay;
+import com.rubyhuntersky.gx.internal.devices.PatchDevice;
+import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
 
 /**
  * @author wehjin

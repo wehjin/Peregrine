@@ -3,10 +3,10 @@ package com.rubyhuntersky.gx.bars;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.columns.Div0;
-import com.rubyhuntersky.gx.columns.Div1;
+import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.poles.Div1;
 import com.rubyhuntersky.gx.tiles.Tile0;
-import com.rubyhuntersky.gx.ui.Ui1;
+import com.rubyhuntersky.gx.internal.Ui1;
 
 /**
  * @author wehjin

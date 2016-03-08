@@ -2,18 +2,18 @@ package com.rubyhuntersky.gx.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.Observer;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.columns.Column;
-import com.rubyhuntersky.gx.columns.Div0;
-import com.rubyhuntersky.gx.Human;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.presentations.ResizePresentation;
-import com.rubyhuntersky.gx.presenters.BasePresenter;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.poles.Pole;
+import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.presentations.ResizePresentation;
+import com.rubyhuntersky.gx.internal.presenters.BasePresenter;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.tiles.Tile0;
-import com.rubyhuntersky.gx.ui.Ui;
+import com.rubyhuntersky.gx.internal.Ui;
 
 /**
  * @author wehjin
@@ -27,9 +27,9 @@ abstract public class Span0 implements Ui<Bar> {
 
     public Div0 toColumn(final Sizelet heightlet) {
         final Span0 span0 = this;
-        return Div0.create(new OnPresent<Column>() {
+        return Div0.create(new OnPresent<Pole>() {
             @Override
-            public void onPresent(Presenter<Column> presenter) {
+            public void onPresent(Presenter<Pole> presenter) {
                 presenter.addPresentation(
                       presentBarToColumn(span0, heightlet, presenter.getHuman(), presenter.getDisplay(), presenter));
             }
@@ -37,17 +37,17 @@ abstract public class Span0 implements Ui<Bar> {
     }
 
     @NonNull
-    private Presentation presentBarToColumn(Span0 span0, Sizelet heightlet, Human human, Column column,
+    private Presentation presentBarToColumn(Span0 span0, Sizelet heightlet, Human human, Pole pole,
           Observer observer) {
-        final float height = heightlet.toFloat(human, column.relatedHeight);
-        final Bar bar = new Bar(height, column.fixedWidth, column.elevation, column);
+        final float height = heightlet.toFloat(human, pole.relatedHeight);
+        final Bar bar = new Bar(height, pole.fixedWidth, pole.elevation, pole);
         final ShiftBar shiftBar = bar.withShift();
         final Presentation presentation = span0.present(human, shiftBar, observer);
         final float presentationWidth = presentation.getWidth();
-        final float extraWidth = column.fixedWidth - presentationWidth;
+        final float extraWidth = pole.fixedWidth - presentationWidth;
         final float anchor = .5f;
         shiftBar.setShift(extraWidth * anchor, 0);
-        return new ResizePresentation(column.fixedWidth, bar.fixedHeight, presentation);
+        return new ResizePresentation(pole.fixedWidth, bar.fixedHeight, presentation);
     }
 
     public Span0 expandStart(final Tile0 startUi) {

@@ -8,7 +8,8 @@ import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.patches.Patch;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 import org.junit.Before;
 import org.junit.Test;

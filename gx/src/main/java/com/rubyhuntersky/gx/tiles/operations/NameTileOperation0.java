@@ -1,10 +1,10 @@
 package com.rubyhuntersky.gx.tiles.operations;
 
-import com.rubyhuntersky.gx.Observer;
-import com.rubyhuntersky.gx.Reaction;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.client.Observer;
+import com.rubyhuntersky.gx.client.Reaction;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.tiles.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 

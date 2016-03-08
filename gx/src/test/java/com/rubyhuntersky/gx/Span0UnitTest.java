@@ -9,10 +9,13 @@ import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.patches.Patch;
-import com.rubyhuntersky.gx.presentations.Presentation;
-import com.rubyhuntersky.gx.presenters.OnPresent;
-import com.rubyhuntersky.gx.presenters.Presenter;
+import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Observer;
+import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
+import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.internal.presenters.Presenter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +23,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static com.rubyhuntersky.gx.Creator.colorBar;
+import static com.rubyhuntersky.gx.client.Gx.colorBar;
 import static com.rubyhuntersky.coloret.Coloret.BLACK;
 import static com.rubyhuntersky.coloret.Coloret.GREEN;
 import static com.rubyhuntersky.gx.basics.Sizelet.pixels;
