@@ -49,14 +49,13 @@ public class Gx {
                 final TextHeight textHeight = textSize.textHeight;
                 final Frame textFrame = frame.withVerticalShift(-textHeight.topPadding)
                       .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
-                final int argbColor = textStyle.coloret.toArgb();
                 final ViewShape viewShape = new ViewShape() {
                     @Override
                     public View createView(Context context) {
                         final TextView textView = new TextView(context);
                         textView.setGravity(Gravity.TOP);
                         textView.setSingleLine();
-                        textView.setTextColor(argbColor);
+                        textView.setTextColor(textStyle.typecolor);
                         textView.setTypeface(textStyle.typeface);
                         textView.setTextSize(textStyle.typeheight);
                         textView.setText(textString);
@@ -65,7 +64,7 @@ public class Gx {
                         return textView;
                     }
                 };
-                final Patch patch = mosaic.addPatch(textFrame, viewShape, argbColor);
+                final Patch patch = mosaic.addPatch(textFrame, viewShape, textStyle.typecolor);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });

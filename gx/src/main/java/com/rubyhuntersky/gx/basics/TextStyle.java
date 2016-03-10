@@ -2,8 +2,6 @@ package com.rubyhuntersky.gx.basics;
 
 import android.graphics.Typeface;
 
-import com.rubyhuntersky.coloret.Coloret;
-
 /**
  * @author wehjin
  * @since 1/23/16.
@@ -12,12 +10,12 @@ import com.rubyhuntersky.coloret.Coloret;
 public class TextStyle {
     public final int typeheight;
     public final Typeface typeface;
-    public final Coloret coloret;
+    public final int typecolor;
 
-    public TextStyle(float typeheight, Typeface typeface, Coloret coloret) {
+    public TextStyle(float typeheight, Typeface typeface, int typecolor) {
         this.typeheight = (int) typeheight;
         this.typeface = typeface;
-        this.coloret = coloret;
+        this.typecolor = typecolor;
     }
 
     @Override
@@ -25,7 +23,7 @@ public class TextStyle {
         return "TextStyle{" +
               "typeheight=" + typeheight +
               ", typeface=" + typeface +
-              ", coloret=" + coloret +
+              ", typecolor=" + typecolor +
               '}';
     }
 }

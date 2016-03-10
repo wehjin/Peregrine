@@ -31,6 +31,6 @@ public class TextStylet {
     }
 
     public TextStyle toStyle(Human human, float contextSize) {
-        return new TextStyle(heightlet.toFloat(human, contextSize), typeface, coloret);
+        return new TextStyle(heightlet.toFloat(human, contextSize), typeface, coloret.toArgb());
     }
 }

@@ -98,7 +98,7 @@ public class PatchDeviceView extends FrameLayout implements PatchDevice {
     private Patch getTextPatch(Frame frame, TextShape textShape) {
         final TextView textView = new TextView(getContext());
         textView.setGravity(Gravity.TOP);
-        textView.setTextColor(textShape.textStyle.coloret.toArgb());
+        textView.setTextColor(textShape.textStyle.typecolor);
         textView.setTypeface(textShape.textStyle.typeface);
         textView.setTextSize(textShape.textStyle.typeheight);
         textView.setText(textShape.textString);
