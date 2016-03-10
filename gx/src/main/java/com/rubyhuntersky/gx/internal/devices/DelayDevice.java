@@ -5,6 +5,6 @@ package com.rubyhuntersky.gx.internal.devices;
  * @since 1/28/16.
  */
 
-public interface DelayDevice<T> extends CoreDevice<T> {
+public interface DelayDevice<T> extends Device<T> {
     void endDelay();
 }

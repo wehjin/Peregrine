@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.internal.presenters;
 
 import android.util.Log;
 
-import com.rubyhuntersky.gx.client.Human;
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Presentation;
-import com.rubyhuntersky.gx.client.Reaction;
+import com.rubyhuntersky.gx.Human;
+import com.rubyhuntersky.gx.observers.Observer;
+import com.rubyhuntersky.gx.presentations.Presentation;
 import com.rubyhuntersky.gx.reactions.HeightChangedReaction;
+import com.rubyhuntersky.gx.reactions.Reaction;
 
 import java.util.Collections;
 import java.util.List;

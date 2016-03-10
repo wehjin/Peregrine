@@ -1,6 +1,6 @@
 package com.rubyhuntersky.gx.basics;
 
-import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.Human;
 
 /**
  * @author wehjin

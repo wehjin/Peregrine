@@ -1,7 +1,5 @@
 package com.rubyhuntersky.gx.reactions;
 
-import com.rubyhuntersky.gx.client.Reaction;
-
 /**
  * @author wehjin
  * @since 2/9/16.

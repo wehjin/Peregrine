@@ -9,10 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import com.rubyhuntersky.gx.client.Observer;
+import com.rubyhuntersky.gx.observers.Observer;
 import com.rubyhuntersky.gx.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.gx.tiles.Tile1;
-import com.rubyhuntersky.gx.tiles.TileView;
+import com.rubyhuntersky.gx.uis.tiles.Tile1;
+import com.rubyhuntersky.gx.android.TileView;
 
 import java.util.List;
 

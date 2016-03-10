@@ -3,18 +3,18 @@ package com.rubyhuntersky.gx.internal.interchange;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.devices.poles.Pole;
-import com.rubyhuntersky.gx.divs.Div0;
-import com.rubyhuntersky.gx.divs.Div1;
-import com.rubyhuntersky.gx.divs.Div2;
-import com.rubyhuntersky.gx.client.Presentation;
-import com.rubyhuntersky.gx.internal.presentations.ResizePresentation;
-import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.uis.divs.Div0;
+import com.rubyhuntersky.gx.uis.divs.Div1;
+import com.rubyhuntersky.gx.uis.divs.Div2;
+import com.rubyhuntersky.gx.presentations.Presentation;
+import com.rubyhuntersky.gx.presentations.ResizePresentation;
+import com.rubyhuntersky.gx.uis.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.devices.mosaics.ShiftMosaic;
-import com.rubyhuntersky.gx.tiles.Tile0;
-import com.rubyhuntersky.gx.tiles.Tile1;
-import com.rubyhuntersky.gx.tiles.Tile2;
+import com.rubyhuntersky.gx.uis.tiles.Tile0;
+import com.rubyhuntersky.gx.uis.tiles.Tile1;
+import com.rubyhuntersky.gx.uis.tiles.Tile2;
 
 /**
  * @author wehjin

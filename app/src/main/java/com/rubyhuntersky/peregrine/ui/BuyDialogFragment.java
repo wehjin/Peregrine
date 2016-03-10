@@ -10,21 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Reaction;
+import com.rubyhuntersky.gx.observers.Observer;
+import com.rubyhuntersky.gx.reactions.Reaction;
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.divs.ColumnUiView;
-import com.rubyhuntersky.gx.divs.Div0;
-import com.rubyhuntersky.gx.divs.Div2;
-import com.rubyhuntersky.gx.divs.Div4;
-import com.rubyhuntersky.gx.internal.presentations.EmptyPresentation;
-import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.android.PoleView;
+import com.rubyhuntersky.gx.uis.divs.Div0;
+import com.rubyhuntersky.gx.uis.divs.Div2;
+import com.rubyhuntersky.gx.uis.divs.Div4;
+import com.rubyhuntersky.gx.presentations.EmptyPresentation;
+import com.rubyhuntersky.gx.presentations.Presentation;
 import com.rubyhuntersky.gx.reactions.HeightChangedReaction;
 import com.rubyhuntersky.gx.reactions.ItemSelectionReaction;
-import com.rubyhuntersky.gx.tiles.Tile0;
-import com.rubyhuntersky.gx.tiles.Tile1;
-import com.rubyhuntersky.gx.tiles.Tile2;
-import com.rubyhuntersky.gx.tiles.TileCreator;
+import com.rubyhuntersky.gx.uis.tiles.Tile0;
+import com.rubyhuntersky.gx.uis.tiles.Tile1;
+import com.rubyhuntersky.gx.uis.tiles.Tile2;
+import com.rubyhuntersky.gx.uis.tiles.TileCreator;
 import com.rubyhuntersky.peregrine.AssetPrice;
 import com.rubyhuntersky.peregrine.BuyProgram;
 import com.rubyhuntersky.peregrine.FundingAccount;
@@ -38,18 +38,18 @@ import java.util.List;
 
 import static com.rubyhuntersky.coloret.Coloret.BLACK;
 import static com.rubyhuntersky.coloret.Coloret.WHITE;
-import static com.rubyhuntersky.gx.client.Gx.colorColumn;
-import static com.rubyhuntersky.gx.client.Gx.gapColumn;
-import static com.rubyhuntersky.gx.client.Gx.textColumn;
-import static com.rubyhuntersky.gx.client.Gx.textTile;
+import static com.rubyhuntersky.gx.Gx.colorColumn;
+import static com.rubyhuntersky.gx.Gx.gapColumn;
+import static com.rubyhuntersky.gx.Gx.textColumn;
+import static com.rubyhuntersky.gx.Gx.textTile;
 import static com.rubyhuntersky.gx.basics.Sizelet.PREVIOUS;
 import static com.rubyhuntersky.gx.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.gx.basics.Sizelet.TWO_THIRDS_FINGER;
 import static com.rubyhuntersky.gx.basics.Sizelet.readables;
 import static com.rubyhuntersky.gx.basics.TextStylet.IMPORTANT_DARK;
 import static com.rubyhuntersky.gx.basics.TextStylet.READABLE_DARK;
-import static com.rubyhuntersky.gx.material.Android.spinnerTile;
-import static com.rubyhuntersky.gx.tiles.TileCreator.textTile1;
+import static com.rubyhuntersky.gx.android.AndroidGx.spinnerTile;
+import static com.rubyhuntersky.gx.uis.tiles.TileCreator.textTile1;
 import static com.rubyhuntersky.peregrine.ui.UiHelper.getCurrencyDisplayString;
 
 /**
@@ -68,7 +68,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
     public static final String FUNDING_ACCOUNT_SPINNER = "fundingAccountSpinner";
     public static final String FUNDING_OPTION_SPINNER = "fundingOptionSpinner";
 
-    private ColumnUiView columnUiView;
+    private PoleView columnUiView;
     private Presentation presentation = new EmptyPresentation();
     private Div0 ui;
     private BuyProgram program;
@@ -242,7 +242,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View inflate = inflater.inflate(R.layout.fragment_buy, container, false);
-        columnUiView = (ColumnUiView) inflate.findViewById(R.id.ui);
+        columnUiView = (PoleView) inflate.findViewById(R.id.ui);
         return inflate;
     }
 

@@ -1,9 +1,9 @@
 package com.rubyhuntersky.gx.internal.presenters;
 
-import com.rubyhuntersky.gx.client.Human;
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Presentation;
-import com.rubyhuntersky.gx.client.Reaction;
+import com.rubyhuntersky.gx.Human;
+import com.rubyhuntersky.gx.observers.Observer;
+import com.rubyhuntersky.gx.presentations.Presentation;
+import com.rubyhuntersky.gx.reactions.Reaction;
 
 import java.util.ArrayList;
 import java.util.Collections;

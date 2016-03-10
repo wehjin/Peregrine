@@ -2,7 +2,7 @@ package com.rubyhuntersky.gx.devices.mosaics;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.CoreDevice;
+import com.rubyhuntersky.gx.internal.devices.Device;
 import com.rubyhuntersky.gx.internal.devices.DelayDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDeviceChain;
@@ -12,7 +12,7 @@ import com.rubyhuntersky.gx.internal.devices.PatchDeviceChain;
  * @since 1/28/16.
  */
 
-public class Mosaic extends PatchDeviceChain implements CoreDevice<Mosaic> {
+public class Mosaic extends PatchDeviceChain implements Device<Mosaic> {
 
     public final float relatedWidth;
     public final float relatedHeight;

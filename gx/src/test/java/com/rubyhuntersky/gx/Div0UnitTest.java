@@ -7,16 +7,15 @@ import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.client.Human;
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Presentation;
 import com.rubyhuntersky.gx.devices.poles.Pole;
-import com.rubyhuntersky.gx.divs.Div0;
 import com.rubyhuntersky.gx.devices.poles.SeedPole;
 import com.rubyhuntersky.gx.internal.patches.Patch;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
-import com.rubyhuntersky.gx.internal.presenters.OnPresent;
+import com.rubyhuntersky.gx.uis.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
+import com.rubyhuntersky.gx.observers.Observer;
+import com.rubyhuntersky.gx.presentations.Presentation;
+import com.rubyhuntersky.gx.uis.divs.Div0;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,8 +23,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static com.rubyhuntersky.gx.client.Gx.colorColumn;
-import static com.rubyhuntersky.gx.client.Gx.gapColumn;
+import static com.rubyhuntersky.gx.Gx.colorColumn;
+import static com.rubyhuntersky.gx.Gx.gapColumn;
 import static com.rubyhuntersky.gx.basics.Sizelet.pixels;
 import static org.junit.Assert.assertEquals;
 

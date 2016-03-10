@@ -2,8 +2,6 @@ package com.rubyhuntersky.gx.reactions;
 
 import android.support.annotation.Nullable;
 
-import com.rubyhuntersky.gx.client.Reaction;
-
 /**
  * @author wehjin
  * @since 1/27/16.
