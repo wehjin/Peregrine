@@ -33,7 +33,7 @@ public class ExpandHorizontalTileOperation0 extends TileOperation0 {
                 final Presentation basePresentation = base.present(human, shiftDevice, presenter);
                 final float baseWidth = basePresentation.getWidth();
                 final float padding = padlet.toFloat(human, baseWidth);
-                shiftDevice.setShift(padding, 0);
+                shiftDevice.doShift(padding, 0);
                 presenter.addPresentation(new ResizePresentation(baseWidth + 2 * padding, basePresentation.getHeight(),
                                                                  basePresentation));
             }

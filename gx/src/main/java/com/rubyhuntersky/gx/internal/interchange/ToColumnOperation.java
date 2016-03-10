@@ -34,7 +34,7 @@ public class ToColumnOperation {
                 final float presentationWidth = presentation.getWidth();
                 final float extraWidth = pole.fixedWidth - presentationWidth;
                 final float anchor = .5f;
-                frameShiftTile.setShift(extraWidth * anchor, 0);
+                frameShiftTile.doShift(extraWidth * anchor, 0);
                 presenter.addPresentation(new ResizePresentation(pole.fixedWidth,
                                                                  presentation.getHeight(),
                                                                  presentation));

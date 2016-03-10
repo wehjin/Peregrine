@@ -27,8 +27,8 @@ public class ExpandLeftTileOperation1 extends TileOperation1 {
                 final Presentation presentBase = base.present(human, baseShift, presenter);
                 final Presentation presentExpansion = expansion.present(human, expansionShift, presenter);
                 final float height = Math.max(presentBase.getHeight(), presentExpansion.getHeight());
-                baseShift.setShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
-                expansionShift.setShift(0, (height - presentExpansion.getHeight()) * .5f);
+                baseShift.doShift(presentExpansion.getWidth(), (height - presentBase.getHeight()) * .5f);
+                expansionShift.doShift(0, (height - presentExpansion.getHeight()) * .5f);
                 presenter.addPresentation(presentExpansion);
                 presenter.addPresentation(new ResizePresentation(presentExpansion.getWidth() + presentBase.getWidth(),
                                                                  height,

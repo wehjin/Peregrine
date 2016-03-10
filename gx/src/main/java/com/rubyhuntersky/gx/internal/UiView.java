@@ -62,7 +62,7 @@ abstract public class UiView<T extends FixedDimensionDevice<T>> extends PatchDev
         final MultiDevicePresentation<T> presentation1 = ui == null
               ? new MultiDevicePresentation<T>()
               : new MultiDevicePresentation<T>(ui, human, device,
-                                                observer) {
+                                               observer) {
                   @Override
                   protected void onCancel() {
                       super.onCancel();
@@ -103,7 +103,7 @@ abstract public class UiView<T extends FixedDimensionDevice<T>> extends PatchDev
         if (!variableDimensions.containsKey(fixedDimension)) {
             Log.d(TAG, "onMeasure widthSpec: " + MeasureSpec.toString(widthMeasureSpec) + ", heightSpec: " + MeasureSpec
                   .toString(heightMeasureSpec));
-            final T device = withFixedDimension(fixedDimension).withDelay().asType();
+            final T device = withFixedDimension(fixedDimension).withDelay().toType();
             final Presentation presentation = ui.present(human, device, Observer.EMPTY);
             final float variableDimension = getVariableDimension(presentation);
             presentation.cancel();

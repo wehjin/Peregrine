@@ -46,7 +46,7 @@ abstract public class Span0 implements Ui<Bar> {
         final float presentationWidth = presentation.getWidth();
         final float extraWidth = pole.fixedWidth - presentationWidth;
         final float anchor = .5f;
-        shiftBar.setShift(extraWidth * anchor, 0);
+        shiftBar.doShift(extraWidth * anchor, 0);
         return new ResizePresentation(pole.fixedWidth, bar.fixedHeight, presentation);
     }
 
@@ -66,7 +66,7 @@ abstract public class Span0 implements Ui<Bar> {
                 final Bar startBar = bar.withRelatedWidth(endPresentation.getWidth());
                 final Presentation startPresentation = startUi.present(human, startBar, presenter);
                 final float startWidth = startPresentation.getWidth();
-                shiftBar.setShift(startWidth, 0);
+                shiftBar.doShift(startWidth, 0);
                 final float combinedWidth = startWidth + endPresentation.getWidth();
                 presenter.addPresentation(startPresentation);
                 presenter.addPresentation(new ResizePresentation(combinedWidth, bar.fixedHeight, endPresentation));
@@ -84,7 +84,7 @@ abstract public class Span0 implements Ui<Bar> {
                 final Human human = presenter.getHuman();
                 final Presentation presentation = ui.present(human, shiftBar, presenter);
                 final float padding = padlet.toFloat(human, presentation.getWidth());
-                shiftBar.setShift(padding, 0);
+                shiftBar.doShift(padding, 0);
                 presenter.addPresentation(
                       new ResizePresentation(padding + presentation.getWidth(), presentation.getHeight(),
                             presentation));

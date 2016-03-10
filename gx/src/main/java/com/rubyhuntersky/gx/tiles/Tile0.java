@@ -62,7 +62,7 @@ abstract public class Tile0 implements Ui<Mosaic> {
                 final float presentationHeight = presentation.getHeight();
                 final float extraHeight = bar.fixedHeight - presentationHeight;
                 final float anchor = .5f;
-                frameShiftTile.setShift(0, extraHeight * anchor);
+                frameShiftTile.doShift(0, extraHeight * anchor);
                 presenter.addPresentation(presentation);
             }
         });

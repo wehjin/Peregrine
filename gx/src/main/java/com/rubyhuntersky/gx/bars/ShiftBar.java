@@ -28,7 +28,7 @@ public class ShiftBar extends Bar implements ShiftDevice<Bar> {
 
     @NonNull
     @Override
-    public ShiftBar setShift(float horizontalShift, float verticalShift) {
+    public ShiftBar doShift(float horizontalShift, float verticalShift) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontalShift;

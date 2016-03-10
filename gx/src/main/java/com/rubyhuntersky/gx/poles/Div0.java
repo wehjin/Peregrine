@@ -77,7 +77,7 @@ public abstract class Div0 implements Ui<Pole> {
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
-                newColumn.setShift(0, padding);
+                newColumn.doShift(0, padding);
                 final float newHeight = height + padding;
                 presenter.addPresentation(new ResizePresentation(pole.fixedWidth, newHeight, presentation));
             }
@@ -99,7 +99,7 @@ public abstract class Div0 implements Ui<Pole> {
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
                 final float padding = padlet.toFloat(human, height);
-                newColumn.setShift(0, padding);
+                newColumn.doShift(0, padding);
                 final float newHeight = height + 2 * padding;
                 presenter.addPresentation(new ResizePresentation(pole.fixedWidth, newHeight, presentation));
             }

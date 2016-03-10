@@ -40,7 +40,7 @@ public class ColumnUiView extends UiView<Pole> {
 
     @NonNull
     @Override
-    public Pole asType() {
+    public Pole toType() {
         return pole;
     }
 

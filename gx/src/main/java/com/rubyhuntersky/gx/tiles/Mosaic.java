@@ -49,7 +49,7 @@ public class Mosaic extends PatchDeviceWrapper implements CoreDevice<Mosaic> {
 
     @NonNull
     @Override
-    public Mosaic asType() {
+    public Mosaic toType() {
         return this;
     }
 

@@ -28,7 +28,7 @@ public class ShiftPole extends Pole implements ShiftDevice<Pole> {
 
     @NonNull
     @Override
-    public ShiftPole setShift(float horizontal, float vertical) {
+    public ShiftPole doShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontal;

@@ -33,7 +33,7 @@ public class ExpandVerticalTileOperation0 extends TileOperation0 {
                 final Presentation basePresentation = base.present(human, baseMosaic, presenter);
                 final float baseHeight = basePresentation.getHeight();
                 final float padding = padlet.toFloat(human, baseHeight);
-                baseMosaic.setShift(0, padding);
+                baseMosaic.doShift(0, padding);
                 final float width = basePresentation.getWidth();
                 final float height = baseHeight + 2 * padding;
                 presenter.addPresentation(new ResizePresentation(width, height, basePresentation));

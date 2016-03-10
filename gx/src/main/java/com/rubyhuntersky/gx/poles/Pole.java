@@ -34,7 +34,7 @@ public class Pole extends PatchDeviceWrapper implements FixedDimensionDevice<Pol
 
     public Pole withShift(float horizontal, float vertical) {
         final ShiftPole frameShiftColumn = withShift();
-        frameShiftColumn.setShift(horizontal, vertical);
+        frameShiftColumn.doShift(horizontal, vertical);
         return frameShiftColumn;
     }
 
@@ -66,7 +66,7 @@ public class Pole extends PatchDeviceWrapper implements FixedDimensionDevice<Pol
 
     @NonNull
     @Override
-    public Pole asType() {
+    public Pole toType() {
         return this;
     }
 }

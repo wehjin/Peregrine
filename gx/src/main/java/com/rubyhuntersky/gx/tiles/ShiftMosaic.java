@@ -28,7 +28,7 @@ public class ShiftMosaic extends Mosaic implements ShiftDevice<Mosaic> {
 
     @NonNull
     @Override
-    public ShiftMosaic setShift(float horizontal, float vertical) {
+    public ShiftMosaic doShift(float horizontal, float vertical) {
         if (!didShift) {
             didShift = true;
             this.horizontalShift = horizontal;

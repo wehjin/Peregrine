@@ -64,7 +64,7 @@ public class Bar extends PatchDeviceWrapper implements FixedDimensionDevice<Bar>
 
     @NonNull
     @Override
-    public Bar asType() {
+    public Bar toType() {
         return this;
     }
 }

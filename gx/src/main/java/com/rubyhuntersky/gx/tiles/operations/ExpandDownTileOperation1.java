@@ -29,8 +29,8 @@ public class ExpandDownTileOperation1 extends TileOperation1 {
                 final float width = Math.max(basePresentation.getWidth(), expansionPresentation.getWidth());
                 final float baseShiftX = (width - basePresentation.getWidth()) * .5f;
                 final float expansionShiftX = (width - expansionPresentation.getWidth()) * .5f;
-                baseMosaic.setShift(baseShiftX, 0);
-                expansionMosaic.setShift(expansionShiftX, basePresentation.getHeight());
+                baseMosaic.doShift(baseShiftX, 0);
+                expansionMosaic.doShift(expansionShiftX, basePresentation.getHeight());
                 presenter.addPresentation(new BooleanPresentation() {
                     @Override
                     protected void onCancel() {

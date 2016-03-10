@@ -9,5 +9,5 @@ import android.support.annotation.NonNull;
 public interface ShiftDevice<T> extends CoreDevice<T> {
 
     @NonNull
-    ShiftDevice<T> setShift(float horizontal, float vertical);
+    ShiftDevice<T> doShift(float horizontal, float vertical);
 }

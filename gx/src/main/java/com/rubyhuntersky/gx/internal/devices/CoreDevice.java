@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 public interface CoreDevice<T> extends PatchDevice {
     @NonNull
-    T asType();
+    T toType();
 
     @NonNull
     T withElevation(int elevation);
