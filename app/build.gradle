@@ -41,8 +41,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.0.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile project(':gx')
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+    compile('com.github.wehjin:GxAndroid:v0.1') {
+        transitive = true
+    }
 }
