@@ -2,18 +2,18 @@ package com.rubyhuntersky.gx.material;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.bars.Span0;
-import com.rubyhuntersky.gx.bars.Span1;
+import com.rubyhuntersky.gx.spans.Span0;
+import com.rubyhuntersky.gx.spans.Span1;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextStylet;
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.patches.Patch;
 import com.rubyhuntersky.gx.internal.presentations.PatchPresentation;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.internal.shapes.SpinnerViewShape;
-import com.rubyhuntersky.gx.poles.Div0;
-import com.rubyhuntersky.gx.tiles.Mosaic;
+import com.rubyhuntersky.gx.divs.Div0;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 import com.rubyhuntersky.gx.tiles.Tile1;
 import com.rubyhuntersky.gx.tiles.TileCreator;

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.rubyhuntersky.gx.client.Gx;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.basics.TextStylet;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.internal.presentations.BooleanPresentation;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;

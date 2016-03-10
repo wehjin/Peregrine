@@ -2,13 +2,13 @@ package com.rubyhuntersky.gx;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.bars.Bar;
-import com.rubyhuntersky.gx.bars.BarSeed;
+import com.rubyhuntersky.gx.devices.bars.Bar;
+import com.rubyhuntersky.gx.devices.bars.SeedBar;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class BarUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        bar = new BarSeed(10, 20, 1) {
+        bar = new SeedBar(10, 20, 1) {
 
             @NonNull
             @Override

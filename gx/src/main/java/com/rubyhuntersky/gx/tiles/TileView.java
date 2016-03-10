@@ -10,6 +10,7 @@ import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.R;
 import com.rubyhuntersky.gx.client.Human;
 import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.material.PatchDeviceView;
 
 /**

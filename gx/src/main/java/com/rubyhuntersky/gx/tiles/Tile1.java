@@ -2,7 +2,8 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.poles.Div1;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
+import com.rubyhuntersky.gx.divs.Div1;
 import com.rubyhuntersky.gx.internal.interchange.ToColumnOperation;
 import com.rubyhuntersky.gx.tiles.operations.ExpandDownTileOperation1;
 import com.rubyhuntersky.gx.tiles.operations.ExpandLeftTileOperation1;

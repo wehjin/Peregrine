@@ -5,7 +5,7 @@ import com.rubyhuntersky.gx.client.Reaction;
 import com.rubyhuntersky.gx.client.Presentation;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
-import com.rubyhuntersky.gx.tiles.Mosaic;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 
 /**

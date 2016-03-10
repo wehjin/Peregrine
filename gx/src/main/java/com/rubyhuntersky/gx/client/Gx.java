@@ -7,24 +7,24 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.rubyhuntersky.coloret.Coloret;
-import com.rubyhuntersky.gx.bars.Bar;
-import com.rubyhuntersky.gx.bars.Span0;
+import com.rubyhuntersky.gx.devices.bars.Bar;
+import com.rubyhuntersky.gx.spans.Span0;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.basics.TextHeight;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
 import com.rubyhuntersky.gx.basics.TextStylet;
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.patches.Patch;
 import com.rubyhuntersky.gx.internal.presentations.BooleanPresentation;
 import com.rubyhuntersky.gx.internal.presentations.PatchPresentation;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.internal.shapes.RectangleShape;
 import com.rubyhuntersky.gx.internal.shapes.ViewShape;
-import com.rubyhuntersky.gx.poles.Div0;
-import com.rubyhuntersky.gx.poles.Pole;
-import com.rubyhuntersky.gx.tiles.Mosaic;
+import com.rubyhuntersky.gx.divs.Div0;
+import com.rubyhuntersky.gx.devices.poles.Pole;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 
 /**

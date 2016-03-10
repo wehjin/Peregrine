@@ -1,10 +1,12 @@
 package com.rubyhuntersky.gx.tiles;
 
 import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.bars.Bar;
-import com.rubyhuntersky.gx.bars.Span0;
+import com.rubyhuntersky.gx.devices.bars.Bar;
+import com.rubyhuntersky.gx.spans.Span0;
 import com.rubyhuntersky.gx.basics.Sizelet;
-import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.devices.mosaics.Mosaic;
+import com.rubyhuntersky.gx.devices.mosaics.ShiftMosaic;
+import com.rubyhuntersky.gx.divs.Div0;
 import com.rubyhuntersky.gx.client.Human;
 import com.rubyhuntersky.gx.internal.interchange.ToColumnOperation;
 import com.rubyhuntersky.gx.client.Presentation;

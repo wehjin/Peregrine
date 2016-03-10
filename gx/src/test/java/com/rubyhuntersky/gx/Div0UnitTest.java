@@ -10,10 +10,10 @@ import com.rubyhuntersky.gx.basics.TextStyle;
 import com.rubyhuntersky.gx.client.Human;
 import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Presentation;
-import com.rubyhuntersky.gx.poles.Pole;
-import com.rubyhuntersky.gx.poles.Div0;
-import com.rubyhuntersky.gx.poles.PoleSeed;
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.devices.poles.Pole;
+import com.rubyhuntersky.gx.divs.Div0;
+import com.rubyhuntersky.gx.devices.poles.SeedPole;
+import com.rubyhuntersky.gx.internal.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
@@ -44,7 +44,7 @@ public class Div0UnitTest {
     public void setUp() throws Exception {
         human = new Human(17, 13);
         frames = new ArrayList<>();
-        pole = new PoleSeed(100, 27, 5) {
+        pole = new SeedPole(100, 27, 5) {
             @NonNull
             @Override
             public Patch addPatch(Frame frame, Shape shape, int argbColor) {

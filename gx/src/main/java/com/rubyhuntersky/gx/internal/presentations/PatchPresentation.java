@@ -1,7 +1,7 @@
 package com.rubyhuntersky.gx.internal.presentations;
 
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.patches.Patch;
 
 /**
  * @author wehjin
