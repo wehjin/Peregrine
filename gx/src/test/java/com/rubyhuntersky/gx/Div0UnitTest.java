@@ -47,7 +47,7 @@ public class Div0UnitTest {
         pole = new PoleSeed(100, 27, 5) {
             @NonNull
             @Override
-            public Patch addPatch(Frame frame, Shape shape) {
+            public Patch addPatch(Frame frame, Shape shape, int argbColor) {
                 frames.add(frame);
                 return Patch.EMPTY;
             }

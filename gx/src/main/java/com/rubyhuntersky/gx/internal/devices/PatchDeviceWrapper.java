@@ -22,8 +22,8 @@ public class PatchDeviceWrapper implements PatchDevice {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape) {
-        return basis.addPatch(frame, shape);
+    public Patch addPatch(Frame frame, Shape shape, int argbColor) {
+        return basis.addPatch(frame, shape, argbColor);
     }
 
     @NonNull

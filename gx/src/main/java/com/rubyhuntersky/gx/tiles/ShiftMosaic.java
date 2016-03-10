@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.internal.devices.ShiftDisplay;
 import com.rubyhuntersky.gx.internal.devices.patches.FrameShiftPatch;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,8 @@ public class ShiftMosaic extends Mosaic implements ShiftDisplay<Mosaic> {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape) {
-        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, basis);
+    public Patch addPatch(Frame frame, Shape shape, int argbColor) {
+        final FrameShiftPatch patch = new FrameShiftPatch(frame, shape, argbColor, basis);
         if (didShift) {
             patch.setShift(horizontalShift, verticalShift);
         } else {

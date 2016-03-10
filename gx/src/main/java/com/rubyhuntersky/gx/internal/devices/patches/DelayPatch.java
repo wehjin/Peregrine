@@ -14,15 +14,17 @@ public class DelayPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
+    private final int argbColor;
     private final PatchDevice display;
     private Patch patch;
     private boolean didEndDelay;
     private boolean didRemove;
 
-    public DelayPatch(Frame frame, Shape shape, @NonNull PatchDevice display) {
+    public DelayPatch(Frame frame, Shape shape, int argbColor, @NonNull PatchDevice display) {
 
         this.frame = frame;
         this.shape = shape;
+        this.argbColor = argbColor;
         this.display = display;
     }
 
@@ -30,7 +32,7 @@ public class DelayPatch implements Patch {
         if (didRemove || didEndDelay) {
             return;
         }
-        patch = display.addPatch(frame, shape);
+        patch = display.addPatch(frame, shape, argbColor);
         didEndDelay = true;
     }
 

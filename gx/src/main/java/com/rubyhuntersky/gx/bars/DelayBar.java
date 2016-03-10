@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
 import com.rubyhuntersky.gx.internal.devices.patches.DelayPatch;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +38,11 @@ public class DelayBar extends Bar implements DelayDisplay<Bar> {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape) {
+    public Patch addPatch(Frame frame, Shape shape, int argbColor) {
         if (didEndDelay) {
-            return basis.addPatch(frame, shape);
+            return basis.addPatch(frame, shape, argbColor);
         }
-        final DelayPatch patch = new DelayPatch(frame, shape, basis);
+        final DelayPatch patch = new DelayPatch(frame, shape, argbColor, basis);
         pending.add(patch);
         return patch;
     }

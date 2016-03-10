@@ -29,7 +29,7 @@ public class BarUnitTest {
 
             @NonNull
             @Override
-            public Patch addPatch(Frame frame, Shape shape) {
+            public Patch addPatch(Frame frame, Shape shape, int argbColor) {
                 return Patch.EMPTY;
             }
 

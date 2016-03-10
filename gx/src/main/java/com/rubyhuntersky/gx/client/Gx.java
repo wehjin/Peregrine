@@ -15,8 +15,6 @@ import com.rubyhuntersky.gx.basics.TextHeight;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
 import com.rubyhuntersky.gx.basics.TextStylet;
-import com.rubyhuntersky.gx.poles.Pole;
-import com.rubyhuntersky.gx.poles.Div0;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.presentations.BooleanPresentation;
 import com.rubyhuntersky.gx.internal.presentations.PatchPresentation;
@@ -24,6 +22,8 @@ import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.internal.shapes.RectangleShape;
 import com.rubyhuntersky.gx.internal.shapes.ViewShape;
+import com.rubyhuntersky.gx.poles.Div0;
+import com.rubyhuntersky.gx.poles.Pole;
 import com.rubyhuntersky.gx.tiles.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 
@@ -49,13 +49,14 @@ public class Gx {
                 final TextHeight textHeight = textSize.textHeight;
                 final Frame textFrame = frame.withVerticalShift(-textHeight.topPadding)
                       .withVerticalLength(textHeight.topPadding + 1.5f * textHeight.height);
+                final int argbColor = textStyle.coloret.toArgb();
                 final ViewShape viewShape = new ViewShape() {
                     @Override
                     public View createView(Context context) {
                         final TextView textView = new TextView(context);
                         textView.setGravity(Gravity.TOP);
                         textView.setSingleLine();
-                        textView.setTextColor(textStyle.coloret.toArgb());
+                        textView.setTextColor(argbColor);
                         textView.setTypeface(textStyle.typeface);
                         textView.setTextSize(textStyle.typeheight);
                         textView.setText(textString);
@@ -64,7 +65,7 @@ public class Gx {
                         return textView;
                     }
                 };
-                final Patch patch = mosaic.addPatch(textFrame, viewShape);
+                final Patch patch = mosaic.addPatch(textFrame, viewShape, argbColor);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });
@@ -77,7 +78,7 @@ public class Gx {
                 final Bar bar = presenter.getDisplay();
                 final float width = widthlet.toFloat(presenter.getHuman(), bar.relatedWidth);
                 final Frame frame = new Frame(width, bar.fixedHeight, bar.elevation);
-                final Patch patch = bar.addPatch(frame, new RectangleShape(coloret));
+                final Patch patch = bar.addPatch(frame, new RectangleShape(), coloret.toArgb());
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });
@@ -98,8 +99,9 @@ public class Gx {
                 final Pole pole = presenter.getDisplay();
                 final float height = heightlet.toFloat(presenter.getHuman(), pole.relatedHeight);
                 final Frame frame = new Frame(pole.fixedWidth, height, pole.elevation);
-                final RectangleShape rectangle = new RectangleShape(coloret);
-                final Patch patch = coloret == null ? null : pole.addPatch(frame, rectangle);
+                final Patch patch = coloret == null
+                      ? null
+                      : pole.addPatch(frame, new RectangleShape(), coloret.toArgb());
                 final Presentation presentation = new BooleanPresentation() {
 
                     @Override

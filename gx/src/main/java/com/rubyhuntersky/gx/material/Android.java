@@ -7,12 +7,12 @@ import com.rubyhuntersky.gx.bars.Span1;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextStylet;
-import com.rubyhuntersky.gx.poles.Div0;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.presentations.PatchPresentation;
 import com.rubyhuntersky.gx.internal.presenters.OnPresent;
 import com.rubyhuntersky.gx.internal.presenters.Presenter;
 import com.rubyhuntersky.gx.internal.shapes.SpinnerViewShape;
+import com.rubyhuntersky.gx.poles.Div0;
 import com.rubyhuntersky.gx.tiles.Mosaic;
 import com.rubyhuntersky.gx.tiles.Tile0;
 import com.rubyhuntersky.gx.tiles.Tile1;
@@ -35,7 +35,7 @@ public class Android {
                 final SpinnerViewShape shape = new SpinnerViewShape<>(options, optionsTile, selectedOption, presenter);
                 final ShapeSize shapeSize = mosaic.measureShape(shape);
                 final Frame frame = new Frame(shapeSize.measuredWidth, shapeSize.measuredHeight, mosaic.elevation);
-                final Patch patch = mosaic.addPatch(frame, shape);
+                final Patch patch = mosaic.addPatch(frame, shape, 0);
                 presenter.addPresentation(new PatchPresentation(patch, frame));
             }
         });

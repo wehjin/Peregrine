@@ -47,7 +47,7 @@ public class Span0UnitTest {
 
             @NonNull
             @Override
-            public Patch addPatch(Frame frame, Shape shape) {
+            public Patch addPatch(Frame frame, Shape shape, int argbColor) {
                 frames.add(frame);
                 return Patch.EMPTY;
             }

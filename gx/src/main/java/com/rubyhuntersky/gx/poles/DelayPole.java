@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.poles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
 import com.rubyhuntersky.gx.internal.devices.patches.DelayPatch;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +39,11 @@ public class DelayPole extends Pole implements DelayDisplay<Pole> {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape) {
+    public Patch addPatch(Frame frame, Shape shape, int argbColor) {
         if (didEndDelay) {
-            return super.addPatch(frame, shape);
+            return super.addPatch(frame, shape, argbColor);
         }
-        final DelayPatch patch = new DelayPatch(frame, shape, basis);
+        final DelayPatch patch = new DelayPatch(frame, shape, argbColor, basis);
         pending.add(patch);
         return patch;
     }

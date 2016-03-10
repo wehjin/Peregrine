@@ -2,12 +2,12 @@ package com.rubyhuntersky.gx.poles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 /**
  * @author wehjin
@@ -21,7 +21,7 @@ abstract public class PoleSeed extends Pole {
 
     @NonNull
     @Override
-    abstract public Patch addPatch(Frame frame, Shape shape);
+    abstract public Patch addPatch(Frame frame, Shape shape, int argbColor);
 
     @NonNull
     @Override

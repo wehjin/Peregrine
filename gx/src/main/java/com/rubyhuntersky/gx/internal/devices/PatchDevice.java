@@ -2,11 +2,11 @@ package com.rubyhuntersky.gx.internal.devices;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
+import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 /**
@@ -16,7 +16,7 @@ import com.rubyhuntersky.gx.internal.shapes.Shape;
 
 public interface PatchDevice {
     @NonNull
-    Patch addPatch(Frame frame, Shape shape);
+    Patch addPatch(Frame frame, Shape shape, int argbColor);
 
     @NonNull
     TextSize measureText(String text, TextStyle textStyle);

@@ -11,19 +11,19 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.rubyhuntersky.gx.R;
-import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.basics.Frame;
 import com.rubyhuntersky.gx.basics.ShapeSize;
 import com.rubyhuntersky.gx.basics.TextHeight;
 import com.rubyhuntersky.gx.basics.TextSize;
 import com.rubyhuntersky.gx.basics.TextStyle;
+import com.rubyhuntersky.gx.internal.ShapeRuler;
+import com.rubyhuntersky.gx.internal.TextRuler;
 import com.rubyhuntersky.gx.internal.devices.PatchDevice;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.RectangleShape;
+import com.rubyhuntersky.gx.internal.shapes.Shape;
 import com.rubyhuntersky.gx.internal.shapes.TextShape;
 import com.rubyhuntersky.gx.internal.shapes.ViewShape;
-import com.rubyhuntersky.gx.internal.ShapeRuler;
-import com.rubyhuntersky.gx.internal.TextRuler;
 
 /**
  * @author wehjin
@@ -73,9 +73,9 @@ public class PatchDeviceView extends FrameLayout implements PatchDevice {
 
     @NonNull
     @Override
-    public Patch addPatch(Frame frame, Shape shape) {
+    public Patch addPatch(Frame frame, Shape shape, int argbColor) {
         if (shape instanceof RectangleShape) {
-            return getRectanglePatch(frame, (RectangleShape) shape);
+            return getRectanglePatch(frame, (RectangleShape) shape, argbColor);
         } else if (shape instanceof TextShape) {
             return getTextPatch(frame, (TextShape) shape);
         } else if (shape instanceof ViewShape) {
@@ -87,11 +87,10 @@ public class PatchDeviceView extends FrameLayout implements PatchDevice {
     }
 
     @NonNull
-    private Patch getRectanglePatch(Frame frame, RectangleShape rectangleShape) {
+    private Patch getRectanglePatch(Frame frame, RectangleShape rectangleShape, int argbColor) {
         final View view = new View(getContext());
-        final int color = rectangleShape.coloret.toArgb();
-        view.setBackgroundColor(color);
-        view.setContentDescription(String.format("Rectangle{%x}", color));
+        view.setBackgroundColor(argbColor);
+        view.setContentDescription(String.format("Rectangle{%x}", argbColor));
         return getViewPatch(view, frame, 0);
     }
 

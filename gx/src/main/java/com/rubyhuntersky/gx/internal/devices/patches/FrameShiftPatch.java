@@ -14,15 +14,17 @@ public class FrameShiftPatch implements Patch {
 
     private final Frame frame;
     private final Shape shape;
-    private final PatchDevice display;
+    private final int argbColor;
+    private final PatchDevice device;
     private Patch patch;
     private boolean didShift;
     private boolean didRemove;
 
-    public FrameShiftPatch(Frame frame, Shape shape, @NonNull PatchDevice display) {
+    public FrameShiftPatch(Frame frame, Shape shape, int argbColor, @NonNull PatchDevice device) {
         this.frame = frame;
         this.shape = shape;
-        this.display = display;
+        this.argbColor = argbColor;
+        this.device = device;
     }
 
     public void setShift(float horizontal, float vertical) {
@@ -30,7 +32,7 @@ public class FrameShiftPatch implements Patch {
             return;
         }
         didShift = true;
-        patch = display.addPatch(frame.withShift(horizontal, vertical), shape);
+        patch = device.addPatch(frame.withShift(horizontal, vertical), shape, argbColor);
     }
 
     @Override
