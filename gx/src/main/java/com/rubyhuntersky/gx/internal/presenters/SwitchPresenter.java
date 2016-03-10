@@ -2,10 +2,10 @@ package com.rubyhuntersky.gx.internal.presenters;
 
 import android.util.Log;
 
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Reaction;
 import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.client.Reaction;
 import com.rubyhuntersky.gx.reactions.HeightChangedReaction;
 
 import java.util.Collections;
@@ -19,15 +19,15 @@ public class SwitchPresenter<T> implements Presenter<T> {
 
     public static final String TAG = SwitchPresenter.class.getSimpleName();
     private final Human human;
-    private final T display;
+    private final T device;
     private final Observer observer;
     boolean isCancelled;
     Presentation presentation;
     int presentationCount = 0;
 
-    public SwitchPresenter(Human human, T display, Observer observer) {
+    public SwitchPresenter(Human human, T device, Observer observer) {
         this.human = human;
-        this.display = display;
+        this.device = device;
         this.observer = observer;
         presentation = Presentation.EMPTY;
     }
@@ -77,8 +77,8 @@ public class SwitchPresenter<T> implements Presenter<T> {
     }
 
     @Override
-    public T getDisplay() {
-        return display;
+    public T getDevice() {
+        return device;
     }
 
     @Override

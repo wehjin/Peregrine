@@ -68,7 +68,7 @@ public abstract class Div2<C1, C2> {
             @Override
             public void onPresent(final Presenter<Pole> presenter) {
                 final SwitchPresenter<Pole> switchPresenter = new SwitchPresenter<>(presenter.getHuman(),
-                                                                                      presenter.getDisplay(),
+                                                                                      presenter.getDevice(),
                                                                                       presenter);
                 presenter.addPresentation(switchPresenter);
                 present(repl, switchPresenter);
@@ -78,7 +78,7 @@ public abstract class Div2<C1, C2> {
                 if (presenter.isCancelled())
                     return;
                 final Div0 print = repl.print(div2);
-                presenter.addPresentation(print.present(presenter.getHuman(), presenter.getDisplay(), new Observer() {
+                presenter.addPresentation(print.present(presenter.getHuman(), presenter.getDevice(), new Observer() {
                     @Override
                     public void onReaction(Reaction reaction) {
                         if (presenter.isCancelled())

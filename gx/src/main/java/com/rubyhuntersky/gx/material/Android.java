@@ -31,7 +31,7 @@ public class Android {
         return Tile0.create(new OnPresent<Mosaic>() {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
-                final Mosaic mosaic = presenter.getDisplay();
+                final Mosaic mosaic = presenter.getDevice();
                 final SpinnerViewShape shape = new SpinnerViewShape<>(options, optionsTile, selectedOption, presenter);
                 final ShapeSize shapeSize = mosaic.measureShape(shape);
                 final Frame frame = new Frame(shapeSize.measuredWidth, shapeSize.measuredHeight, mosaic.elevation);

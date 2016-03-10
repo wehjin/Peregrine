@@ -25,7 +25,7 @@ public class PadHorizontalDivOperation0 extends DivOperation0 {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 Human human = presenter.getHuman();
-                Pole pole = presenter.getDisplay();
+                Pole pole = presenter.getDevice();
                 final float padding = padlet.toFloat(human, pole.fixedWidth);
                 Pole newPole = pole.withFixedWidth(pole.fixedWidth - 2 * padding).withShift(padding, 0);
                 presenter.addPresentation(base.present(human, newPole, presenter));

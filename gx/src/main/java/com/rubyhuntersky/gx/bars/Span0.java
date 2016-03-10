@@ -31,7 +31,7 @@ abstract public class Span0 implements Ui<Bar> {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 presenter.addPresentation(
-                      presentBarToColumn(span0, heightlet, presenter.getHuman(), presenter.getDisplay(), presenter));
+                      presentBarToColumn(span0, heightlet, presenter.getHuman(), presenter.getDevice(), presenter));
             }
         });
     }
@@ -59,7 +59,7 @@ abstract public class Span0 implements Ui<Bar> {
         return create(new OnPresent<Bar>() {
             @Override
             public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
+                final Bar bar = presenter.getDevice();
                 final ShiftBar shiftBar = bar.withShift();
                 final Human human = presenter.getHuman();
                 final Presentation endPresentation = ui.present(human, shiftBar, presenter);
@@ -79,7 +79,7 @@ abstract public class Span0 implements Ui<Bar> {
         return create(new OnPresent<Bar>() {
             @Override
             public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
+                final Bar bar = presenter.getDevice();
                 final ShiftBar shiftBar = bar.withShift();
                 final Human human = presenter.getHuman();
                 final Presentation presentation = ui.present(human, shiftBar, presenter);
@@ -108,7 +108,7 @@ abstract public class Span0 implements Ui<Bar> {
 
                     @Override
                     public float getHeight() {
-                        return display.fixedHeight;
+                        return device.fixedHeight;
                     }
                 };
                 onPresent.onPresent(presenter);

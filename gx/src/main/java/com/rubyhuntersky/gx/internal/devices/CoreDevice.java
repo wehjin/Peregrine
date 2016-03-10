@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  * @since 1/28/16.
  */
 
-public interface CoreDisplay<T> extends PatchDevice {
+public interface CoreDevice<T> extends PatchDevice {
     @NonNull
     T asType();
 
@@ -15,8 +15,8 @@ public interface CoreDisplay<T> extends PatchDevice {
     T withElevation(int elevation);
 
     @NonNull
-    DelayDisplay<T> withDelay();
+    DelayDevice<T> withDelay();
 
     @NonNull
-    ShiftDisplay<T> withShift();
+    ShiftDevice<T> withShift();
 }

@@ -46,7 +46,7 @@ public abstract class Div5<C1, C2, C3, C4, C5> {
             @Override
             public void onPresent(final Presenter<Pole> presenter) {
                 final SwitchPresenter<Pole> switchPresenter = new SwitchPresenter<>(presenter.getHuman(),
-                                                                                      presenter.getDisplay(),
+                                                                                      presenter.getDevice(),
                                                                                       presenter);
                 presenter.addPresentation(switchPresenter);
                 present(repl, switchPresenter);
@@ -80,7 +80,7 @@ public abstract class Div5<C1, C2, C3, C4, C5> {
                     }
                 };
                 switchPresenter.addPresentation(ui.present(switchPresenter.getHuman(),
-                                                           switchPresenter.getDisplay(),
+                                                           switchPresenter.getDevice(),
                                                            observer));
             }
         });

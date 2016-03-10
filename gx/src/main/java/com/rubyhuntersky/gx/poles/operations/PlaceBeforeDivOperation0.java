@@ -32,7 +32,7 @@ public class PlaceBeforeDivOperation0 extends DivOperation0 {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 Human human = presenter.getHuman();
-                Pole pole = presenter.getDisplay();
+                Pole pole = presenter.getDevice();
                 final DelayPole delayColumn = pole.withElevation(pole.elevation + gap).withDelay();
                 final Presentation frontPresentation = base.present(human, delayColumn, presenter);
                 final Pole backgroundPole = pole.withRelatedHeight(frontPresentation.getHeight());

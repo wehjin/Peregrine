@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.bars;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.internal.devices.ShiftDisplay;
+import com.rubyhuntersky.gx.internal.devices.ShiftDevice;
 import com.rubyhuntersky.gx.internal.devices.patches.FrameShiftPatch;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class ShiftBar extends Bar implements ShiftDisplay<Bar> {
+public class ShiftBar extends Bar implements ShiftDevice<Bar> {
 
     private boolean didShift;
     private List<FrameShiftPatch> pending = new ArrayList<>();

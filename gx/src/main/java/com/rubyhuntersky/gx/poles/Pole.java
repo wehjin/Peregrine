@@ -2,7 +2,7 @@ package com.rubyhuntersky.gx.poles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.FixedDisplay;
+import com.rubyhuntersky.gx.internal.devices.FixedDimensionDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
 
@@ -11,7 +11,7 @@ import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
  * @since 1/23/16.
  */
 
-public class Pole extends PatchDeviceWrapper implements FixedDisplay<Pole> {
+public class Pole extends PatchDeviceWrapper implements FixedDimensionDevice<Pole> {
 
     public final float fixedWidth;
     public final float relatedHeight;
@@ -60,7 +60,7 @@ public class Pole extends PatchDeviceWrapper implements FixedDisplay<Pole> {
 
     @NonNull
     @Override
-    public Pole asDisplayWithFixedDimension(float fixedDimension) {
+    public Pole withFixedDimension(float fixedDimension) {
         return withFixedWidth(fixedDimension);
     }
 

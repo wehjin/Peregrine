@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.R;
 import com.rubyhuntersky.gx.client.Human;
-import com.rubyhuntersky.gx.internal.devices.FixedDisplay;
-import com.rubyhuntersky.gx.material.PatchDeviceView;
-import com.rubyhuntersky.gx.internal.presentations.MultiDisplayPresentation;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.internal.devices.FixedDimensionDevice;
+import com.rubyhuntersky.gx.internal.presentations.MultiDevicePresentation;
+import com.rubyhuntersky.gx.material.PatchDeviceView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,12 +20,12 @@ import java.util.Map;
  * @since 1/23/16.
  */
 
-abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView implements FixedDisplay<T> {
+abstract public class UiView<T extends FixedDimensionDevice<T>> extends PatchDeviceView implements FixedDimensionDevice<T> {
 
     public final String TAG = getClass().getSimpleName();
     private Human human;
-    private T display;
-    private MultiDisplayPresentation<T> multiDisplayPresentation = new MultiDisplayPresentation<>();
+    private T device;
+    private MultiDevicePresentation<T> multiDevicePresentation = new MultiDevicePresentation<>();
     private Ui<T> ui;
     private Ui<T> measuredUi;
     private Map<Integer, Integer> variableDimensions = new HashMap<>();
@@ -57,11 +57,11 @@ abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView 
     }
 
     public Presentation present(Ui<T> ui, Observer observer) {
-        multiDisplayPresentation.cancel();
+        multiDevicePresentation.cancel();
         this.ui = ui;
-        final MultiDisplayPresentation<T> presentation1 = ui == null
-              ? new MultiDisplayPresentation<T>()
-              : new MultiDisplayPresentation<T>(ui, human, display,
+        final MultiDevicePresentation<T> presentation1 = ui == null
+              ? new MultiDevicePresentation<T>()
+              : new MultiDevicePresentation<T>(ui, human, device,
                                                 observer) {
                   @Override
                   protected void onCancel() {
@@ -70,12 +70,12 @@ abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView 
                       requestLayout();
                   }
               };
-        multiDisplayPresentation = presentation1;
+        multiDevicePresentation = presentation1;
         requestLayout();
         return presentation1;
     }
 
-    abstract protected void setMeasuredDimensionFromDisplayDimensions(float fixed, float variable);
+    abstract protected void setMeasuredDimensionFromDeviceDimensions(float fixed, float variable);
     abstract protected float getVariableDimension(Presentation presentation);
     abstract protected float getFixedDimension(int width, int height);
     abstract protected int getFixedDimensionMeasureSpec(int widthMeasureSpec, int heightMeasureSpec);
@@ -92,7 +92,7 @@ abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView 
 
         int fixedDimension = MeasureSpec.getSize(fixedDimensionMeasureSpec);
         if (ui == null) {
-            setMeasuredDimensionFromDisplayDimensions(fixedDimension, 0);
+            setMeasuredDimensionFromDeviceDimensions(fixedDimension, 0);
             return;
         }
 
@@ -103,15 +103,15 @@ abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView 
         if (!variableDimensions.containsKey(fixedDimension)) {
             Log.d(TAG, "onMeasure widthSpec: " + MeasureSpec.toString(widthMeasureSpec) + ", heightSpec: " + MeasureSpec
                   .toString(heightMeasureSpec));
-            final T display = asDisplayWithFixedDimension(fixedDimension).withDelay().asType();
-            final Presentation presentation = ui.present(human, display, Observer.EMPTY);
+            final T device = withFixedDimension(fixedDimension).withDelay().asType();
+            final Presentation presentation = ui.present(human, device, Observer.EMPTY);
             final float variableDimension = getVariableDimension(presentation);
             presentation.cancel();
             variableDimensions.put(fixedDimension, (int) variableDimension);
         }
         final int variableDimension = variableDimensions.get(fixedDimension);
         Log.d(TAG, "onMeasure setMeasureDimension fixed: " + fixedDimension + ", variable: " + variableDimension);
-        setMeasuredDimensionFromDisplayDimensions(fixedDimension, variableDimension);
+        setMeasuredDimensionFromDeviceDimensions(fixedDimension, variableDimension);
     }
 
     @Override
@@ -124,12 +124,12 @@ abstract public class UiView<T extends FixedDisplay<T>> extends PatchDeviceView 
             Log.d(TAG, "no change in fixed dimension");
             return;
         }
-        display = asDisplayWithFixedDimension(fixedDimension);
+        device = this.withFixedDimension(fixedDimension);
         // Patch views sometimes don't show up if beginPresentation is called directly.
         post(new Runnable() {
             @Override
             public void run() {
-                multiDisplayPresentation.setDisplay(display);
+                multiDevicePresentation.setDevice(device);
             }
         });
     }

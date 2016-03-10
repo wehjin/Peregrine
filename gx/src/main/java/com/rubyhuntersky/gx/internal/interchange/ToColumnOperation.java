@@ -27,7 +27,7 @@ public class ToColumnOperation {
         return Div0.create(new OnPresent<Pole>() {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
-                Pole pole = presenter.getDisplay();
+                Pole pole = presenter.getDevice();
                 final Mosaic mosaic = new Mosaic(pole.fixedWidth, pole.relatedHeight, pole.elevation, pole);
                 final ShiftMosaic frameShiftTile = mosaic.withShift();
                 final Presentation presentation = tile0.present(presenter.getHuman(), frameShiftTile, presenter);

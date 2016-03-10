@@ -40,20 +40,20 @@ public class PatchDeviceView extends FrameLayout implements PatchDevice {
 
     public PatchDeviceView(Context context) {
         super(context);
-        initShapeDisplayView(context);
+        initPatchDeviceView(context);
     }
 
     public PatchDeviceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initShapeDisplayView(context);
+        initPatchDeviceView(context);
     }
 
     public PatchDeviceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initShapeDisplayView(context);
+        initPatchDeviceView(context);
     }
 
-    private void initShapeDisplayView(Context context) {
+    private void initPatchDeviceView(Context context) {
         textRuler = new TextRuler(context);
         shapeRuler = new ShapeRuler(context);
         elevationPixels = getResources().getDimensionPixelSize(R.dimen.elevationGap);

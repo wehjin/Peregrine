@@ -22,7 +22,7 @@ public class ExpandDownDivOperation1 extends DivOperation1 {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 Human human = presenter.getHuman();
-                Pole pole = presenter.getDisplay();
+                Pole pole = presenter.getDevice();
 
                 final DelayPole delayColumn = pole.withDelay();
                 final Presentation topPresentation = base.present(human, delayColumn, presenter);

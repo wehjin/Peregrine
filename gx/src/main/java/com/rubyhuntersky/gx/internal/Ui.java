@@ -10,5 +10,5 @@ import com.rubyhuntersky.gx.client.Presentation;
  */
 
 public interface Ui<T> {
-    Presentation present(Human human, T display, Observer observer);
+    Presentation present(Human human, T device, Observer observer);
 }

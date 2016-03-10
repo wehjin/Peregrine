@@ -4,10 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
-import com.rubyhuntersky.gx.internal.devices.ShiftDisplay;
 import com.rubyhuntersky.gx.client.Presentation;
 import com.rubyhuntersky.gx.internal.UiView;
+import com.rubyhuntersky.gx.internal.devices.DelayDevice;
+import com.rubyhuntersky.gx.internal.devices.ShiftDevice;
 
 /**
  * @author wehjin
@@ -46,19 +46,19 @@ public class ColumnUiView extends UiView<Pole> {
 
     @NonNull
     @Override
-    public Pole asDisplayWithFixedDimension(float fixedDimension) {
-        return pole.asDisplayWithFixedDimension(fixedDimension);
+    public Pole withFixedDimension(float fixedDimension) {
+        return pole.withFixedDimension(fixedDimension);
     }
 
     @NonNull
     @Override
-    public DelayDisplay<Pole> withDelay() {
+    public DelayDevice<Pole> withDelay() {
         return pole.withDelay();
     }
 
     @NonNull
     @Override
-    public ShiftDisplay<Pole> withShift() {
+    public ShiftDevice<Pole> withShift() {
         return pole.withShift();
     }
 
@@ -74,7 +74,7 @@ public class ColumnUiView extends UiView<Pole> {
     }
 
     @Override
-    protected void setMeasuredDimensionFromDisplayDimensions(float fixed, float variable) {
+    protected void setMeasuredDimensionFromDeviceDimensions(float fixed, float variable) {
         setMeasuredDimension((int) fixed, (int) variable);
     }
 

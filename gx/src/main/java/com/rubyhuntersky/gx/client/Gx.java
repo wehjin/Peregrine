@@ -42,7 +42,7 @@ public class Gx {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final Mosaic mosaic = presenter.getDisplay();
+                final Mosaic mosaic = presenter.getDevice();
                 final TextStyle textStyle = textStylet.toStyle(human, mosaic.relatedHeight);
                 final TextSize textSize = mosaic.measureText(textString, textStyle);
                 final Frame frame = new Frame(textSize.textWidth, textSize.textHeight.height, mosaic.elevation);
@@ -74,7 +74,7 @@ public class Gx {
         return Span0.create(new OnPresent<Bar>() {
             @Override
             public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
+                final Bar bar = presenter.getDevice();
                 final float width = widthlet.toFloat(presenter.getHuman(), bar.relatedWidth);
                 final Frame frame = new Frame(width, bar.fixedHeight, bar.elevation);
                 final Patch patch = bar.addPatch(frame, new RectangleShape(), coloret.toArgb());
@@ -95,7 +95,7 @@ public class Gx {
         return Div0.create(new OnPresent<Pole>() {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
-                final Pole pole = presenter.getDisplay();
+                final Pole pole = presenter.getDevice();
                 final float height = heightlet.toFloat(presenter.getHuman(), pole.relatedHeight);
                 final Frame frame = new Frame(pole.fixedWidth, height, pole.elevation);
                 final Patch patch = coloret == null

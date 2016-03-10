@@ -21,7 +21,7 @@ public class ExpandDownTileOperation1 extends TileOperation1 {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final Mosaic mosaic = presenter.getDisplay();
+                final Mosaic mosaic = presenter.getDevice();
                 final ShiftMosaic baseMosaic = mosaic.withShift();
                 final ShiftMosaic expansionMosaic = mosaic.withShift();
                 final Presentation basePresentation = base.present(human, baseMosaic, presenter);

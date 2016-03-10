@@ -29,11 +29,11 @@ public class ExpandHorizontalTileOperation0 extends TileOperation0 {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final ShiftMosaic shiftingDisplay = presenter.getDisplay().withShift();
-                final Presentation basePresentation = base.present(human, shiftingDisplay, presenter);
+                final ShiftMosaic shiftDevice = presenter.getDevice().withShift();
+                final Presentation basePresentation = base.present(human, shiftDevice, presenter);
                 final float baseWidth = basePresentation.getWidth();
                 final float padding = padlet.toFloat(human, baseWidth);
-                shiftingDisplay.setShift(padding, 0);
+                shiftDevice.setShift(padding, 0);
                 presenter.addPresentation(new ResizePresentation(baseWidth + 2 * padding, basePresentation.getHeight(),
                                                                  basePresentation));
             }

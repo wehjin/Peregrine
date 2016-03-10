@@ -55,7 +55,7 @@ abstract public class Tile0 implements Ui<Mosaic> {
         return Span0.create(new OnPresent<Bar>() {
             @Override
             public void onPresent(Presenter<Bar> presenter) {
-                final Bar bar = presenter.getDisplay();
+                final Bar bar = presenter.getDevice();
                 final Mosaic mosaic = new Mosaic(bar.relatedWidth, bar.fixedHeight, bar.elevation, bar);
                 final ShiftMosaic frameShiftTile = mosaic.withShift();
                 final Presentation presentation = present(presenter.getHuman(), frameShiftTile, presenter);

@@ -21,7 +21,7 @@ public class ExpandLeftTileOperation1 extends TileOperation1 {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final Mosaic mosaic = presenter.getDisplay();
+                final Mosaic mosaic = presenter.getDevice();
                 final ShiftMosaic baseShift = mosaic.withShift();
                 final ShiftMosaic expansionShift = mosaic.withShift();
                 final Presentation presentBase = base.present(human, baseShift, presenter);

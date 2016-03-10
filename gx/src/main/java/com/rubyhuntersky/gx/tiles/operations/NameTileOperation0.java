@@ -27,7 +27,7 @@ public class NameTileOperation0 extends TileOperation0 {
             @Override
             public void onPresent(final Presenter<Mosaic> presenter) {
                 final Presentation presentation = base.present(presenter.getHuman(),
-                                                               presenter.getDisplay(),
+                                                               presenter.getDevice(),
                                                                new Observer() {
                                                                    @Override
                                                                    public void onReaction(Reaction reaction) {

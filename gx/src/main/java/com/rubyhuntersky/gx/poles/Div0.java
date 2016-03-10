@@ -42,7 +42,7 @@ public abstract class Div0 implements Ui<Pole> {
                 final BasePresenter<Pole> presenter = new BasePresenter<Pole>(human, pole, observer) {
                     @Override
                     public float getWidth() {
-                        return display.fixedWidth;
+                        return device.fixedWidth;
                     }
 
                     @Override
@@ -72,7 +72,7 @@ public abstract class Div0 implements Ui<Pole> {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 final Human human = presenter.getHuman();
-                final Pole pole = presenter.getDisplay();
+                final Pole pole = presenter.getDevice();
                 final ShiftPole newColumn = pole.withShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
@@ -94,7 +94,7 @@ public abstract class Div0 implements Ui<Pole> {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 final Human human = presenter.getHuman();
-                final Pole pole = presenter.getDisplay();
+                final Pole pole = presenter.getDevice();
                 final ShiftPole newColumn = pole.withShift();
                 final Presentation presentation = ui.present(human, newColumn, presenter);
                 final float height = presentation.getHeight();
@@ -139,7 +139,7 @@ public abstract class Div0 implements Ui<Pole> {
             @Override
             public void onPresent(final Presenter<Pole> presenter) {
                 final Presentation presentation = Div0.this.present(presenter.getHuman(),
-                                                                    presenter.getDisplay(),
+                                                                    presenter.getDevice(),
                                                                     new Observer() {
                                                                         @Override
                                                                         public void onReaction(Reaction reaction) {

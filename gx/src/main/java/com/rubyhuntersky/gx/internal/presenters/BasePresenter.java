@@ -1,9 +1,9 @@
 package com.rubyhuntersky.gx.internal.presenters;
 
-import com.rubyhuntersky.gx.client.Observer;
-import com.rubyhuntersky.gx.client.Reaction;
 import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Presentation;
+import com.rubyhuntersky.gx.client.Reaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,14 +16,14 @@ import java.util.List;
 public abstract class BasePresenter<T> implements Presenter<T> {
 
     protected final Human human;
-    protected final T display;
+    protected final T device;
     protected final Observer observer;
     protected final List<Presentation> presentations = new ArrayList<>();
     protected boolean isCancelled;
 
-    public BasePresenter(Human human, T display, Observer observer) {
+    public BasePresenter(Human human, T device, Observer observer) {
         this.human = human;
-        this.display = display;
+        this.device = device;
         this.observer = observer;
     }
 
@@ -31,9 +31,9 @@ public abstract class BasePresenter<T> implements Presenter<T> {
         return human;
     }
 
-    public T getDisplay() {
-        // TODO override display and remove patches when cancelled.
-        return display;
+    public T getDevice() {
+        // TODO override device and remove patches when cancelled.
+        return device;
     }
 
     @Override
@@ -56,7 +56,8 @@ public abstract class BasePresenter<T> implements Presenter<T> {
 
     @Override
     public void cancel() {
-        if (isCancelled) return;
+        if (isCancelled)
+            return;
         isCancelled = true;
         final List<Presentation> toCancel = new ArrayList<>(presentations);
         presentations.clear();
@@ -68,20 +69,23 @@ public abstract class BasePresenter<T> implements Presenter<T> {
 
     @Override
     public void onReaction(Reaction reaction) {
-        if (isCancelled) return;
+        if (isCancelled)
+            return;
         observer.onReaction(reaction);
     }
 
     @Override
     public void onEnd() {
-        if (isCancelled) return;
+        if (isCancelled)
+            return;
         cancel();
         observer.onEnd();
     }
 
     @Override
     public void onError(Throwable throwable) {
-        if (isCancelled) return;
+        if (isCancelled)
+            return;
         cancel();
         observer.onError(throwable);
     }

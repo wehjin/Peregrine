@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
  * @since 1/27/16.
  */
 
-public interface FixedDisplay<T> extends CoreDisplay<T> {
+public interface FixedDimensionDevice<T> extends CoreDevice<T> {
 
     @NonNull
-    T asDisplayWithFixedDimension(float fixedDimension);
+    T withFixedDimension(float fixedDimension);
 }

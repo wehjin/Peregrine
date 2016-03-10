@@ -2,7 +2,7 @@ package com.rubyhuntersky.gx.bars;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.FixedDisplay;
+import com.rubyhuntersky.gx.internal.devices.FixedDimensionDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
 
@@ -11,7 +11,7 @@ import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
  * @since 1/23/16.
  */
 
-public class Bar extends PatchDeviceWrapper implements FixedDisplay<Bar> {
+public class Bar extends PatchDeviceWrapper implements FixedDimensionDevice<Bar> {
 
     public final float fixedHeight;
     public final float relatedWidth;
@@ -42,7 +42,7 @@ public class Bar extends PatchDeviceWrapper implements FixedDisplay<Bar> {
 
     @NonNull
     @Override
-    public Bar asDisplayWithFixedDimension(float fixedDimension) {
+    public Bar withFixedDimension(float fixedDimension) {
         return withFixedHeight(fixedDimension);
     }
 

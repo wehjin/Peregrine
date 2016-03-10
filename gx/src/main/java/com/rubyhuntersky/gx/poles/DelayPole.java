@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.poles;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
+import com.rubyhuntersky.gx.internal.devices.DelayDevice;
 import com.rubyhuntersky.gx.internal.devices.patches.DelayPatch;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class DelayPole extends Pole implements DelayDisplay<Pole> {
+public class DelayPole extends Pole implements DelayDevice<Pole> {
 
     protected boolean didEndDelay;
     private List<DelayPatch> pending = new ArrayList<>();

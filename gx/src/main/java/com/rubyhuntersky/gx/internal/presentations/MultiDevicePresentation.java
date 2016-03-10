@@ -1,7 +1,7 @@
 package com.rubyhuntersky.gx.internal.presentations;
 
-import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Human;
+import com.rubyhuntersky.gx.client.Observer;
 import com.rubyhuntersky.gx.client.Presentation;
 import com.rubyhuntersky.gx.internal.Ui;
 
@@ -10,32 +10,32 @@ import com.rubyhuntersky.gx.internal.Ui;
  * @since 1/30/16.
  */
 
-public class MultiDisplayPresentation<T> extends BooleanPresentation implements Presentation {
+public class MultiDevicePresentation<T> extends BooleanPresentation implements Presentation {
 
     private final Ui<T> ui;
     private final Human human;
     private final Observer observer;
     private Presentation presentation = new EmptyPresentation();
 
-    public MultiDisplayPresentation(Ui<T> ui, Human human, T display, Observer observer) {
+    public MultiDevicePresentation(Ui<T> ui, Human human, T device, Observer observer) {
         this.ui = ui;
         this.human = human;
         this.observer = observer;
-        setDisplay(display);
+        setDevice(device);
     }
 
-    public MultiDisplayPresentation() {
+    public MultiDevicePresentation() {
         this.ui = null;
         this.human = null;
         this.observer = null;
     }
 
-    public void setDisplay(T display) {
+    public void setDevice(T device) {
         if (isCancelled()) {
             return;
         }
         presentation.cancel();
-        presentation = display == null ? new EmptyPresentation() : ui.present(human, display, observer);
+        presentation = device == null ? new EmptyPresentation() : ui.present(human, device, observer);
     }
 
     @Override

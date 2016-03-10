@@ -14,7 +14,7 @@ import java.util.List;
 public interface Presenter<T> extends Observer, Presentation {
 
     Human getHuman();
-    T getDisplay();
+    T getDevice();
     List<Presentation> getPresentations();
     void addPresentation(Presentation presentation);
 }

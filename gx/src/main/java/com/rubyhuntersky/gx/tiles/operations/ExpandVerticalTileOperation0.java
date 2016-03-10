@@ -29,7 +29,7 @@ public class ExpandVerticalTileOperation0 extends TileOperation0 {
             @Override
             public void onPresent(Presenter<Mosaic> presenter) {
                 final Human human = presenter.getHuman();
-                final ShiftMosaic baseMosaic = presenter.getDisplay().withShift();
+                final ShiftMosaic baseMosaic = presenter.getDevice().withShift();
                 final Presentation basePresentation = base.present(human, baseMosaic, presenter);
                 final float baseHeight = basePresentation.getHeight();
                 final float padding = padlet.toFloat(human, baseHeight);

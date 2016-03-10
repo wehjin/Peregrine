@@ -28,7 +28,7 @@ public class ExpandVerticalDivOperation0 extends DivOperation0 {
             @Override
             public void onPresent(Presenter<Pole> presenter) {
                 final Human human = presenter.getHuman();
-                final Pole pole = presenter.getDisplay();
+                final Pole pole = presenter.getDevice();
                 final float expansion = heightlet.toFloat(human, pole.relatedHeight);
                 final Pole shiftPole = pole.withShift(0, expansion);
                 final Presentation present = base.present(human, shiftPole, presenter);

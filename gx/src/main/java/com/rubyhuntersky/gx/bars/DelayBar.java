@@ -3,7 +3,7 @@ package com.rubyhuntersky.gx.bars;
 import android.support.annotation.NonNull;
 
 import com.rubyhuntersky.gx.basics.Frame;
-import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
+import com.rubyhuntersky.gx.internal.devices.DelayDevice;
 import com.rubyhuntersky.gx.internal.devices.patches.DelayPatch;
 import com.rubyhuntersky.gx.internal.devices.patches.Patch;
 import com.rubyhuntersky.gx.internal.shapes.Shape;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author wehjin
  * @since 1/24/16.
  */
-public class DelayBar extends Bar implements DelayDisplay<Bar> {
+public class DelayBar extends Bar implements DelayDevice<Bar> {
 
     protected boolean didEndDelay;
     private List<DelayPatch> pending = new ArrayList<>();

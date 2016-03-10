@@ -2,8 +2,8 @@ package com.rubyhuntersky.gx.tiles;
 
 import android.support.annotation.NonNull;
 
-import com.rubyhuntersky.gx.internal.devices.CoreDisplay;
-import com.rubyhuntersky.gx.internal.devices.DelayDisplay;
+import com.rubyhuntersky.gx.internal.devices.CoreDevice;
+import com.rubyhuntersky.gx.internal.devices.DelayDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDevice;
 import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
 
@@ -12,7 +12,7 @@ import com.rubyhuntersky.gx.internal.devices.PatchDeviceWrapper;
  * @since 1/28/16.
  */
 
-public class Mosaic extends PatchDeviceWrapper implements CoreDisplay<Mosaic> {
+public class Mosaic extends PatchDeviceWrapper implements CoreDevice<Mosaic> {
 
     public final float relatedWidth;
     public final float relatedHeight;
@@ -37,7 +37,7 @@ public class Mosaic extends PatchDeviceWrapper implements CoreDisplay<Mosaic> {
 
     @NonNull
     @Override
-    public DelayDisplay<Mosaic> withDelay() {
+    public DelayDevice<Mosaic> withDelay() {
         return null;
     }
 
