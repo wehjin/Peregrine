@@ -10,26 +10,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rubyhuntersky.gx.observers.Observer;
-import com.rubyhuntersky.gx.reactions.Reaction;
-import com.rubyhuntersky.gx.basics.Sizelet;
 import com.rubyhuntersky.gx.android.PoleView;
-import com.rubyhuntersky.gx.uis.divs.Div0;
-import com.rubyhuntersky.gx.uis.divs.Div2;
-import com.rubyhuntersky.gx.uis.divs.Div4;
+import com.rubyhuntersky.gx.basics.Sizelet;
+import com.rubyhuntersky.gx.observers.Observer;
 import com.rubyhuntersky.gx.presentations.EmptyPresentation;
 import com.rubyhuntersky.gx.presentations.Presentation;
 import com.rubyhuntersky.gx.reactions.HeightChangedReaction;
 import com.rubyhuntersky.gx.reactions.ItemSelectionReaction;
+import com.rubyhuntersky.gx.reactions.Reaction;
+import com.rubyhuntersky.gx.uis.divs.Div0;
+import com.rubyhuntersky.gx.uis.divs.Div2;
+import com.rubyhuntersky.gx.uis.divs.Div4;
 import com.rubyhuntersky.gx.uis.tiles.Tile0;
 import com.rubyhuntersky.gx.uis.tiles.Tile1;
 import com.rubyhuntersky.gx.uis.tiles.Tile2;
 import com.rubyhuntersky.gx.uis.tiles.TileCreator;
+import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.AssetPrice;
 import com.rubyhuntersky.peregrine.model.BuyProgram;
 import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.FundingOption;
-import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,13 +41,13 @@ import static com.rubyhuntersky.gx.Gx.colorColumn;
 import static com.rubyhuntersky.gx.Gx.gapColumn;
 import static com.rubyhuntersky.gx.Gx.textColumn;
 import static com.rubyhuntersky.gx.Gx.textTile;
+import static com.rubyhuntersky.gx.android.AndroidGx.spinnerTile;
 import static com.rubyhuntersky.gx.basics.Sizelet.PREVIOUS;
 import static com.rubyhuntersky.gx.basics.Sizelet.THIRD_FINGER;
 import static com.rubyhuntersky.gx.basics.Sizelet.TWO_THIRDS_FINGER;
 import static com.rubyhuntersky.gx.basics.Sizelet.readables;
 import static com.rubyhuntersky.gx.basics.TextStylet.IMPORTANT_DARK;
 import static com.rubyhuntersky.gx.basics.TextStylet.READABLE_DARK;
-import static com.rubyhuntersky.gx.android.AndroidGx.spinnerTile;
 import static com.rubyhuntersky.gx.uis.tiles.TileCreator.textTile1;
 import static com.rubyhuntersky.peregrine.ui.UiHelper.getCurrencyDisplayString;
 
@@ -117,7 +117,7 @@ public class BuyDialogFragment extends TradeDialogFragment {
                   @Override
                   public Div0 print(Div4<Integer, String, Integer, Div0> div4) {
                       return div4.bind(program.getSelectedBuyOption())
-                            .bind(getSharesString(program.getSharesToBuy()))
+                            .bind(Companion.getSharesString(program.getSharesToBuy()))
                             .bind(program.getSelectedFundingAccount())
                             .bind(program.fundingAccountHasSufficientFundsToBuy()
                                         || program.getFundingOptions().size() == 0

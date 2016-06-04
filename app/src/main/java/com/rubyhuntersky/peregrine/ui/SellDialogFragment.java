@@ -13,8 +13,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.model.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
+import com.rubyhuntersky.peregrine.model.AssetPrice;
 import com.rubyhuntersky.peregrine.model.Values;
 
 import java.math.BigDecimal;
@@ -116,7 +116,7 @@ public class SellDialogFragment extends TradeDialogFragment {
             @Override
             public SpinnerAdapter call(List<String> strings) {
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                      android.R.layout.simple_spinner_item, strings);
+                                                                        android.R.layout.simple_spinner_item, strings);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 return adapter;
             }
@@ -133,7 +133,7 @@ public class SellDialogFragment extends TradeDialogFragment {
             @Override
             public void call(AssetPrice price) {
                 final BigDecimal sharesCount = amount.divide(price.price, Values.SCALE, BigDecimal.ROUND_HALF_UP);
-                sharesText.setText(getSharesString(sharesCount));
+                sharesText.setText(Companion.getSharesString(sharesCount));
             }
         });
         return inflate;
