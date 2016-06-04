@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.AccountAssets;
 import com.rubyhuntersky.peregrine.model.Asset;
 import com.rubyhuntersky.peregrine.model.AssetPrice;
@@ -24,7 +25,6 @@ import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.Group;
 import com.rubyhuntersky.peregrine.model.PartitionList;
 import com.rubyhuntersky.peregrine.model.PortfolioAssets;
-import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -135,7 +135,10 @@ public class GroupsFragment extends BaseFragment {
                               @Override
                               public void call(List<FundingAccount> fundingAccounts) {
                                   final DialogFragment fragment =
-                                        BuyDialogFragment.create(sellAmount.abs(), prices, 0, fundingAccounts);
+                                        BuyDialogFragment.Companion.create(sellAmount.abs(),
+                                                                           prices,
+                                                                           0,
+                                                                           fundingAccounts);
                                   fragment.setCancelable(true);
                                   fragment.show(getFragmentManager(), "BuyFragment");
                               }
