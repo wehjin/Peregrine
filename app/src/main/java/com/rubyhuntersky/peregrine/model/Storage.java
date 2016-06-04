@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -25,12 +25,11 @@ import com.rubyhuntersky.gx.uis.tiles.Tile0;
 import com.rubyhuntersky.gx.uis.tiles.Tile1;
 import com.rubyhuntersky.gx.uis.tiles.Tile2;
 import com.rubyhuntersky.gx.uis.tiles.TileCreator;
-import com.rubyhuntersky.peregrine.AssetPrice;
-import com.rubyhuntersky.peregrine.BuyProgram;
-import com.rubyhuntersky.peregrine.FundingAccount;
-import com.rubyhuntersky.peregrine.FundingOption;
+import com.rubyhuntersky.peregrine.model.AssetPrice;
+import com.rubyhuntersky.peregrine.model.BuyProgram;
+import com.rubyhuntersky.peregrine.model.FundingAccount;
+import com.rubyhuntersky.peregrine.model.FundingOption;
 import com.rubyhuntersky.peregrine.R;
-import com.rubyhuntersky.peregrine.TradeDialogFragment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

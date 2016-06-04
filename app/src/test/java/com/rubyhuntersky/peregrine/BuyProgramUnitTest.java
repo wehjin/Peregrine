@@ -1,5 +1,12 @@
 package com.rubyhuntersky.peregrine;
 
+import com.rubyhuntersky.peregrine.model.AccountAssets;
+import com.rubyhuntersky.peregrine.model.Asset;
+import com.rubyhuntersky.peregrine.model.AssetPrice;
+import com.rubyhuntersky.peregrine.model.BuyProgram;
+import com.rubyhuntersky.peregrine.model.FundingAccount;
+import com.rubyhuntersky.peregrine.model.FundingOption;
+
 import org.junit.Before;
 import org.junit.Test;
 

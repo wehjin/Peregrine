@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.ui;
 
 import android.support.v7.app.AppCompatDialogFragment;
 

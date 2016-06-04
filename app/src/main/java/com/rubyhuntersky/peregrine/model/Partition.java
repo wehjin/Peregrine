@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,9 +1,11 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.model;
 
 import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
+import com.rubyhuntersky.peregrine.BuildConfig;
+import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.oauth.OauthAppToken;
 import com.rubyhuntersky.peregrine.oauth.OauthHttpRequest;
 import com.rubyhuntersky.peregrine.oauth.OauthToken;

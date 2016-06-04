@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AllAccounts;
-import com.rubyhuntersky.peregrine.EtradeAccount;
+import com.rubyhuntersky.peregrine.model.AllAccounts;
+import com.rubyhuntersky.peregrine.model.EtradeAccount;
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 

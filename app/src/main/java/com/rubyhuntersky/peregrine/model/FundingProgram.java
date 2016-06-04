@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine;
+package com.rubyhuntersky.peregrine.model;
 
 import java.math.BigDecimal;
 import java.util.List;

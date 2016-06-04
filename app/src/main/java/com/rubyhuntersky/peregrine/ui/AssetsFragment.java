@@ -19,11 +19,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.Asset;
-import com.rubyhuntersky.peregrine.Assignments;
-import com.rubyhuntersky.peregrine.Partition;
-import com.rubyhuntersky.peregrine.PartitionList;
-import com.rubyhuntersky.peregrine.PortfolioAssets;
+import com.rubyhuntersky.peregrine.model.Asset;
+import com.rubyhuntersky.peregrine.model.Assignments;
+import com.rubyhuntersky.peregrine.model.Partition;
+import com.rubyhuntersky.peregrine.model.PartitionList;
+import com.rubyhuntersky.peregrine.model.PortfolioAssets;
 import com.rubyhuntersky.peregrine.R;
 
 import java.util.List;

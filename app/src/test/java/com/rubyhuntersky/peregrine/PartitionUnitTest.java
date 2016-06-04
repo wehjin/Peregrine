@@ -1,5 +1,7 @@
 package com.rubyhuntersky.peregrine;
 
+import com.rubyhuntersky.peregrine.model.Partition;
+
 import org.junit.Before;
 import org.junit.Test;
 

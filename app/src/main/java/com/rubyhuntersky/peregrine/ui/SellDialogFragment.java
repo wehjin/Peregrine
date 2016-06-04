@@ -13,10 +13,9 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AssetPrice;
+import com.rubyhuntersky.peregrine.model.AssetPrice;
 import com.rubyhuntersky.peregrine.R;
-import com.rubyhuntersky.peregrine.TradeDialogFragment;
-import com.rubyhuntersky.peregrine.Values;
+import com.rubyhuntersky.peregrine.model.Values;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

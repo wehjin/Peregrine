@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.rubyhuntersky.peregrine.AllAccounts;
+import com.rubyhuntersky.peregrine.model.AllAccounts;
 import com.rubyhuntersky.peregrine.R;
 
 import rx.Subscription;

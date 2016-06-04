@@ -16,14 +16,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.rubyhuntersky.peregrine.AccountAssets;
-import com.rubyhuntersky.peregrine.Asset;
-import com.rubyhuntersky.peregrine.AssetPrice;
-import com.rubyhuntersky.peregrine.Assignments;
-import com.rubyhuntersky.peregrine.FundingAccount;
-import com.rubyhuntersky.peregrine.Group;
-import com.rubyhuntersky.peregrine.PartitionList;
-import com.rubyhuntersky.peregrine.PortfolioAssets;
+import com.rubyhuntersky.peregrine.model.AccountAssets;
+import com.rubyhuntersky.peregrine.model.Asset;
+import com.rubyhuntersky.peregrine.model.AssetPrice;
+import com.rubyhuntersky.peregrine.model.Assignments;
+import com.rubyhuntersky.peregrine.model.FundingAccount;
+import com.rubyhuntersky.peregrine.model.Group;
+import com.rubyhuntersky.peregrine.model.PartitionList;
+import com.rubyhuntersky.peregrine.model.PortfolioAssets;
 import com.rubyhuntersky.peregrine.R;
 
 import java.math.BigDecimal;

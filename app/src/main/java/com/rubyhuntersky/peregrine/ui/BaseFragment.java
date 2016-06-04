@@ -3,8 +3,8 @@ package com.rubyhuntersky.peregrine.ui;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.rubyhuntersky.peregrine.EtradeApi;
-import com.rubyhuntersky.peregrine.Storage;
+import com.rubyhuntersky.peregrine.model.EtradeApi;
+import com.rubyhuntersky.peregrine.model.Storage;
 
 import rx.functions.Action1;
 
