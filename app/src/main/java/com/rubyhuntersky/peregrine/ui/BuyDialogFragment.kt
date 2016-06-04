@@ -31,10 +31,7 @@ import com.rubyhuntersky.gx.uis.tiles.Tile1
 import com.rubyhuntersky.gx.uis.tiles.TileCreator
 import com.rubyhuntersky.gx.uis.tiles.TileCreator.textTile1
 import com.rubyhuntersky.peregrine.R
-import com.rubyhuntersky.peregrine.model.AssetPrice
-import com.rubyhuntersky.peregrine.model.BuyProgram
-import com.rubyhuntersky.peregrine.model.FundingAccount
-import com.rubyhuntersky.peregrine.model.FundingOption
+import com.rubyhuntersky.peregrine.model.*
 import com.rubyhuntersky.peregrine.ui.UiHelper.getCurrencyDisplayString
 import java.math.BigDecimal
 import java.util.*
@@ -44,12 +41,22 @@ import java.util.*
  * *
  * @since 1/19/16.
  */
-class BuyDialogFragment : TradeDialogFragment() {
+class BuyDialogFragment() : TradeDialogFragment() {
 
     private var columnUiView: PoleView? = null
     private var presentation: Presentation = EmptyPresentation()
     private var ui: Div0? = null
     private var program: BuyProgram? = null
+
+    private fun BigDecimal.toCurrencyString(): String = getCurrencyDisplayString(this)
+    private fun BigDecimal.toSharesString(): String = TradeDialogFragment.getSharesString(this)
+    private fun FundingStatus.toOptionString(): String {
+        return if (isFullyFunded) {
+            "Sufficient funds ${cashAvailable.toCurrencyString()}"
+        } else {
+            "Buy ${fundedShares.toSharesString()} or Add funds ${shortfall.toCurrencyString()}"
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -72,7 +79,7 @@ class BuyDialogFragment : TradeDialogFragment() {
             private var fundingPriceSelection = program!!.selectedFundingOption
 
             override fun print(div4: Div4<Int, String, Int, Div0>): Div0 {
-                return div4.bind(program!!.selectedBuyOption).bind(TradeDialogFragment.Companion.getSharesString(program!!.sharesToBuy!!)).bind(program!!.selectedFundingAccount).bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0)
+                return div4.bind(program!!.selectedBuyOption).bind(TradeDialogFragment.Companion.getSharesString(program!!.sharesToBuy)).bind(program!!.selectedFundingAccount).bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0)
                     Div0.EMPTY
                 else
                     getSellUi(getFundingPrices(program!!.fundingOptions),
@@ -111,18 +118,6 @@ class BuyDialogFragment : TradeDialogFragment() {
 
     }
 
-    private fun BigDecimal.asCurrencyString(): String = getCurrencyDisplayString(this)
-    private val FundingAccount.additionalFundsNeededToBuyProgram: BigDecimal get() = program!!.getAdditionalFundsNeededToBuy(this)!!
-    private val FundingAccount.hasSufficientFundsToBuyProgram: Boolean get() = program!!.fundingAccountHasSufficientFundsToBuy(this)
-
-    private fun getFundingAccountStatus(fundingAccount: FundingAccount): String {
-        return if (fundingAccount.hasSufficientFundsToBuyProgram) {
-            "Sufficient funds ${fundingAccount.cashAvailable.asCurrencyString()}"
-        } else {
-            "Add funds ${fundingAccount.additionalFundsNeededToBuyProgram.asCurrencyString()}"
-        }
-    }
-
     private fun getBuyUi(buyAmount: BigDecimal, buyPrices: List<String>): Div2<Int, String> {
         return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK).expandDown(SPACING).expandDown(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn()).expandDown(SPACING).expandDown(DIVIDER).expandDown(SPACING).expandDown(textTile1(IMPORTANT_DARK).toColumn())
     }
@@ -138,10 +133,11 @@ class BuyDialogFragment : TradeDialogFragment() {
     private val fundingUi: Div2<Int, Div0>
         get() {
             val accountNamesAndStatus = ArrayList<Pair<String, String>>()
+            val buyIntention = program!!.buyIntention!!
             for (fundingAccount in program!!.fundingAccounts) {
                 val name = "Account " + fundingAccount.accountName
-                val status = getFundingAccountStatus(fundingAccount)
-                accountNamesAndStatus.add(Pair.create(name, status))
+                val buyStatus = fundingAccount.getStatusForBuy(buyIntention)
+                accountNamesAndStatus.add(Pair.create(name, buyStatus.toOptionString()))
             }
 
             val accountTile = Tile1.create(object : Tile1.OnBind<Pair<String, String>> {

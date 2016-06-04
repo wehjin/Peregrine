@@ -1,6 +1,7 @@
 package com.rubyhuntersky.peregrine.model;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author wehjin
  * @since 2/6/16.
  */
-class EtradeFundingAccount implements FundingAccount {
+class EtradeFundingAccount extends BaseFundingAccount implements FundingAccount {
 
     final private List<FundingOption> fundingOptions;
     final private BigDecimal cashAvailable;
@@ -31,16 +32,19 @@ class EtradeFundingAccount implements FundingAccount {
         this.fundingOptions = fundingOptions;
     }
 
+    @NonNull
     @Override
     public String getAccountName() {
         return accountName;
     }
 
+    @NonNull
     @Override
     public BigDecimal getCashAvailable() {
         return cashAvailable;
     }
 
+    @NonNull
     @Override
     public List<FundingOption> getFundingOptions(String exclude) {
         final ArrayList<FundingOption> includedOptions = new ArrayList<>();

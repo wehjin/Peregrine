@@ -12,24 +12,19 @@ import java.util.*
  */
 
 data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice>, var selectedBuyOption: Int) : Parcelable, FundingProgram {
+
     private var fundingAccounts = emptyList<FundingAccount>()
     private var selectedFundingAccount: Int = 0
     private var selectedFundingOption: Int = 0
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeSerializable(buyAmount)
-        dest.writeList(buyOptions)
-        dest.writeInt(selectedBuyOption)
-        dest.writeList(fundingAccounts)
-        dest.writeInt(selectedFundingAccount)
-        dest.writeInt(selectedFundingOption)
-    }
+    fun AssetPrice.toIntention(buyAmount: BigDecimal): BuyIntention = BuyIntention(buyAmount, this)
 
-    val sharesToBuy: BigDecimal?
-        get() {
-            val assetPrice = buyOption ?: return null
-            return buyAmount.divide(assetPrice.price, Values.SCALE, BigDecimal.ROUND_HALF_UP)
-        }
+    val buyPrice: BigDecimal get() = buyOption!!.price
+    val buyOption: AssetPrice? get() = if (selectedBuyOption < 0) null else buyOptions[selectedBuyOption]
+    val buyIntention: BuyIntention? get() = buyOption?.toIntention(buyAmount)
+    val sharesToBuy: BigDecimal get() = getSharesAvailableToBuyWithFunds(buyAmount)
+
+    fun getSharesAvailableToBuyWithFunds(funds: BigDecimal): BigDecimal = funds.divide(buyPrice, Values.SCALE, BigDecimal.ROUND_HALF_UP)
 
     fun setFundingAccounts(fundingAccounts: List<FundingAccount>, selectedFundingAccount: Int, selectedFundingOption: Int) {
         this.fundingAccounts = fundingAccounts
@@ -49,11 +44,13 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
     }
 
     override fun fundingAccountHasSufficientFundsToBuy(): Boolean {
-        return additionalFundsNeededToBuy.compareTo(BigDecimal.ZERO) <= 0
+        val currentFundingAccount = fundingAccount ?: return false
+        return fundingAccountHasSufficientFundsToBuy(currentFundingAccount)
     }
 
     override fun fundingAccountHasSufficientFundsToBuy(fundingAccount: FundingAccount): Boolean {
-        return getAdditionalFundsNeededToBuy(fundingAccount)!!.compareTo(BigDecimal.ZERO) <= 0
+        val currentBuyIntention = buyIntention ?: return false
+        return fundingAccount.hasFundsForBuyIntention(currentBuyIntention)
     }
 
     override fun getAdditionalFundsNeededToBuy(): BigDecimal {
@@ -108,38 +105,40 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
                 fundingOptions[selectedFundingOption]
         }
 
-    val buyOption: AssetPrice?
-        get() {
-            if (selectedBuyOption < 0)
-                return null
-            return buyOptions[selectedBuyOption]
-        }
-
     val fundingAccount: FundingAccount?
-        get() {
-            if (selectedFundingAccount < 0)
-                return null
-            return fundingAccounts[selectedFundingAccount]
-        }
+        get() = if (selectedFundingAccount < 0) null else fundingAccounts[selectedFundingAccount]
 
     override fun describeContents(): Int {
         return 0
     }
 
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeSerializable(buyAmount)
+        dest.writeList(buyOptions)
+        dest.writeInt(selectedBuyOption)
+        dest.writeList(fundingAccounts)
+        dest.writeInt(selectedFundingAccount)
+        dest.writeInt(selectedFundingOption)
+    }
+
     companion object {
         @JvmField final val CREATOR: Parcelable.Creator<BuyProgram> = object : Parcelable.Creator<BuyProgram> {
-            override fun createFromParcel(`in`: Parcel): BuyProgram {
-                val buyAmount = `in`.readSerializable() as BigDecimal
 
-                val prices = ArrayList<AssetPrice>()
-                `in`.readList(prices, null)
-                val selectedTradingAsset = `in`.readInt()
-                val fundingAccounts = ArrayList<FundingAccount>()
-                `in`.readList(fundingAccounts, null)
-                val selectedFundingAccount = `in`.readInt()
-                val selectedFundingOption = `in`.readInt()
+            fun <T> Parcel.readList(): List<T> {
+                val list = ArrayList<T>()
+                readList(list, null)
+                return list
+            }
 
-                val buyProgram = BuyProgram(buyAmount, prices, selectedTradingAsset)
+            override fun createFromParcel(parcel: Parcel): BuyProgram {
+                val buyAmount = parcel.readSerializable() as BigDecimal
+                val buyOptions = parcel.readList<AssetPrice>()
+                val selectedBuyOption = parcel.readInt()
+                val buyProgram = BuyProgram(buyAmount, buyOptions, selectedBuyOption)
+
+                val fundingAccounts = parcel.readList<FundingAccount>()
+                val selectedFundingAccount = parcel.readInt()
+                val selectedFundingOption = parcel.readInt()
                 buyProgram.setFundingAccounts(fundingAccounts, selectedFundingAccount, selectedFundingOption)
                 return buyProgram
             }
