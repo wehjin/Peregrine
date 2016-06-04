@@ -72,7 +72,7 @@ class BuyDialogFragment : TradeDialogFragment() {
             private var fundingPriceSelection = program!!.selectedFundingOption
 
             override fun print(div4: Div4<Int, String, Int, Div0>): Div0 {
-                return div4.bind(program!!.selectedBuyOption).bind(TradeDialogFragment.Companion.getSharesString(program!!.sharesToBuy)).bind(program!!.selectedFundingAccount).bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0)
+                return div4.bind(program!!.selectedBuyOption).bind(TradeDialogFragment.Companion.getSharesString(program!!.sharesToBuy!!)).bind(program!!.selectedFundingAccount).bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0)
                     Div0.EMPTY
                 else
                     getSellUi(getFundingPrices(program!!.fundingOptions),
@@ -111,11 +111,16 @@ class BuyDialogFragment : TradeDialogFragment() {
 
     }
 
+    private fun BigDecimal.asCurrencyString(): String = getCurrencyDisplayString(this)
+    private val FundingAccount.additionalFundsNeededToBuyProgram: BigDecimal get() = program!!.getAdditionalFundsNeededToBuy(this)!!
+    private val FundingAccount.hasSufficientFundsToBuyProgram: Boolean get() = program!!.fundingAccountHasSufficientFundsToBuy(this)
+
     private fun getFundingAccountStatus(fundingAccount: FundingAccount): String {
-        return if (program!!.fundingAccountHasSufficientFundsToBuy(fundingAccount))
-            "Sufficient funds " + getCurrencyDisplayString(fundingAccount.cashAvailable)
-        else
-            "Add funds " + getCurrencyDisplayString(program!!.getAdditionalFundsNeededToBuy(fundingAccount))
+        return if (fundingAccount.hasSufficientFundsToBuyProgram) {
+            "Sufficient funds ${fundingAccount.cashAvailable.asCurrencyString()}"
+        } else {
+            "Add funds ${fundingAccount.additionalFundsNeededToBuyProgram.asCurrencyString()}"
+        }
     }
 
     private fun getBuyUi(buyAmount: BigDecimal, buyPrices: List<String>): Div2<Int, String> {
