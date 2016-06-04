@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
-import com.rubyhuntersky.peregrine.oauth.OauthAppToken;
-import com.rubyhuntersky.peregrine.oauth.OauthToken;
+import com.rubyhuntersky.peregrine.model.oauth.OauthAppToken;
+import com.rubyhuntersky.peregrine.model.oauth.OauthToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;

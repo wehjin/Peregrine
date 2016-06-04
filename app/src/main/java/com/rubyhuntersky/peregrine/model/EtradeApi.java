@@ -6,10 +6,10 @@ import android.util.Pair;
 
 import com.rubyhuntersky.peregrine.BuildConfig;
 import com.rubyhuntersky.peregrine.R;
-import com.rubyhuntersky.peregrine.oauth.OauthAppToken;
-import com.rubyhuntersky.peregrine.oauth.OauthHttpRequest;
-import com.rubyhuntersky.peregrine.oauth.OauthToken;
-import com.rubyhuntersky.peregrine.oauth.OauthVerifier;
+import com.rubyhuntersky.peregrine.model.oauth.OauthAppToken;
+import com.rubyhuntersky.peregrine.model.oauth.OauthHttpRequest;
+import com.rubyhuntersky.peregrine.model.oauth.OauthToken;
+import com.rubyhuntersky.peregrine.model.oauth.OauthVerifier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
