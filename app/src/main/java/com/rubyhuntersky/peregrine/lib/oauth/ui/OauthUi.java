@@ -1,9 +1,9 @@
-package com.rubyhuntersky.peregrine.ui.oauth;
+package com.rubyhuntersky.peregrine.lib.oauth.ui;
 
 import android.app.Activity;
 
-import com.rubyhuntersky.peregrine.model.oauth.OauthToken;
-import com.rubyhuntersky.peregrine.model.oauth.OauthVerifier;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthToken;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthVerifier;
 
 import rx.Observable;
 import rx.Subscriber;

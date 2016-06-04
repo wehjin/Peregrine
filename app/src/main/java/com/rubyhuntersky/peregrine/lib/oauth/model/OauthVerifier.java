@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine.model.oauth;
+package com.rubyhuntersky.peregrine.lib.oauth.model;
 
 /**
  * @author wehjin

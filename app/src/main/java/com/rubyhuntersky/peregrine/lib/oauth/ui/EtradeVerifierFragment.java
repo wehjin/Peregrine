@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine.ui.oauth;
+package com.rubyhuntersky.peregrine.lib.oauth.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -20,7 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.rubyhuntersky.peregrine.model.oauth.OauthToken;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthToken;
 import com.rubyhuntersky.peregrine.R;
 
 import org.json.JSONException;

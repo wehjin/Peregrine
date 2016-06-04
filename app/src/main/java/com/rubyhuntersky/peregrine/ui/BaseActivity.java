@@ -19,8 +19,8 @@ import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.Storage;
 import com.rubyhuntersky.peregrine.exception.NotStoredException;
 import com.rubyhuntersky.peregrine.exception.ProductionStorage;
-import com.rubyhuntersky.peregrine.model.oauth.OauthToken;
-import com.rubyhuntersky.peregrine.model.oauth.OauthVerifier;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthToken;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthVerifier;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +43,7 @@ import rx.functions.Func2;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.Subscriptions;
 
-import static com.rubyhuntersky.peregrine.ui.oauth.OauthUi.promptForVerifier;
+import static com.rubyhuntersky.peregrine.lib.oauth.ui.OauthUi.promptForVerifier;
 
 /**
  * @author wehjin

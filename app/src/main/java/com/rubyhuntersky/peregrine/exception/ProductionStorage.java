@@ -2,7 +2,7 @@ package com.rubyhuntersky.peregrine.exception;
 
 import android.content.Context;
 
-import com.rubyhuntersky.peregrine.model.oauth.OauthAppToken;
+import com.rubyhuntersky.peregrine.lib.oauth.model.OauthAppToken;
 import com.rubyhuntersky.peregrine.model.Storage;
 
 /**

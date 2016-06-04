@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine.model.oauth;
+package com.rubyhuntersky.peregrine.lib.oauth.model;
 
 import android.support.annotation.NonNull;
 import android.util.Base64;

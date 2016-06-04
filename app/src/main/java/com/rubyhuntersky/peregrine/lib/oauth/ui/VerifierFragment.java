@@ -1,4 +1,4 @@
-package com.rubyhuntersky.peregrine.ui.oauth;
+package com.rubyhuntersky.peregrine.lib.oauth.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
