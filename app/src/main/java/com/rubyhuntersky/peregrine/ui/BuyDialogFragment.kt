@@ -59,31 +59,31 @@ class BuyDialogFragment() : TradeDialogFragment() {
     private var presentation: Div.Presentation? = null
     private var frameLayout: FrameLayout? = null
     private var ui: Div0? = null
-    private var program: BuyProgram? = null
     var frameWidth = 576
     var frameHeight = 1070
-
+    lateinit var purchase: BuyProgram
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(PROGRAM_KEY, program)
+        outState.putParcelable(PROGRAM_KEY, purchase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, 0)
+        purchase = arguments.getParcelable<BuyProgram>(PROGRAM_KEY)
 
-        program = arguments.getParcelable<BuyProgram>(PROGRAM_KEY)
-        if (program == null) {
-            return
-        }
+        val windowSize = Point()
+        activity.windowManager.defaultDisplay.getSize(windowSize)
+        val portion = .9
+        frameWidth = (windowSize.x * portion).toInt()
+        frameHeight = (windowSize.y * portion).toInt()
 
         ui = Div0.create(object : Div.OnPresent {
             override fun onPresent(presenter: Div.Presenter) {
                 presenter.addPresentation(object : Div.PresenterPresentation(presenter) {
 
                     var presentation: Div.Presentation? = null
-                    var purchase = program!!
 
                     val productMenu = "productMenu"
                     val accountMenu = "accountMenu"
@@ -98,7 +98,7 @@ class BuyDialogFragment() : TradeDialogFragment() {
                         return cashAvailable.compareTo(purchaseAmount) >= 0
                     }
 
-                    fun FundingAccount.getSharesPurchaseableWithCash(product: AssetPrice): String {
+                    fun FundingAccount.getSharesPurchasableWithCash(product: AssetPrice): String {
                         return cashAvailable.divide(product.price, Values.SCALE, BigDecimal.ROUND_HALF_UP).intString
                     }
 
@@ -116,7 +116,7 @@ class BuyDialogFragment() : TradeDialogFragment() {
                                 .expandDown(if (hasFundsForPurchase(budget)) {
                                     textColumn("Sufficient funds ${cashAvailable.currency}", READABLE_DARK)
                                 } else {
-                                    textColumn("Buy ${getSharesPurchaseableWithCash(product)} shares", READABLE_DARK)
+                                    textColumn("Buy ${getSharesPurchasableWithCash(product)} shares", READABLE_DARK)
                                             .expandDown(gapColumn(Sizelet.READABLE))
                                             .expandDown(textColumn("or", READABLE_DARK))
                                             .expandDown(gapColumn(Sizelet.IMPORTANT))
@@ -209,9 +209,6 @@ class BuyDialogFragment() : TradeDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d(tag, "onCreateView")
-        val windowSize = Point()
-        activity.windowManager.defaultDisplay.getSize(windowSize)
-        Log.d(tag, "onCreateView $frameWidth $frameHeight")
 
         val mainFrame = inflater!!.inflate(R.layout.fragment_buy, container, false) as FrameLayout
         frameLayout = object : FrameLayout(activity) {
