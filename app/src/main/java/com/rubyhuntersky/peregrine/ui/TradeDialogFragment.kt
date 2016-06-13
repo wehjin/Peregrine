@@ -12,10 +12,11 @@ import java.math.BigDecimal
 
 open class TradeDialogFragment : AppCompatDialogFragment() {
     companion object {
+        val BigDecimal.intString: String get() = "${setScale(0, BigDecimal.ROUND_HALF_DOWN).toPlainString()}"
+        val BigDecimal.shares: String get() = "${setScale(0, BigDecimal.ROUND_HALF_DOWN).toPlainString()} shares"
 
         fun getSharesString(shareCount: BigDecimal): String {
-            val shareCountString = shareCount.setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()
-            return "$shareCountString shares"
+            return shareCount.shares
         }
     }
 }

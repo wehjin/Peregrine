@@ -46,10 +46,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.0.1'
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:support-v4:23.2.0'
-    compile 'com.android.support:design:23.2.0'
-    compile('com.github.wehjin:GxAndroid:v0.1') {
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile('com.github.wehjin:GxAndroid:2da6bd1580a19555d67f1d17534784cc801eb735') {
         transitive = true
     }
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

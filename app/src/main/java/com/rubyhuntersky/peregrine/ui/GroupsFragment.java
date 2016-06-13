@@ -28,6 +28,7 @@ import com.rubyhuntersky.peregrine.model.PortfolioAssets;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -134,11 +135,10 @@ public class GroupsFragment extends BaseFragment {
                           .subscribe(new Action1<List<FundingAccount>>() {
                               @Override
                               public void call(List<FundingAccount> fundingAccounts) {
+                                  final List<FundingAccount> accounts = fundingAccounts == null
+                                        ? Collections.<FundingAccount>emptyList() : fundingAccounts;
                                   final DialogFragment fragment =
-                                        BuyDialogFragment.Companion.create(sellAmount.abs(),
-                                                                           prices,
-                                                                           0,
-                                                                           fundingAccounts);
+                                        BuyDialogFragment.Companion.create(sellAmount.abs(), prices, 0, accounts);
                                   fragment.setCancelable(true);
                                   fragment.show(getFragmentManager(), "BuyFragment");
                               }

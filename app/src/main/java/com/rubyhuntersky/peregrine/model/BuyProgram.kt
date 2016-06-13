@@ -11,25 +11,49 @@ import java.util.*
  * @since 2/4/16.
  */
 
-data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice>, var selectedBuyOption: Int) : Parcelable, FundingProgram {
+data class BuyProgram(val budget: BigDecimal,
+                      val products: List<AssetPrice>, val productIndex: Int,
+                      val accounts: List<FundingAccount>, val accountIndex: Int = 0,
+                      val assetIndex: Int = 0) : Parcelable, FundingProgram {
 
-    private var fundingAccounts = emptyList<FundingAccount>()
-    private var selectedFundingAccount: Int = 0
-    private var selectedFundingOption: Int = 0
+    val product: AssetPrice get() = products[productIndex]
+    val sharesInBudget: BigDecimal get() = budget.divide(product.price, Values.SCALE, BigDecimal.ROUND_FLOOR)
+    val account: FundingAccount? get() = if (accounts.isEmpty()) {
+        null
+    } else {
+        accounts[accountIndex]
+    }
+    val assets: List<FundingOption> by lazy {
+        if (account == null) {
+            emptyList<FundingOption>()
+        } else {
+            val product = if (products.isEmpty()) null else products[productIndex]
+            val exclude = product?.name ?: "nothing-to-exclude"
+            account!!.getFundingOptions(exclude)
+        }
+    }
+    val asset: FundingOption? = if (assets.isEmpty()) null else assets[assetIndex]
+
+    fun withProductIndex(index: Int): BuyProgram {
+        return BuyProgram(budget, products, index, accounts, accountIndex, assetIndex)
+    }
+
+    fun withAccountIndex(index: Int): BuyProgram {
+        return BuyProgram(budget, products, productIndex, accounts, index, assetIndex)
+    }
+
+    fun withAssetIndex(index: Int): BuyProgram {
+        return BuyProgram(budget, products, productIndex, accounts, accountIndex, index)
+    }
 
     fun AssetPrice.toIntention(buyAmount: BigDecimal): BuyIntention = BuyIntention(buyAmount, this)
 
     val buyPrice: BigDecimal get() = buyOption!!.price
-    val buyOption: AssetPrice? get() = if (selectedBuyOption < 0) null else buyOptions[selectedBuyOption]
-    val buyIntention: BuyIntention? get() = buyOption?.toIntention(buyAmount)
-    val sharesToBuy: BigDecimal get() = getSharesAvailableToBuyWithFunds(buyAmount)
+    val buyOption: AssetPrice? get() = if (productIndex < 0) null else products[productIndex]
+    val buyIntention: BuyIntention? get() = buyOption?.toIntention(budget)
+    val sharesToBuy: BigDecimal get() = getSharesAvailableToBuyWithFunds(budget)
 
     fun getSharesAvailableToBuyWithFunds(funds: BigDecimal): BigDecimal = funds.divide(buyPrice, Values.SCALE, BigDecimal.ROUND_HALF_UP)
-
-    fun setFundingAccounts(fundingAccounts: List<FundingAccount>, selectedFundingAccount: Int, selectedFundingOption: Int) {
-        this.fundingAccounts = fundingAccounts
-        this.selectedFundingAccount = selectedFundingAccount
-    }
 
     override fun getFundingAccounts(): List<FundingAccount> {
         return fundingAccounts
@@ -61,7 +85,7 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
         if (fundingAccount == null)
             return null
         val cashAvailableInFundingAccount = fundingAccount.cashAvailable
-        return buyAmount.subtract(cashAvailableInFundingAccount).max(BigDecimal.ZERO)
+        return budget.subtract(cashAvailableInFundingAccount).max(BigDecimal.ZERO)
     }
 
     override fun getFundingOptions(): List<FundingOption> {
@@ -89,7 +113,7 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
     }
 
     override fun getAdditionalFundsNeededAfterSale(): BigDecimal {
-        val fundingOption = fundingOption ?: return buyAmount
+        val fundingOption = fundingOption ?: return budget
 
         val fundedAmount = sharesToSellForFunding.multiply(fundingOption.sellPrice)
         val additionalFundsNeededToBuy = additionalFundsNeededToBuy
@@ -113,12 +137,12 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeSerializable(buyAmount)
-        dest.writeList(buyOptions)
-        dest.writeInt(selectedBuyOption)
-        dest.writeList(fundingAccounts)
-        dest.writeInt(selectedFundingAccount)
-        dest.writeInt(selectedFundingOption)
+        dest.writeSerializable(budget)
+        dest.writeList(products)
+        dest.writeInt(productIndex)
+        dest.writeList(accounts)
+        dest.writeInt(accountIndex)
+        dest.writeInt(assetIndex)
     }
 
     companion object {
@@ -131,16 +155,13 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
             }
 
             override fun createFromParcel(parcel: Parcel): BuyProgram {
-                val buyAmount = parcel.readSerializable() as BigDecimal
-                val buyOptions = parcel.readList<AssetPrice>()
-                val selectedBuyOption = parcel.readInt()
-                val buyProgram = BuyProgram(buyAmount, buyOptions, selectedBuyOption)
-
-                val fundingAccounts = parcel.readList<FundingAccount>()
-                val selectedFundingAccount = parcel.readInt()
-                val selectedFundingOption = parcel.readInt()
-                buyProgram.setFundingAccounts(fundingAccounts, selectedFundingAccount, selectedFundingOption)
-                return buyProgram
+                val budget = parcel.readSerializable() as BigDecimal
+                val products = parcel.readList<AssetPrice>()
+                val productIndex = parcel.readInt()
+                val accounts = parcel.readList<FundingAccount>()
+                val accountIndex = parcel.readInt()
+                val assetIndex = parcel.readInt()
+                return BuyProgram(budget, products, productIndex, accounts, accountIndex, assetIndex)
             }
 
             override fun newArray(size: Int): Array<BuyProgram?> {
@@ -148,4 +169,5 @@ data class BuyProgram(val buyAmount: BigDecimal, val buyOptions: List<AssetPrice
             }
         }
     }
+
 }

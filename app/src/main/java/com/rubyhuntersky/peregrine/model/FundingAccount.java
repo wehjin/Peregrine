@@ -3,6 +3,8 @@ package com.rubyhuntersky.peregrine.model;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,7 +21,6 @@ public interface FundingAccount extends Parcelable {
     List<FundingOption> getFundingOptions(String exclude);
 
     boolean hasFundsForBuyIntention(@NonNull BuyIntention buyIntention);
-
     @NonNull
     FundingStatus getStatusForBuy(@NonNull BuyIntention buyIntention);
 }

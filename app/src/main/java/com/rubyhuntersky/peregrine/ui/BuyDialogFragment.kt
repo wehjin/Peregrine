@@ -2,30 +2,33 @@ package com.rubyhuntersky.peregrine.ui
 
 import android.app.Dialog
 import android.app.DialogFragment
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.rubyhuntersky.coloret.Coloret.BLACK
-import com.rubyhuntersky.coloret.Coloret.WHITE
-import com.rubyhuntersky.gx.Gx.*
+import com.rubyhuntersky.gx.Gx.colorColumn
+import com.rubyhuntersky.gx.Gx.dropDownMenuDiv
+import com.rubyhuntersky.gx.Gx.gapColumn
+import com.rubyhuntersky.gx.Gx.textColumn
+import com.rubyhuntersky.gx.Gx.textTile
 import com.rubyhuntersky.gx.android.AndroidGx.spinnerTile
-import com.rubyhuntersky.gx.android.PoleView
+import com.rubyhuntersky.gx.android.AndroidHuman
+import com.rubyhuntersky.gx.android.FrameLayoutScreen
 import com.rubyhuntersky.gx.basics.Sizelet
-import com.rubyhuntersky.gx.basics.Sizelet.*
+import com.rubyhuntersky.gx.basics.Sizelet.readables
 import com.rubyhuntersky.gx.basics.TextStylet.IMPORTANT_DARK
 import com.rubyhuntersky.gx.basics.TextStylet.READABLE_DARK
-import com.rubyhuntersky.gx.observers.Observer
-import com.rubyhuntersky.gx.presentations.EmptyPresentation
-import com.rubyhuntersky.gx.presentations.Presentation
-import com.rubyhuntersky.gx.reactions.HeightChangedReaction
+import com.rubyhuntersky.gx.devices.poles.Pole
 import com.rubyhuntersky.gx.reactions.ItemSelectionReaction
 import com.rubyhuntersky.gx.reactions.Reaction
+import com.rubyhuntersky.gx.uis.divs.Div
 import com.rubyhuntersky.gx.uis.divs.Div0
 import com.rubyhuntersky.gx.uis.divs.Div2
-import com.rubyhuntersky.gx.uis.divs.Div4
 import com.rubyhuntersky.gx.uis.tiles.Tile0
 import com.rubyhuntersky.gx.uis.tiles.Tile1
 import com.rubyhuntersky.gx.uis.tiles.TileCreator
@@ -43,13 +46,38 @@ import java.util.*
  */
 class BuyDialogFragment() : TradeDialogFragment() {
 
-    private var columnUiView: PoleView? = null
-    private var presentation: Presentation = EmptyPresentation()
-    private var ui: Div0? = null
-    private var program: BuyProgram? = null
+    companion object {
 
+        val DIVISION_SIGN = "\u00f7"
+        val SPACING = gapColumn(Sizelet.QUARTER_FINGER)
+        val DIVIDER = colorColumn(readables(.25f), BLACK)
+        val TAG = BuyDialogFragment::class.java.simpleName
+        val PROGRAM_KEY = "programKey"
+        val DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK)
+        val BUY_PRICES_SPINNER = "buyPricesSpinner"
+        val FUNDING_ACCOUNT_SPINNER = "fundingAccountSpinner"
+        val FUNDING_OPTION_SPINNER = "fundingOptionSpinner"
+
+        fun create(amount: BigDecimal, prices: List<AssetPrice>, selectedPrice: Int, fundingAccounts: List<FundingAccount>): BuyDialogFragment {
+            val buyProgram = BuyProgram(amount, prices, selectedPrice, fundingAccounts)
+
+            val arguments = Bundle()
+            arguments.putParcelable(PROGRAM_KEY, buyProgram)
+
+            val fragment = BuyDialogFragment()
+            fragment.arguments = arguments
+            return fragment
+        }
+    }
+
+    private var presentation: Div.Presentation? = null
+    private var frameLayout: FrameLayout? = null
+    private var ui: Div0? = null
+
+    private var program: BuyProgram? = null
     private fun BigDecimal.toCurrencyString(): String = getCurrencyDisplayString(this)
-    private fun BigDecimal.toSharesString(): String = TradeDialogFragment.getSharesString(this)
+    private fun BigDecimal.toSharesString(): String = getSharesString(this)
+
     private fun FundingStatus.toOptionString(): String {
         return if (isFullyFunded) {
             "Sufficient funds ${cashAvailable.toCurrencyString()}"
@@ -72,54 +100,191 @@ class BuyDialogFragment() : TradeDialogFragment() {
             return
         }
 
-        ui = getBuyUi(program!!.buyAmount, getBuyPrices(program!!.buyOptions)).expandDown(gapColumn(Sizelet.FINGER)).expandDown(fundingUi).expandVertical(TWO_THIRDS_FINGER).padHorizontal(THIRD_FINGER).placeBefore(colorColumn(PREVIOUS, WHITE), 0).printReadEval(object : Div4.Repl<Int, String, Int, Div0> {
+        val buyAmount = program!!.budget
+        val buyAssetPrices: List<String> = getBuyPrices(program!!.products)
 
-            private var fundingAccountSelection = program!!.selectedFundingAccount
-            private var buyPriceSelection = program!!.selectedBuyOption
-            private var fundingPriceSelection = program!!.selectedFundingOption
+        ui = Div0.create(object : Div.OnPresent {
+            override fun onPresent(presenter: Div.Presenter) {
+                presenter.addPresentation(object : Div.PresenterPresentation(presenter) {
 
-            override fun print(div4: Div4<Int, String, Int, Div0>): Div0 {
-                return div4.bind(program!!.selectedBuyOption).bind(TradeDialogFragment.Companion.getSharesString(program!!.sharesToBuy)).bind(program!!.selectedFundingAccount).bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0)
-                    Div0.EMPTY
-                else
-                    getSellUi(getFundingPrices(program!!.fundingOptions),
-                            program!!.selectedFundingOption,
-                            program!!.sharesToSellForFunding,
-                            program!!.additionalFundsNeededAfterSale))
-            }
+                    var presentation: Div.Presentation? = null
+                    var purchase = program!!
 
-            override fun read(reaction: Reaction) {
-                Log.d(TAG, "Repl reaction: " + reaction)
-                if (BUY_PRICES_SPINNER == reaction.source) {
+                    val productMenu = "productMenu"
+                    val accountMenu = "accountMenu"
+                    val assetMenu = "assetMenu"
+                    val divider = DIVIDER.padHorizontal(Sizelet.HALF_FINGER)
+                    val BigDecimal.currency: String get() = getCurrencyDisplayString(this)
+                    val AssetPrice.divisor: String get() = "$DIVISION_SIGN $name ${price.currency}"
+                    val AssetPrice.menuItem: Div0 get() = textColumn(divisor, IMPORTANT_DARK)
+                    val FundingOption.menuItem: Div0 get() = textColumn("$DIVISION_SIGN $assetName ${sellPrice.currency}", IMPORTANT_DARK)
 
-                    buyPriceSelection = (reaction as ItemSelectionReaction<*>).item as Int
-                }
-                if (FUNDING_ACCOUNT_SPINNER == reaction.source) {
+                    fun FundingAccount.hasFundsForPurchase(purchaseAmount: BigDecimal): Boolean {
+                        return cashAvailable.compareTo(purchaseAmount) >= 0
+                    }
 
-                    fundingAccountSelection = (reaction as ItemSelectionReaction<*>).item as Int
-                }
-                if (FUNDING_OPTION_SPINNER == reaction.source) {
-                    fundingPriceSelection = (reaction as ItemSelectionReaction<*>).item as Int
-                }
-            }
+                    fun FundingAccount.getSharesPurchaseableWithCash(product: AssetPrice): String {
+                        return cashAvailable.divide(product.price, Values.SCALE, BigDecimal.ROUND_HALF_UP).intString
+                    }
 
-            override fun eval(): Boolean {
-                if (buyPriceSelection == program!!.selectedBuyOption
-                        && fundingAccountSelection == program!!.selectedFundingAccount
-                        && fundingPriceSelection == program!!.selectedFundingOption)
-                    return false
+                    fun FundingAccount.getShortfall(purchaseAmount: BigDecimal): BigDecimal {
+                        return purchaseAmount.subtract(cashAvailable)
+                    }
 
-                program!!.selectedBuyOption = buyPriceSelection
-                program!!.selectedFundingAccount = fundingAccountSelection
-                program!!.selectedFundingOption = fundingPriceSelection
-                return true
+                    fun FundingAccount.isFullyFundedForPurchase(purchaseAmount: BigDecimal): Boolean {
+                        return getShortfall(purchaseAmount).compareTo(BigDecimal.ZERO) <= 0
+                    }
+
+                    fun FundingAccount.getMenuItem(budget: BigDecimal, product: AssetPrice): Div0 {
+                        return textColumn("Account $accountName", IMPORTANT_DARK)
+                                .expandDown(if (hasFundsForPurchase(budget)) {
+                                    textColumn("Sufficient funds ${cashAvailable.currency}", READABLE_DARK)
+                                } else {
+                                    textColumn("Buy ${getSharesPurchaseableWithCash(product)} shares", READABLE_DARK)
+                                            .expandDown(textColumn("or", READABLE_DARK))
+                                            .expandDown(textColumn("Add funds ${getShortfall(budget).currency}", IMPORTANT_DARK))
+                                })
+                    }
+
+                    fun FundingOption.getSharesToRaiseFunds(funds: BigDecimal): BigDecimal {
+                        if (sellPrice.equals(BigDecimal.ZERO)) {
+                            return BigDecimal.ZERO
+                        } else {
+                            return funds.divide(sellPrice, Values.SCALE, BigDecimal.ROUND_HALF_UP).setScale(0, BigDecimal.ROUND_CEILING)
+                        }
+                    }
+
+                    private val div0: Div0
+                        get() {
+
+                            val budget = purchase.budget
+                            val budgetLine = textColumn("Buy " + budget.currency, IMPORTANT_DARK)
+                            val productSelector = dropDownMenuDiv(purchase.productIndex, purchase.products.map { it.menuItem }, productMenu)
+                            val sharesInBudget = divider.expandDown(textColumn("${purchase.sharesInBudget.intString} shares", IMPORTANT_DARK))
+                            val productDecision = budgetLine.expandDown(productSelector).expandDown(sharesInBudget)
+                            val accountDecision = if (purchase.accounts.isEmpty()) {
+                                Div0.EMPTY
+                            } else {
+                                val product = purchase.product
+                                dropDownMenuDiv(purchase.accountIndex, purchase.accounts.map { it.getMenuItem(budget, product) }, accountMenu)
+                            }
+                            val assetDecision = if (purchase.account?.isFullyFundedForPurchase(budget) ?: false || purchase.assets.isEmpty()) {
+                                Div0.EMPTY
+                            } else {
+                                val shortfall = purchase.account!!.getShortfall(budget)
+                                val asset = purchase.asset!!
+                                dropDownMenuDiv(purchase.assetIndex, purchase.assets.map { it.menuItem }, assetMenu)
+                                        .expandDown(divider)
+                                        .expandDown(textColumn("Sell ${asset.getSharesToRaiseFunds(shortfall)} shares", IMPORTANT_DARK))
+                            }
+
+                            return productDecision
+                                    .expandDown(accountDecision)
+                                    .expandDown(assetDecision)
+                        }
+
+                    init {
+                        present()
+                    }
+
+                    fun present() {
+                        presentation?.cancel()
+                        presentation = div0.present(human, pole, object : Div.ForwardingObserver(presenter) {
+                            override fun onReaction(reaction: Reaction) {
+                                when (reaction.source) {
+                                    productMenu -> {
+                                        val index = (reaction as ItemSelectionReaction<*>).item as Int
+                                        purchase = purchase.withProductIndex(index)
+                                        present()
+                                    }
+                                    accountMenu -> {
+                                        val index = (reaction as ItemSelectionReaction<*>).item as Int
+                                        purchase = purchase.withAccountIndex(index)
+                                        present()
+                                    }
+                                    assetMenu -> {
+                                        val index = (reaction as ItemSelectionReaction<*>).item as Int
+                                        purchase = purchase.withAssetIndex(index)
+                                        present()
+                                    }
+                                    else -> {
+                                        super.onReaction(reaction)
+                                    }
+                                }
+                            }
+                        })
+
+                    }
+
+                    override fun onCancel() {
+                        presentation?.cancel()
+                    }
+                })
             }
         })
+
+
+//        val ui = getBuyUi(buyAmount, buyAssetPrices)
+//                .expandDown(gapColumn(FINGER))
+//                .expandDown(fundingUi)
+//                .expandVertical(TWO_THIRDS_FINGER)
+//                .padHorizontal(THIRD_FINGER)
+//                .placeBefore(colorColumn(PREVIOUS, WHITE), 0)
+//                .printReadEval(object : Div4.Repl<Int, String, Int, Div0> {
+//
+//                    private var fundingAccountSelection = program!!.selectedFundingAccount
+//                    private var buyPriceSelection = program!!.productIndex
+//                    private var fundingPriceSelection = program!!.selectedFundingOption
+//
+//                    override fun print(unbound: Div4<Int, String, Int, Div0>): Div0 {
+//                        return unbound.bind(program!!.productIndex)
+//                                .bind(getSharesString(program!!.sharesToBuy))
+//                                .bind(program!!.selectedFundingAccount)
+//                                .bind(if (program!!.fundingAccountHasSufficientFundsToBuy() || program!!.fundingOptions.size == 0) {
+//                                    Div0.EMPTY
+//                                } else {
+//                                    getSellUi(getFundingPrices(program!!.fundingOptions),
+//                                            program!!.selectedFundingOption,
+//                                            program!!.sharesToSellForFunding,
+//                                            program!!.additionalFundsNeededAfterSale)
+//                                })
+//                    }
+//
+//                    override fun read(reaction: Reaction) {
+//                        Log.d(TAG, "Repl reaction: " + reaction)
+//                        if (BUY_PRICES_SPINNER == reaction.source) {
+//
+//                            buyPriceSelection = (reaction as ItemSelectionReaction<*>).item as Int
+//                        }
+//                        if (FUNDING_ACCOUNT_SPINNER == reaction.source) {
+//
+//                            fundingAccountSelection = (reaction as ItemSelectionReaction<*>).item as Int
+//                        }
+//                        if (FUNDING_OPTION_SPINNER == reaction.source) {
+//                            fundingPriceSelection = (reaction as ItemSelectionReaction<*>).item as Int
+//                        }
+//                    }
+//
+//                    override fun eval(): Boolean {
+//                        if (buyPriceSelection == program!!.productIndex
+//                                && fundingAccountSelection == program!!.selectedFundingAccount
+//                                && fundingPriceSelection == program!!.selectedFundingOption)
+//                            return false
+//
+//                        //program!!.productIndex = buyPriceSelection
+//                        program!!.selectedFundingAccount = fundingAccountSelection
+//                        program!!.selectedFundingOption = fundingPriceSelection
+//                        return true
+//                    }
+//                })
 
     }
 
     private fun getBuyUi(buyAmount: BigDecimal, buyPrices: List<String>): Div2<Int, String> {
-        return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK).expandDown(SPACING).expandDown(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn()).expandDown(SPACING).expandDown(DIVIDER).expandDown(SPACING).expandDown(textTile1(IMPORTANT_DARK).toColumn())
+        return textColumn("Buy " + getCurrencyDisplayString(buyAmount), IMPORTANT_DARK)
+                .expandDown(SPACING)
+                .expandDown(spinnerTile(buyPrices).name(BUY_PRICES_SPINNER).expandLeft(DIVISION_SIGN_TILE).toColumn())
+                .expandDown(SPACING).expandDown(DIVIDER).expandDown(SPACING).expandDown(textTile1(IMPORTANT_DARK).toColumn())
     }
 
     private fun getBuyPrices(buyOptions: List<AssetPrice>): List<String> {
@@ -172,39 +337,80 @@ class BuyDialogFragment() : TradeDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val inflate = inflater!!.inflate(R.layout.fragment_buy, container, false)
-        columnUiView = inflate.findViewById(R.id.ui) as PoleView
-        return inflate
-    }
+        Log.d(tag, "onCreateView")
+        val windowSize = Point()
+        activity.windowManager.defaultDisplay.getSize(windowSize)
+        val width = windowSize.x - 40
+        val height = windowSize.y - 20
 
-    override fun onResume() {
-        super.onResume()
-        present()
-    }
-
-    private fun present() {
-        presentation.cancel()
-        presentation = columnUiView!!.present(ui, object : Observer {
-            override fun onReaction(reaction: Reaction) {
-                Log.d(TAG, "onReaction: " + reaction)
-                if (reaction is HeightChangedReaction) {
-                    columnUiView!!.clearVariableDimensions()
-                    columnUiView!!.requestLayout()
+        val mainFrame = inflater!!.inflate(R.layout.fragment_buy, container, false) as FrameLayout
+        frameLayout = object : FrameLayout(activity) {
+            override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+                super.onLayout(changed, left, top, right, bottom)
+                Log.d(this@BuyDialogFragment.tag, "onLayout $left $top $right $bottom $changed")
+                if (changed) {
+                    onWidth(right - left)
                 }
             }
 
-            override fun onEnd() {
-                Log.d(TAG, "onEnd")
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+                setMeasuredDimension(width, height)
+            }
+        }
+        mainFrame.addView(frameLayout, width, height)
+        return mainFrame
+    }
+
+    data class State(val width: Int, val isResumed: Boolean) {
+        fun withWidth(value: Int) = State(value, isResumed)
+        fun withResumed(value: Boolean) = State(width, value)
+
+    }
+
+    var state = State(-1, false)
+        set(value) {
+            field = value
+            Log.d(tag, "setState $value")
+            presentation?.cancel()
+            if (state.width > 0 && state.isResumed) {
+                presentUi()
+            }
+        }
+
+    private fun presentUi() {
+        val human = AndroidHuman(activity)
+        val pole = Pole(state.width.toFloat(), 0f, 0, FrameLayoutScreen(frameLayout!!, human))
+
+        presentation = ui!!.present(human, pole, object : Div.Observer {
+            override fun onHeight(height: Float) {
+                Log.d(tag, "onHeight: $height")
+                frameLayout!!.requestLayout()
+            }
+
+            override fun onReaction(reaction: Reaction) {
+                Log.d(tag, "onReaction: $reaction")
             }
 
             override fun onError(throwable: Throwable) {
-                Log.e(TAG, "onError", throwable)
+                Log.e(TAG, "onError: $throwable", throwable)
             }
         })
     }
 
+    fun onWidth(width: Int) {
+        Log.d(tag, "onWidth $width")
+        state = state.withWidth(width)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(tag, "onResume")
+        state = state.withResumed(true)
+    }
+
     override fun onPause() {
-        presentation.cancel()
+        state = state.withResumed(false)
         super.onPause()
     }
 
@@ -212,32 +418,5 @@ class BuyDialogFragment() : TradeDialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setCanceledOnTouchOutside(true)
         return dialog
-    }
-
-    companion object {
-
-        val DIVISION_SIGN = "\u00f7"
-        val SPACING = gapColumn(Sizelet.QUARTER_FINGER)
-        val DIVIDER = colorColumn(readables(.1f), BLACK)
-        val TAG = BuyDialogFragment::class.java.simpleName
-        val PROGRAM_KEY = "programKey"
-        val DIVISION_SIGN_TILE = textTile(DIVISION_SIGN, IMPORTANT_DARK)
-        val BUY_PRICES_SPINNER = "buyPricesSpinner"
-        val FUNDING_ACCOUNT_SPINNER = "fundingAccountSpinner"
-        val FUNDING_OPTION_SPINNER = "fundingOptionSpinner"
-
-        fun create(amount: BigDecimal, prices: List<AssetPrice>, selectedPrice: Int, fundingAccounts: List<FundingAccount>?): BuyDialogFragment {
-            val buyProgram = BuyProgram(amount, prices, selectedPrice)
-            if (fundingAccounts != null) {
-                buyProgram.setFundingAccounts(fundingAccounts, 0, 0)
-            }
-
-            val arguments = Bundle()
-            arguments.putParcelable(PROGRAM_KEY, buyProgram)
-
-            val fragment = BuyDialogFragment()
-            fragment.arguments = arguments
-            return fragment
-        }
     }
 }
