@@ -49,7 +49,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile('com.github.wehjin:GxAndroid:2da6bd1580a19555d67f1d17534784cc801eb735') {
+    compile('com.github.wehjin:GxAndroid:3333eb16c42e984839ae65263e28d50e0243fcb2') {
         transitive = true
     }
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -252,7 +252,7 @@ class BuyDialogFragment() : TradeDialogFragment() {
             presentation?.cancel()
             if (state.width > 0 && state.isResumed) {
                 val human = AndroidHuman(activity)
-                val pole = Pole(state.width.toFloat(), 0f, 0, FrameLayoutScreen(frameLayout!!, human))
+                val pole = Pole(state.width.toFloat(), 0f, 0, FrameLayoutScreen(frameLayout!!, human, activity))
                 presentation = ui!!.present(human, pole, object : Div.Observer {
                     override fun onHeight(height: Float) {
                         val freshHeight = height.toInt()
