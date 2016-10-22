@@ -17,8 +17,6 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.rubyhuntersky.peregrine.lib.oauth.model.OauthToken;
 import com.rubyhuntersky.peregrine.R;
@@ -33,10 +31,6 @@ public class EtradeVerifierFragment extends DialogFragment {
     public static final String TAG = EtradeVerifierFragment.class.getSimpleName();
     private Listener listener;
     private WebView verifierWeb;
-    private ViewGroup credentialsGroup;
-    private EditText usernameEdit;
-    private EditText passwordEdit;
-    private Button signinButton;
 
     public EtradeVerifierFragment() {
         // Required empty public constructor
@@ -55,7 +49,10 @@ public class EtradeVerifierFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        final Window window = dialog.getWindow();
+        if (window != null) {
+            window.requestFeature(Window.FEATURE_NO_TITLE);
+        }
         return dialog;
     }
 
@@ -66,12 +63,6 @@ public class EtradeVerifierFragment extends DialogFragment {
         final View inflate = inflater.inflate(R.layout.fragment_etrade_verifier, container, false);
         final String url = getUrl();
         Log.d(TAG, "Url: " + url);
-
-        credentialsGroup = (ViewGroup) inflate.findViewById(R.id.credentialsGroup);
-        credentialsGroup.setVisibility(View.GONE);
-        usernameEdit = (EditText) credentialsGroup.findViewById(R.id.usernameEdit);
-        passwordEdit = (EditText) credentialsGroup.findViewById(R.id.passwordEdit);
-        signinButton = (Button) credentialsGroup.findViewById(R.id.signinButton);
 
         verifierWeb = (WebView) inflate.findViewById(R.id.verifierWeb);
         verifierWeb.getSettings().setUseWideViewPort(true);
@@ -90,14 +81,15 @@ public class EtradeVerifierFragment extends DialogFragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: " + url);
-                presentCredentialsGroupIfWebViewContainsInputs();
+                checkPageForVerifier();
             }
         });
         verifierWeb.loadUrl(url);
         return inflate;
     }
 
-    private void presentCredentialsGroupIfWebViewContainsInputs() {
+    private void checkPageForVerifier() {
+        //noinspection SpellCheckingInspection
         final String containsCredentialInputs = "javascript:(function() {" +
               "  var customerInfoForms = document.getElementsByName('CustInfo');" +
               "  if (customerInfoForms.length === 1) {" +
@@ -110,17 +102,6 @@ public class EtradeVerifierFragment extends DialogFragment {
               "  if (verifier) {" +
               "    return {action:'done', verifier: verifier.value};" +
               "  }" +
-              "  var userElements = document.getElementsByName('USER');" +
-              "  if (userElements.length !== 1) { return {error:'NO_USER_INPUT'};}" +
-              "  var userElement = userElements[0];" +
-              "  if (userElement.tagName !== 'INPUT') { return {error:'NO_USER_INPUT'};}" +
-              "  var passwordElements = document.getElementsByName('PASSWORD');" +
-              "  if (passwordElements.length !==1) {return {error:'NO_PASSWORD_INPUT'};}" +
-              "  var passwordElement = passwordElements[0];" +
-              "  if (passwordElement.tagName !== 'INPUT' ||" +
-              "      passwordElement.getAttribute('type') !== 'password') {" +
-              "    return {error:'NO_PASSWORD_INPUT'};" +
-              "  }" +
               "  return {action:'credentials'};" +
               "})();";
         verifierWeb.evaluateJavascript(containsCredentialInputs, new ValueCallback<String>() {
@@ -132,9 +113,7 @@ public class EtradeVerifierFragment extends DialogFragment {
                     final String error = jsonObject.optString("error");
                     if (error.isEmpty()) {
                         final String action = jsonObject.optString("action");
-                        if (action.equals("credentials")) {
-                            presentCredentialsGroup();
-                        } else if (action.equals("done")) {
+                        if (action.equals("done")) {
                             final String verifier = jsonObject.optString("verifier");
                             Log.d(TAG, "Verifier: " + verifier);
                             dismiss();
@@ -152,73 +131,6 @@ public class EtradeVerifierFragment extends DialogFragment {
         });
     }
 
-    private void submitCredentials(String username, String password) {
-        credentialsGroup.setVisibility(View.GONE);
-
-        final JSONObject credentials = new JSONObject();
-        try {
-            credentials.put("username", username);
-            credentials.put("password", password);
-        } catch (JSONException e) {
-            alertError("Submit credentials", e.getMessage());
-            return;
-        }
-
-        final String submitCredentials = "javascript:(function() {" +
-              "  var credentials = " + credentials.toString() + ";" +
-              "  var userElements = document.getElementsByName('USER');" +
-              "  if (userElements.length !== 1) { return {error:'NO_USER_INPUT'};}" +
-              "  var userElement = userElements[0];" +
-              "  if (userElement.tagName !== 'INPUT') { return {error:'NO_USER_INPUT'};}" +
-              "  var passwordElements = document.getElementsByName('PASSWORD');" +
-              "  if (passwordElements.length !==1) {return {error:'NO_PASSWORD_INPUT'};}" +
-              "  var passwordElement = passwordElements[0];" +
-              "  if (passwordElement.tagName !== 'INPUT' ||" +
-              "      passwordElement.getAttribute('type') !== 'password') {" +
-              "    return {error:'NO_PASSWORD_INPUT'};" +
-              "  }" +
-              "  var loginFormElements = document.getElementsByName('LOGIN_FORM');" +
-              "  if (loginFormElements.length !== 1) { return {error:'NO_LOGIN_FORM'};}" +
-              "  var loginFormElement = loginFormElements[0];" +
-              "  userElement.value = credentials.username;" +
-              "  passwordElement.value = credentials.password;" +
-              "  loginFormElement.submit();" +
-              "  return {};" +
-              "})();";
-        verifierWeb.evaluateJavascript(submitCredentials, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                Log.d(TAG, "onReceiveValue: " + value);
-                try {
-                    final JSONObject jsonObject = new JSONObject(value);
-                    final String error = jsonObject.optString("error");
-                    if (!error.isEmpty()) {
-                        alertError("Submit credentials", error);
-                    }
-                } catch (JSONException e) {
-                    alertError("Submit credentials", e.getMessage());
-                }
-            }
-        });
-    }
-
-    private void presentCredentialsGroup() {
-        credentialsGroup.setVisibility(View.VISIBLE);
-        usernameEdit.requestFocus();
-        signinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String username = usernameEdit.getText().toString();
-                final String password = passwordEdit.getText().toString();
-                if (username.isEmpty() || password.isEmpty()) {
-                    return;
-                }
-
-                submitCredentials(username, password);
-            }
-        });
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -232,26 +144,27 @@ public class EtradeVerifierFragment extends DialogFragment {
     private String getUrl() {
         final String appKey = getArguments().getString(ARG_APP_KEY);
         final String requestKey = getArguments().getString(ARG_REQUEST_KEY);
+        //noinspection SpellCheckingInspection
         final String format = "https://us.etrade.com/e/t/etws/authorize?key=%s&token=%s";
         return String.format(format, Uri.encode(appKey), Uri.encode(requestKey));
     }
 
     private void alertJs(String title, String message, final JsResult result) {
         new AlertDialog.Builder(getActivity()).setTitle(title)
-                                              .setMessage(message)
-                                              .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                                  @Override
-                                                  public void onCancel(DialogInterface dialog) {
-                                                      result.cancel();
-                                                  }
-                                              })
-                                              .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                  @Override
-                                                  public void onDismiss(DialogInterface dialog) {
-                                                      result.confirm();
-                                                  }
-                                              })
-                                              .show();
+              .setMessage(message)
+              .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                  @Override
+                  public void onCancel(DialogInterface dialog) {
+                      result.cancel();
+                  }
+              })
+              .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                  @Override
+                  public void onDismiss(DialogInterface dialog) {
+                      result.confirm();
+                  }
+              })
+              .show();
     }
 
     private void alertError(String title, String message) {
