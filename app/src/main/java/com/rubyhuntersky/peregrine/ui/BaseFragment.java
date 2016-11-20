@@ -23,7 +23,7 @@ public class BaseFragment extends Fragment {
     }
 
     protected Action1<Throwable> getErrorAction() {
-        return getBaseActivity().errorAction;
+        return getBaseActivity().getErrorAction();
     }
 
     protected Storage getStorage() {

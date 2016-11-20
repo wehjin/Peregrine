@@ -55,7 +55,7 @@ public class PartitionListUnitTest {
                 totalErrorDollars = totalErrorDollars.add(getAllocationErrorDollars(group));
                 totalTarget = totalTarget.add(group.getTargetAllocation());
             }
-            Log.d(TAG,
+            Log.d(tag,
                   "Total error in groups: " + totalError.toPlainString() + ", " + UiHelper.getCurrencyDisplayString(
                         totalErrorDollars) + ", " + totalTarget);
 
