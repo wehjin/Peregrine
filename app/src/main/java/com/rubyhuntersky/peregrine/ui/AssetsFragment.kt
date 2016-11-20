@@ -1,27 +1,38 @@
 package com.rubyhuntersky.peregrine.ui
 
-import android.content.Context
+import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.*
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.BaseAdapter
+import android.widget.ListView
+import android.widget.TextView
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.model.Asset
 import com.rubyhuntersky.peregrine.model.Assignments
 import com.rubyhuntersky.peregrine.model.PartitionList
 import com.rubyhuntersky.peregrine.model.PortfolioAssets
 import rx.Observable
+import rx.Observable.combineLatest
 import rx.functions.Action1
+import java.math.BigDecimal
 
 class AssetsFragment : BaseFragment() {
 
-    data class ViewsData(val partitionList: PartitionList, val portfolioAssets: PortfolioAssets, val assignments: Assignments)
+    data class ViewsData(
+            val partitionList: PartitionList,
+            val portfolioAssets: PortfolioAssets,
+            val assignments: Assignments
+    )
 
-    private var textView: TextView? = null
-    private var listView: ListView? = null
+    private lateinit var textView: TextView
+    private lateinit var listView: ListView
+    private val partitionLists: Observable<PartitionList> get() = baseActivity.partitionListStream
+    private val portfolioAssets: Observable<PortfolioAssets> get() = baseActivity.portfolioAssetsStream
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +46,11 @@ class AssetsFragment : BaseFragment() {
         return view
     }
 
+
     override fun onResume() {
         super.onResume()
-        Observable.combineLatest(baseActivity.partitionListStream, baseActivity.portfolioAssetsStream, storage.streamAssignments(), ::ViewsData)
-                .subscribe(Action1<ViewsData> { viewsData -> updateViews(viewsData) }, errorAction)
+        combineLatest(partitionLists, portfolioAssets, storage.streamAssignments(), ::ViewsData)
+                .subscribe(Action1 { updateViews(it) }, errorAction)
     }
 
     override fun getErrorAction(): Action1<Throwable> {
@@ -55,8 +67,10 @@ class AssetsFragment : BaseFragment() {
         if (assets.isEmpty()) {
             showText("No data")
         } else {
-            listView!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> showAssignmentDialog(assets[position], partitionList, assignments) }
-            showList(getAssetsBaseAdapter(activity, viewsData.partitionList, assets, viewsData.assignments))
+            listView.adapter = MyListAdapter(activity, viewsData.partitionList, assets, viewsData.assignments)
+            listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> showAssignmentDialog(assets[position], partitionList, assignments) }
+            listView.visibility = View.VISIBLE
+            textView.visibility = View.GONE
         }
     }
 
@@ -84,65 +98,49 @@ class AssetsFragment : BaseFragment() {
                 }).show()
     }
 
-    private fun showList(adapter: ListAdapter) {
-        listView!!.adapter = adapter
-        listView!!.visibility = View.VISIBLE
-        textView!!.visibility = View.GONE
+    private fun getPartitionIndex(asset: Asset, partitionList: PartitionList, assignments: Assignments): Int {
+        return partitionList.getIndex(assignments.getPartitionId(asset.symbol))
     }
 
     private fun showText(message: String) {
-        textView!!.text = message
-        textView!!.visibility = View.VISIBLE
-        listView!!.visibility = View.GONE
-    }
-
-    private fun getAssetsBaseAdapter(context: Context, partitionList: PartitionList,
-                                     assets: List<Asset>, assignments: Assignments): BaseAdapter {
-        return object : BaseAdapter() {
-
-            override fun getCount(): Int {
-                return assets.size
-            }
-
-            override fun getItem(position: Int): Any {
-                return assets[position]
-            }
-
-            override fun getItemId(position: Int): Long {
-                return assets.hashCode().toLong()
-            }
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = convertView ?: View.inflate(context, R.layout.cell_asset, null)
-                val asset = assets[position]
-                val startText = view.findViewById(R.id.startText) as TextView
-                val startDetailText = view.findViewById(R.id.startDetailText) as TextView
-                val endText = view.findViewById(R.id.endText) as TextView
-                startText.text = asset.symbol
-
-                val partitionName = getPartitionName(asset, partitionList, assignments)
-                val detailColorRes = if (partitionName == null) R.color.colorAccent else R.color.darkTextSecondary
-                startDetailText.setTextColor(ContextCompat.getColor(activity, detailColorRes))
-                startDetailText.text = partitionName ?: getString(R.string.unassigned)
-
-                endText.text = UiHelper.getCurrencyDisplayString(asset.marketValue)
-                return view
-            }
-        }
-    }
-
-    private fun getPartitionName(asset: Asset, partitionList: PartitionList, assignments: Assignments): String? {
-        val partitionId = assignments.getPartitionId(asset.symbol)
-        return partitionList.getName(partitionId)
-    }
-
-    private fun getPartitionIndex(asset: Asset, partitionList: PartitionList, assignments: Assignments): Int {
-        return partitionList.getIndex(assignments.getPartitionId(asset.symbol))
+        textView.text = message
+        textView.visibility = View.VISIBLE
+        listView.visibility = View.GONE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.assets, menu)
     }
 
+    class MyListAdapter(val activity: Activity, val partitions: PartitionList, assets: List<Asset>, val assignments: Assignments) : BaseAdapter() {
 
+        data class ItemModel(val symbol: String, val marketValue: BigDecimal, val groupName: String?)
+
+        val List<Asset>.totalMarketValue: BigDecimal get() = map { it.marketValue!! }.reduce { a, b -> a + b }
+        val String.toGroupName: String? get() = partitions.getName(assignments.getPartitionId(this))
+        val BigDecimal.asCurrencyDisplayString: String get() = UiHelper.getCurrencyDisplayString(this)
+        val ItemModel.groupTextColor: Int get() = ContextCompat.getColor(activity, if (groupName == null) R.color.colorAccent else R.color.darkTextSecondary)
+
+        val itemModels: List<ItemModel> by lazy {
+            assets.groupBy { it.symbol }
+                    .map { ItemModel(it.key, it.value.totalMarketValue, it.key.toGroupName) }
+                    .sortedBy { it.symbol }
+        }
+
+        override fun getCount(): Int = itemModels.size
+        override fun getItem(position: Int): Any = itemModels[position]
+        override fun getItemId(position: Int): Long = itemModels.hashCode().toLong()
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = convertView ?: activity.layoutInflater.inflate(R.layout.cell_asset, parent, false)
+            val itemModel = itemModels[position]
+            val startText = view.findViewById(R.id.startText) as TextView
+            val startDetailText = view.findViewById(R.id.startDetailText) as TextView
+            val endText = view.findViewById(R.id.endText) as TextView
+            startText.text = itemModel.symbol
+            startDetailText.text = itemModel.groupName ?: activity.getString(R.string.unassigned)
+            startDetailText.setTextColor(itemModel.groupTextColor)
+            endText.text = itemModel.marketValue.asCurrencyDisplayString
+            return view
+        }
+    }
 }
