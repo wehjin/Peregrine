@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.*
-import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
@@ -23,12 +23,14 @@ import java.math.BigDecimal
 
 class AssetsFragment : BaseFragment() {
 
-    data class ViewsData(
+    data class Model(
             val partitionList: PartitionList,
             val portfolioAssets: PortfolioAssets,
             val assignments: Assignments
     )
 
+    private fun String.toPartitionId(assignments: Assignments): String? = assignments.getPartitionId(this)
+    private fun String?.toPartitionIndex(partitionList: PartitionList): Int = partitionList.getIndex(this)
     private lateinit var textView: TextView
     private lateinit var listView: ListView
     private val partitionLists: Observable<PartitionList> get() = baseActivity.partitionListStream
@@ -49,8 +51,8 @@ class AssetsFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        combineLatest(partitionLists, portfolioAssets, storage.streamAssignments(), ::ViewsData)
-                .subscribe(Action1 { updateViews(it) }, errorAction)
+        combineLatest(partitionLists, portfolioAssets, storage.streamAssignments(), ::Model)
+                .subscribe(Action1 { display(it) }, errorAction)
     }
 
     override fun getErrorAction(): Action1<Throwable> {
@@ -60,46 +62,48 @@ class AssetsFragment : BaseFragment() {
         }
     }
 
-    private fun updateViews(viewsData: ViewsData) {
-        val partitionList = viewsData.partitionList
-        val assignments = viewsData.assignments
-        val assets = viewsData.portfolioAssets.assets
-        if (assets.isEmpty()) {
+    private fun display(model: Model) {
+        val myListAdapter = MyListAdapter(
+                activity = activity,
+                partitions = model.partitionList,
+                assets = model.portfolioAssets.assets,
+                assignments = model.assignments
+        )
+        if (myListAdapter.isEmpty) {
             showText("No data")
         } else {
-            listView.adapter = MyListAdapter(activity, viewsData.partitionList, assets, viewsData.assignments)
-            listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> showAssignmentDialog(assets[position], partitionList, assignments) }
+            listView.adapter = myListAdapter
+            listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+                val item = (parent.adapter as MyListAdapter).getItem(position)
+                showAssignmentDialog(item.symbol, model.partitionList, model.assignments)
+            }
             listView.visibility = View.VISIBLE
             textView.visibility = View.GONE
         }
     }
 
-    private fun showAssignmentDialog(asset: Asset, partitionList: PartitionList,
-                                     assignments: Assignments) {
-        val startingIndex = 1 + getPartitionIndex(asset, partitionList, assignments)
-        val endingIndex = intArrayOf(startingIndex)
+    private fun showAssignmentDialog(symbol: String, partitionList: PartitionList, assignments: Assignments) {
+
+        val startingIndex = 1 + symbol.toPartitionId(assignments).toPartitionIndex(partitionList)
+        var selectedIndex = startingIndex
         AlertDialog.Builder(activity)
-                .setTitle("Assign Group")
-                .setSingleChoiceItems(partitionList.toNamesArray("None"), startingIndex
-                ) { dialog, which -> endingIndex[0] = which }
-                .setNegativeButton("Cancel") { dialog, which -> }
+                .setTitle("Assign Group - $symbol")
+                .setSingleChoiceItems(partitionList.toNamesArray("None"), startingIndex) { dialog, which ->
+                    selectedIndex = which
+                }
+                .setNegativeButton("Cancel", null)
                 .setPositiveButton("Assign", DialogInterface.OnClickListener { dialog, which ->
-                    val nextIndex = endingIndex[0]
-                    if (nextIndex == startingIndex) {
+                    if (selectedIndex == startingIndex) {
                         return@OnClickListener
                     }
-                    val symbol = asset.symbol
-                    val partitions = partitionList.partitions
-                    val nextAssignments = if (nextIndex == 0)
+                    val nextAssignments = if (selectedIndex == 0) {
                         assignments.erasePartitionId(symbol)
-                    else
-                        assignments.setPartitionId(symbol, partitions[nextIndex - 1].id)
+                    } else {
+                        val partitionIndex = selectedIndex - 1
+                        assignments.setPartitionId(symbol, partitionList.partitions[partitionIndex].id)
+                    }
                     storage.writeAssignments(nextAssignments)
                 }).show()
-    }
-
-    private fun getPartitionIndex(asset: Asset, partitionList: PartitionList, assignments: Assignments): Int {
-        return partitionList.getIndex(assignments.getPartitionId(asset.symbol))
     }
 
     private fun showText(message: String) {
@@ -123,12 +127,15 @@ class AssetsFragment : BaseFragment() {
 
         val itemModels: List<ItemModel> by lazy {
             assets.groupBy { it.symbol }
-                    .map { ItemModel(it.key, it.value.totalMarketValue, it.key.toGroupName) }
+                    .map {
+                        val (symbol, assetList) = it
+                        ItemModel(symbol, assetList.totalMarketValue, symbol.toGroupName)
+                    }
                     .sortedBy { it.symbol }
         }
 
         override fun getCount(): Int = itemModels.size
-        override fun getItem(position: Int): Any = itemModels[position]
+        override fun getItem(position: Int): ItemModel = itemModels[position]
         override fun getItemId(position: Int): Long = itemModels.hashCode().toLong()
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: activity.layoutInflater.inflate(R.layout.cell_asset, parent, false)
