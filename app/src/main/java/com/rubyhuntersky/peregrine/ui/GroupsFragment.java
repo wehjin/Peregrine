@@ -113,7 +113,7 @@ public class GroupsFragment extends BaseFragment {
                 if (direction > 0) {
                     List<AssetPrice> prices = getPrices(group);
                     AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
-                    final DialogFragment fragment = SellDialogFragment.create(sellAmount, prices, selectedPrice);
+                    final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount, prices, selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
                 } else if (direction < 0) {
                     final List<AssetPrice> prices = getPrices(group);
