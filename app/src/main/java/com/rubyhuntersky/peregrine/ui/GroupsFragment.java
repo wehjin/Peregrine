@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +24,7 @@ import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.Group;
 import com.rubyhuntersky.peregrine.model.PartitionList;
 import com.rubyhuntersky.peregrine.model.PortfolioAssets;
+import com.rubyhuntersky.peregrine.utility.ExtensionsKt;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -98,7 +98,11 @@ public class GroupsFragment extends BaseFragment {
         }
     }
 
-    private void showList(List<Group> groups) {
+    private BigDecimal getAllocationErrorDollars(Group group, BigDecimal fullValue) {
+        return group.getAllocationError(fullValue).multiply(fullValue);
+    }
+
+    private void showList(final List<Group> groups) {
         textView.setVisibility(View.GONE);
 
         final GroupsAdapter groupsAdapter = getGroupsAdapter(getActivity(), groups);
@@ -108,12 +112,15 @@ public class GroupsFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Group group = groupsAdapter.getItem(position);
-                final BigDecimal sellAmount = groupsAdapter.getAllocationErrorDollars(group);
+                final BigDecimal fullValue = ExtensionsKt.getFullValue(groups);
+                final BigDecimal sellAmount = getAllocationErrorDollars(group, fullValue);
                 final int direction = sellAmount.compareTo(BigDecimal.ZERO);
                 if (direction > 0) {
                     List<AssetPrice> prices = getPrices(group);
                     AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
-                    final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount, prices, selectedPrice);
+                    final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount,
+                                                                                        prices,
+                                                                                        selectedPrice);
                     fragment.show(getFragmentManager(), "SellFragment");
                 } else if (direction < 0) {
                     final List<AssetPrice> prices = getPrices(group);
@@ -174,14 +181,6 @@ public class GroupsFragment extends BaseFragment {
         return new GroupsAdapter(context, groups);
     }
 
-    private BigDecimal getFullValue(List<Group> groups) {
-        BigDecimal fullValue = BigDecimal.ZERO;
-        for (Group group : groups) {
-            fullValue = fullValue.add(group.getValue());
-        }
-        return fullValue;
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.assets, menu);
@@ -204,82 +203,4 @@ public class GroupsFragment extends BaseFragment {
         }
     }
 
-    private class GroupsAdapter extends BaseAdapter {
-
-        private final Context context;
-        private final List<Group> groups;
-        private final BigDecimal fullValue;
-
-        public GroupsAdapter(Context context, List<Group> groups) {
-            this.context = context;
-            this.groups = groups;
-            fullValue = getFullValue(groups);
-        }
-
-        @Override
-        public int getCount() {
-            return groups.size();
-        }
-
-        @Override
-        public Group getItem(int position) {
-            return groups.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return groups.hashCode();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View view = convertView == null ? View.inflate(context, R.layout.cell_group, null) : convertView;
-            final Group group = groups.get(position);
-
-            final TextView startText = (TextView) view.findViewById(R.id.startText);
-            final TextView startDetailText = (TextView) view.findViewById(R.id.startDetailText);
-            final String name = group.getName();
-            startText.setText(name);
-            startDetailText.setText(UiHelper.getCurrencyDisplayString(group.getValue()));
-
-            final TextView endText = (TextView) view.findViewById(R.id.endText);
-            final TextView endDetailText = (TextView) view.findViewById(R.id.endDetailText);
-
-            String errorLabelString;
-            String errorValueString;
-            if (fullValue.equals(BigDecimal.ZERO)) {
-                errorLabelString = "Zero";
-                errorValueString = "-";
-            } else {
-                BigDecimal allocationError = group.getAllocationError(fullValue);
-                if (allocationError.equals(BigDecimal.ZERO)) {
-                    errorLabelString = "Even";
-                    errorValueString = "Hold";
-                } else {
-                    errorLabelString = allocationError.compareTo(BigDecimal.ZERO) > 0 ? "Over" : "Under";
-                    errorValueString = getDollarError(allocationError, fullValue);
-                }
-            }
-            endText.setText(errorLabelString);
-            endDetailText.setText(errorValueString);
-            return view;
-        }
-
-        private BigDecimal getAllocationErrorDollars(Group group) {
-            return group.getAllocationError(fullValue).multiply(fullValue);
-        }
-
-        @NonNull
-        private String getDollarError(BigDecimal allocationError, BigDecimal fullValue) {
-            final BigDecimal dollarError = allocationError.multiply(fullValue);
-            final int versusZero = dollarError.compareTo(BigDecimal.ZERO);
-            if (versusZero > 0) {
-                return "Sell " + UiHelper.getCurrencyDisplayString(dollarError);
-            } else if (versusZero < 0) {
-                return "Buy " + UiHelper.getCurrencyDisplayString(dollarError.abs());
-            } else {
-                return "Hold";
-            }
-        }
-    }
 }
