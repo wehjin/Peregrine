@@ -116,43 +116,50 @@ public class GroupsFragment extends BaseFragment {
                 final BigDecimal sellAmount = getAllocationErrorDollars(group, fullValue);
                 final int direction = sellAmount.compareTo(BigDecimal.ZERO);
                 if (direction > 0) {
-                    List<AssetPrice> prices = getPrices(group);
-                    AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
-                    final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount,
-                                                                                        prices,
-                                                                                        selectedPrice);
-                    fragment.show(getFragmentManager(), "SellFragment");
+                    startSellDialog(group, sellAmount);
                 } else if (direction < 0) {
-                    final List<AssetPrice> prices = getPrices(group);
-                    if (prices.size() == 0) {
-                        prices.add(new AssetPrice());
-                    }
-
-                    getBaseActivity().getAccountAssetsListStream().first()
-                          .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
-                              @Override
-                              public List<FundingAccount> call(List<AccountAssets> accountAssetsList) {
-                                  List<FundingAccount> fundingAccounts = new ArrayList<>();
-                                  for (AccountAssets accountAssets : accountAssetsList) {
-                                      fundingAccounts.add(accountAssets.toFundingAccount());
-                                  }
-                                  return fundingAccounts;
-                              }
-                          })
-                          .subscribe(new Action1<List<FundingAccount>>() {
-                              @Override
-                              public void call(List<FundingAccount> fundingAccounts) {
-                                  final List<FundingAccount> accounts = fundingAccounts == null
-                                        ? Collections.<FundingAccount>emptyList() : fundingAccounts;
-                                  final DialogFragment fragment =
-                                        BuyDialogFragment.Companion.create(sellAmount.abs(), prices, 0, accounts);
-                                  fragment.setCancelable(true);
-                                  fragment.show(getFragmentManager(), "BuyFragment");
-                              }
-                          });
+                    startBuyDialog(group, sellAmount.abs());
                 }
             }
         });
+    }
+
+    private void startSellDialog(Group group, BigDecimal sellAmount) {
+        final List<AssetPrice> prices = getPrices(group);
+        final AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
+        final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount,
+                                                                            prices,
+                                                                            selectedPrice);
+        fragment.show(getFragmentManager(), "SellFragment");
+    }
+
+    private void startBuyDialog(Group group, final BigDecimal buyAmount) {
+        final List<AssetPrice> prices = getPrices(group);
+        if (prices.size() == 0) {
+            prices.add(new AssetPrice());
+        }
+        getBaseActivity().getAccountAssetsListStream().first()
+              .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
+                  @Override
+                  public List<FundingAccount> call(List<AccountAssets> accountAssetsList) {
+                      List<FundingAccount> fundingAccounts = new ArrayList<>();
+                      for (AccountAssets accountAssets : accountAssetsList) {
+                          fundingAccounts.add(accountAssets.toFundingAccount());
+                      }
+                      return fundingAccounts;
+                  }
+              })
+              .subscribe(new Action1<List<FundingAccount>>() {
+                  @Override
+                  public void call(List<FundingAccount> fundingAccounts) {
+                      final List<FundingAccount> accounts = fundingAccounts == null
+                            ? Collections.<FundingAccount>emptyList() : fundingAccounts;
+                      final DialogFragment fragment =
+                            BuyDialogFragment.Companion.create(buyAmount, prices, 0, accounts);
+                      fragment.setCancelable(true);
+                      fragment.show(getFragmentManager(), "BuyFragment");
+                  }
+              });
     }
 
     @NonNull
