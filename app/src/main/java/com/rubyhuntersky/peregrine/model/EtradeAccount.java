@@ -15,20 +15,20 @@ import java.math.BigDecimal;
 
 public class EtradeAccount {
 
-    public static final String JSONKEY_DESCRIPTION = "description";
-    public static final String JSONKEY_ACCOUNT_ID = "accountId";
-    public static final String JSONKEY_REGISTRATION_TYPE = "registrationType";
-    public static final String JSONKEY_NET_ACCOUNT_VALUE = "netAccountValue";
+    private static final String JSONKEY_DESCRIPTION = "description";
+    private static final String JSONKEY_ACCOUNT_ID = "accountId";
+    private static final String JSONKEY_REGISTRATION_TYPE = "registrationType";
+    private static final String JSONKEY_NET_ACCOUNT_VALUE = "netAccountValue";
     public String description;
     public String accountId;
-    public String registrationType;
-    public BigDecimal netAccountValue;
+    private String registrationType;
+    private BigDecimal netAccountValue;
 
     public BigDecimal getNetAccountValue() {
         return netAccountValue;
     }
 
-    public JSONObject toJSONObject() throws JSONException {
+    JSONObject toJSONObject() throws JSONException {
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSONKEY_DESCRIPTION, this.description);
         jsonObject.put(JSONKEY_ACCOUNT_ID, this.accountId);
@@ -47,14 +47,7 @@ public class EtradeAccount {
               '}';
     }
 
-    public EtradeAccount(String description, String accountId, String registrationType, BigDecimal netAccountValue) {
-        this.description = description;
-        this.accountId = accountId;
-        this.registrationType = registrationType;
-        this.netAccountValue = netAccountValue;
-    }
-
-    public EtradeAccount(Element accountElement) {
+    EtradeAccount(Element accountElement) {
         final NodeList childNodes = accountElement.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
             final Node item = childNodes.item(i);
@@ -76,7 +69,7 @@ public class EtradeAccount {
         }
     }
 
-    public EtradeAccount(JSONObject jsonObject) throws JSONException {
+    EtradeAccount(JSONObject jsonObject) throws JSONException {
         description = jsonObject.getString(JSONKEY_DESCRIPTION);
         accountId = jsonObject.getString(JSONKEY_ACCOUNT_ID);
         registrationType = jsonObject.getString(JSONKEY_REGISTRATION_TYPE);
