@@ -13,6 +13,7 @@ import com.rubyhuntersky.peregrine.model.AssetPrice
 import com.rubyhuntersky.peregrine.model.Values
 import com.rubyhuntersky.peregrine.utility.toLabelAndCurrencyDisplayString
 import com.rubyhuntersky.peregrine.utility.toSharesDisplayString
+import kotlinx.android.synthetic.main.cell_amount_price_shares.*
 import kotlinx.android.synthetic.main.fragment_sell.*
 import rx.Subscription
 import rx.subjects.BehaviorSubject
