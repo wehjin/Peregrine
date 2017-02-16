@@ -85,6 +85,7 @@ class SellDialogFragment : TradeDialogFragment() {
             priceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     onAssetPriceSelected(assetPriceList[position])
+                    priceSpinner.requestLayout()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {

@@ -14,7 +14,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:text="No data"
-        android:textColor="@color/darkTextDisabled"
+        android:textColor="@color/darkTextDisabledHintIcons"
         android:textSize="@dimen/textsize_page_primary"
         tools:ignore="HardcodedText"/>
 
