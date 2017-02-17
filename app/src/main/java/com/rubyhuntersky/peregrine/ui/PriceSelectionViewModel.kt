@@ -20,7 +20,11 @@ class PriceSelectionViewModel(val itemView: View) {
         itemView.priceSpinner.adapter = adapter
         itemView.priceSpinner.setSelection(model.prices.indexOf(model.selectedPrice))
         itemView.priceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // View is null when rotating screen.
+                if (view == null) {
+                    return
+                }
                 val price = model.prices[position]
                 val shares = model.amount.divide(price.price, Values.SCALE, BigDecimal.ROUND_HALF_UP)
                 itemView.sharesText.text = shares.toSharesDisplayString()
