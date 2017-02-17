@@ -40,7 +40,7 @@ public class Group {
     public BigDecimal getValue() {
         BigDecimal value = BigDecimal.ZERO;
         for (Asset asset : assets) {
-            value = value.add(asset.marketValue);
+            value = value.add(asset.getMarketValue());
         }
         return value;
     }

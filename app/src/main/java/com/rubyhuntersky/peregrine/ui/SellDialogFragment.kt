@@ -6,25 +6,14 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.model.AssetPrice
-import com.rubyhuntersky.peregrine.model.Values
-import com.rubyhuntersky.peregrine.utility.toLabelAndCurrencyDisplayString
-import com.rubyhuntersky.peregrine.utility.toSharesDisplayString
-import kotlinx.android.synthetic.main.cell_amount_price_shares.*
-import kotlinx.android.synthetic.main.fragment_sell.*
+import com.rubyhuntersky.peregrine.ui.PriceSelectionModel
 import rx.Subscription
 import rx.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.*
 
-/**
- * @author wehjin
- * *
- * @since 1/19/16.
- */
 class SellDialogFragment : TradeDialogFragment() {
     private val amount: BigDecimal by lazy { arguments.getSerializable(AMOUNT_KEY) as BigDecimal }
     private val assetPriceLists = BehaviorSubject.create(emptyList<AssetPrice>())
@@ -58,13 +47,8 @@ class SellDialogFragment : TradeDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        amountText.text = amount.toLabelAndCurrencyDisplayString("Sell")
         assetPriceListsSubscription = assetPriceLists.subscribe {
-            AssetPriceSelectionViewModel().bind(it) { assetPrice -> selectedPrices.onNext(assetPrice) }
-        }
-        selectedPricesSubscription = selectedPrices.subscribe { price ->
-            val sharesToSell = amount.divide(price.price, Values.SCALE, BigDecimal.ROUND_HALF_UP)
-            sharesText.text = sharesToSell.toSharesDisplayString()
+            PriceSelectionViewModel(view!!).bind(PriceSelectionModel(amount, it, selectedPrices.value, "Sell")) { assetPrice, shares -> }
         }
     }
 
@@ -72,28 +56,6 @@ class SellDialogFragment : TradeDialogFragment() {
         assetPriceListsSubscription?.unsubscribe()
         selectedPricesSubscription?.unsubscribe()
         super.onDestroyView()
-    }
-
-    fun AssetPrice.toDisplayString(): String = price.toLabelAndCurrencyDisplayString(name)
-
-    inner class AssetPriceSelectionViewModel {
-        fun bind(assetPriceList: List<AssetPrice>, onAssetPriceSelected: (AssetPrice) -> Unit) {
-
-            val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, assetPriceList.map { it.toDisplayString() })
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            priceSpinner.adapter = adapter
-            priceSpinner.setSelection(assetPriceList.indexOf(selectedPrices.value))
-            priceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    onAssetPriceSelected(assetPriceList[position])
-                    priceSpinner.requestLayout()
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Do nothing
-                }
-            }
-        }
     }
 
 

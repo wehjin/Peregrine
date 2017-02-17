@@ -153,11 +153,10 @@ public class GroupsFragment extends BaseFragment {
                   @Override
                   public void call(List<FundingAccount> fundingAccounts) {
                       final List<FundingAccount> accounts = fundingAccounts == null
-                            ? Collections.<FundingAccount>emptyList() : fundingAccounts;
-                      final DialogFragment fragment =
-                            BuyDialogFragment.Companion.create(buyAmount, prices, 0, accounts);
-                      fragment.setCancelable(true);
-                      fragment.show(getFragmentManager(), "BuyFragment");
+                            ? Collections.<FundingAccount>emptyList()
+                            : fundingAccounts;
+                      BuyDialogFragment.create(buyAmount, prices, 0, accounts)
+                            .show(getFragmentManager(), "BuyFragment");
                   }
               });
     }
@@ -168,11 +167,11 @@ public class GroupsFragment extends BaseFragment {
         List<AssetPrice> prices = new ArrayList<>();
         Set<String> symbols = new HashSet<>();
         for (Asset asset : assets) {
-            if (symbols.contains(asset.symbol)) {
+            if (symbols.contains(asset.getSymbol())) {
                 continue;
             }
-            prices.add(new AssetPrice(asset.symbol, asset.currentPrice));
-            symbols.add(asset.symbol);
+            prices.add(new AssetPrice(asset.getSymbol(), asset.getCurrentPrice()));
+            symbols.add(asset.getSymbol());
         }
         return prices;
     }

@@ -22,8 +22,8 @@ class EtradeFundingAccount extends BaseFundingAccount implements FundingAccount 
         BigDecimal cashAvailable = BigDecimal.ZERO;
         List<FundingOption> fundingOptions = new ArrayList<>();
         for (Asset asset : assets) {
-            if (asset.symbol.equals(Values.USD)) {
-                cashAvailable = asset.marketValue;
+            if (asset.getSymbol().equals(Values.USD)) {
+                cashAvailable = asset.getMarketValue();
             } else {
                 fundingOptions.add(asset.toFundingOption());
             }
