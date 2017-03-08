@@ -37,7 +37,7 @@ public class NetValueFragment extends BaseFragment {
         public void call(AllAccounts allAccounts) {
             final String centerString = allAccounts == null ? "No data" : getFormattedNetWorth(allAccounts);
 
-            final long count = allAccounts == null ? 0 : allAccounts.accounts.size();
+            final long count = allAccounts == null ? 0 : allAccounts.getAccounts().size();
             final CharSequence cornerString = String.format("%d", count);
             netWorthTextView.setText(centerString);
             refreshTimeTextVIew.setText(cornerString);
@@ -46,7 +46,7 @@ public class NetValueFragment extends BaseFragment {
 
     @NonNull
     private String getFormattedNetWorth(AllAccounts allAccounts) {
-        return UiHelper.getCurrencyDisplayString(getNetWorth(allAccounts.accounts));
+        return UiHelper.getCurrencyDisplayString(getNetWorth(allAccounts.getAccounts()));
     }
 
     private Subscription accountsListSubscription;

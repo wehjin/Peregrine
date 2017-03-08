@@ -96,7 +96,9 @@ public class Storage {
                     }
 
                     oauthToken =
-                          new OauthToken(sharedPreferences.getString(PREFKEY_ACCESS_KEY, null), sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null), oauthAppToken);
+                          new OauthToken(sharedPreferences.getString(PREFKEY_ACCESS_KEY, null),
+                                         sharedPreferences.getString(PREFKEY_ACCESS_SECRET, null),
+                                         oauthAppToken);
                 }
                 subscriber.onNext(oauthToken);
                 subscriber.onCompleted();
@@ -106,19 +108,19 @@ public class Storage {
 
     public void writeOauthAccessToken(OauthToken oauthToken) {
         sharedPreferences.edit()
-                         .putString(PREFKEY_ACCESS_KEY, oauthToken.key)
-                         .putString(PREFKEY_ACCESS_SECRET, oauthToken.secret)
-                         .putString(PREFKEY_ACCESS_APP_KEY, oauthToken.appToken.appKey)
-                         .apply();
+              .putString(PREFKEY_ACCESS_KEY, oauthToken.key)
+              .putString(PREFKEY_ACCESS_SECRET, oauthToken.secret)
+              .putString(PREFKEY_ACCESS_APP_KEY, oauthToken.appToken.appKey)
+              .apply();
         this.oauthToken = oauthToken;
     }
 
     public void eraseOauthAccessToken() {
         sharedPreferences.edit()
-                         .remove(PREFKEY_ACCESS_KEY)
-                         .remove(PREFKEY_ACCESS_SECRET)
-                         .remove(PREFKEY_ACCESS_APP_KEY)
-                         .apply();
+              .remove(PREFKEY_ACCESS_KEY)
+              .remove(PREFKEY_ACCESS_SECRET)
+              .remove(PREFKEY_ACCESS_APP_KEY)
+              .apply();
         this.oauthToken = null;
     }
 
@@ -180,12 +182,12 @@ public class Storage {
 
         @Override
         public AllAccounts build(String jsonString) throws JSONException {
-            return new AllAccounts(jsonString);
+            return AllAccounts.fromJson(jsonString);
         }
 
         @Override
         public String stringify(AllAccounts object) throws JSONException {
-            return object.toJSONObject().toString();
+            return AllAccounts.toJson(object);
         }
     }
 

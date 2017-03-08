@@ -5,7 +5,10 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import com.rubyhuntersky.peregrine.model.Group
 import com.rubyhuntersky.peregrine.ui.UiHelper
+import org.json.JSONArray
+import org.json.JSONObject
 import java.math.BigDecimal
+import java.util.*
 
 /**
  * @author Jeffrey Yu
@@ -13,6 +16,7 @@ import java.math.BigDecimal
  */
 
 fun BigDecimal.toCurrencyDisplayString(): String = UiHelper.getCurrencyDisplayString(this)
+
 fun BigDecimal.toLabelAndCurrencyDisplayString(label: String): String = "$label ${toCurrencyDisplayString()}"
 fun BigDecimal.toSharesDisplayString(): String = "${toIntString()} shares"
 fun BigDecimal.toIntString(): String = setScale(0, BigDecimal.ROUND_HALF_DOWN).toPlainString()
@@ -28,4 +32,24 @@ fun Bundle.withParcelable(key: String, parcelable: Parcelable): Bundle {
 fun Fragment.withArguments(arguments: Bundle): Fragment {
     this.arguments = arguments
     return this
+}
+
+fun JSONArray.toJSONObjectList(): List<JSONObject> = (0 until length()).map { getJSONObject(it) }
+
+fun JSONObject.getJSONObjectList(fieldName: String): List<JSONObject> {
+    return getJSONArray(fieldName).toJSONObjectList()
+}
+
+fun JSONObject.putJSONObjectList(fieldName: String, jsonObjectList: List<JSONObject>) {
+    val jsonArray = jsonObjectList.fold(JSONArray(), JSONArray::put)
+    put(fieldName, jsonArray)
+}
+
+
+fun JSONObject.getDate(fieldName: String): Date {
+    return Date(getLong(fieldName))
+}
+
+fun JSONObject.putDate(fieldName: String, date: Date) {
+    put(fieldName, date.time)
 }
