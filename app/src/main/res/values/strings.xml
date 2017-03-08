@@ -8,6 +8,7 @@
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="processing">processing</string>
+    <string name="no_data">No data</string>
     <string-array name="price_symbols">
         <item>TSLA $300.00</item>
     </string-array>

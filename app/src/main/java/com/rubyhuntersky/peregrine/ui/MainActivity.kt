@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.Menu
 import android.view.MenuItem
 import com.rubyhuntersky.peregrine.R
+import com.rubyhuntersky.peregrine.model.AllAccounts
+import com.rubyhuntersky.peregrine.utility.toCurrencyDisplayString
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Subscription
 
@@ -47,9 +49,7 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        titleSubscription = allAccountsStream.subscribe {
-            toolbar.subtitle = it?.relativeArrivalTime
-        }
+        titleSubscription = allAccountsStream.subscribe { toolbar.subtitle = it.toSubtitle() }
     }
 
     override fun onPause() {
@@ -72,4 +72,6 @@ class MainActivity : BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun AllAccounts.toSubtitle() = "${this.netWorth.toCurrencyDisplayString()} \u25f7\u200a${this.relativeArrivalTime}"
 }

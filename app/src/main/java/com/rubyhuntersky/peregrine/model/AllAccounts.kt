@@ -6,6 +6,7 @@ import com.rubyhuntersky.peregrine.utility.getJSONObjectList
 import com.rubyhuntersky.peregrine.utility.putDate
 import com.rubyhuntersky.peregrine.utility.putJSONObjectList
 import org.json.JSONObject
+import java.math.BigDecimal
 import java.util.*
 
 /**
@@ -18,6 +19,9 @@ class AllAccounts(val accounts: List<EtradeAccount>, val arrivalDate: Date) {
 
     val relativeArrivalTime: CharSequence
         get() = UiHelper.getRelativeTimeString(arrivalDate.time)
+
+    val netWorth: BigDecimal
+        get() = accounts.map { it.netAccountValue }.fold(BigDecimal.ZERO, BigDecimal::add)
 
     companion object {
         val JSONKEY_ACCOUNTS = "accounts"
