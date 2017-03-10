@@ -5,7 +5,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
 import java.math.BigDecimal
 
 /**
@@ -22,16 +21,14 @@ class BaseFundingAccountTest {
     fun setUp() {
         baseFundingAccount =
                 object : BaseFundingAccount() {
-                    override fun getAccountName(): String {
-                        throw UnsupportedOperationException()
-                    }
+                    override val accountName: String
+                        get() = throw UnsupportedOperationException()
 
-                    override fun getCashAvailable(): BigDecimal {
-                        return BigDecimal.TEN
-                    }
+                    override val cashAvailable: BigDecimal
+                        get() = BigDecimal.TEN
 
-                    override fun getFundingOptions(exclude: String?): MutableList<FundingOption> {
-                        throw UnsupportedOperationException()
+                    override fun getFundingOptions(exclude: String): List<FundingOption> {
+                        throw UnsupportedOperationException("not implemented")
                     }
 
                     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -46,19 +43,19 @@ class BaseFundingAccountTest {
 
     @Test
     fun testHasFundsForBuyIntention_isTrue_whenCashEqualsBuyAmount() {
-        val buyIntention = BuyIntention(BigDecimal.TEN, mock(AssetPrice::class.java))
+        val buyIntention = BuyIntention(BigDecimal.TEN, AssetPrice("Dollar"))
         assertTrue(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 
     @Test
     fun testHasFundsForBuyIntention_isTrue_whenCashExceedsBuyAmount() {
-        val buyIntention = BuyIntention(BigDecimal.ONE, mock(AssetPrice::class.java))
+        val buyIntention = BuyIntention(BigDecimal.ONE, AssetPrice("Dollar"))
         assertTrue(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 
     @Test
     fun testHasFundsForBuyIntention_isFalse_whenBuyAmountExceedsCash() {
-        val buyIntention = BuyIntention(BigDecimal.TEN.add(BigDecimal.TEN), mock(AssetPrice::class.java))
+        val buyIntention = BuyIntention(BigDecimal.TEN.add(BigDecimal.TEN), AssetPrice("Dollar"))
         assertFalse(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 }
