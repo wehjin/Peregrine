@@ -13,11 +13,11 @@ import java.math.BigDecimal
  */
 
 data class BuyProgram(val budget: BigDecimal,
-                      val products: List<AssetPrice>, val productIndex: Int,
+                      val products: List<AssetNamePrice>, val productIndex: Int,
                       val accounts: List<FundingAccount>, val accountIndex: Int = 0,
                       val assetIndex: Int = 0) : DefaultParcelable, FundingProgram {
 
-    val product: AssetPrice get() = products[productIndex]
+    val product: AssetNamePrice get() = products[productIndex]
     val sharesInBudget: BigDecimal get() = budget.divide(product.price, Values.SCALE, BigDecimal.ROUND_FLOOR)
     val account: FundingAccount? get() = if (accounts.isEmpty()) {
         null

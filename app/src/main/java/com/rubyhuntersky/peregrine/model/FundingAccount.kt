@@ -15,7 +15,7 @@ interface FundingAccount : Parcelable {
         return cashAvailable >= purchaseAmount
     }
 
-    fun getSharesPurchasableWithCash(product: AssetPrice): String {
+    fun getSharesPurchasableWithCash(product: AssetNamePrice): String {
         return cashAvailable.divide(product.price, Values.SCALE, BigDecimal.ROUND_HALF_UP).toIntString()
     }
 

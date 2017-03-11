@@ -8,9 +8,8 @@ import com.rubyhuntersky.peregrine.utility.toLabelAndCurrencyDisplayString
 import com.rubyhuntersky.peregrine.utility.write
 import java.math.BigDecimal
 
-data class AssetPrice
-@JvmOverloads constructor(val name: String = "-", val price: BigDecimal = BigDecimal.ONE)
-    : DefaultParcelable {
+data class AssetNamePrice
+@JvmOverloads constructor(val name: String = "-", val price: BigDecimal = BigDecimal.ONE) : DefaultParcelable {
 
     fun toDisplayString(): String = price.toLabelAndCurrencyDisplayString(name)
 
@@ -20,6 +19,6 @@ data class AssetPrice
 
     companion object {
         @Suppress("unused")
-        @JvmStatic val CREATOR = generateCreator { AssetPrice(it.read(), it.read()) }
+        @JvmStatic val CREATOR = generateCreator { AssetNamePrice(it.read(), it.read()) }
     }
 }

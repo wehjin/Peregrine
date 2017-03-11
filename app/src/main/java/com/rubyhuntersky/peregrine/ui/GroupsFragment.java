@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,11 +16,13 @@ import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.AccountAssets;
+import com.rubyhuntersky.peregrine.model.AccountSaleOption;
 import com.rubyhuntersky.peregrine.model.Asset;
-import com.rubyhuntersky.peregrine.model.AssetPrice;
+import com.rubyhuntersky.peregrine.model.AssetNamePrice;
 import com.rubyhuntersky.peregrine.model.Assignments;
 import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.Group;
+import com.rubyhuntersky.peregrine.model.GroupSaleOption;
 import com.rubyhuntersky.peregrine.model.PartitionList;
 import com.rubyhuntersky.peregrine.model.PortfolioAssets;
 import com.rubyhuntersky.peregrine.utility.ExtensionsKt;
@@ -29,10 +30,13 @@ import com.rubyhuntersky.peregrine.utility.ExtensionsKt;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import kotlin.collections.CollectionsKt;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -63,8 +67,7 @@ public class GroupsFragment extends BaseFragment {
         super.onResume();
         Observable.combineLatest(getBaseActivity().getPartitionListStream(),
                                  getBaseActivity().getPortfolioAssetsStream(),
-                                 getStorage()
-                                       .streamAssignments(),
+                                 getStorage().streamAssignments(),
                                  new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
                                      @Override
                                      public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
@@ -124,19 +127,57 @@ public class GroupsFragment extends BaseFragment {
         });
     }
 
-    private void startSellDialog(Group group, BigDecimal sellAmount) {
-        final List<AssetPrice> prices = getPrices(group);
-        final AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
-        final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount,
-                                                                            prices,
-                                                                            selectedPrice);
-        fragment.show(getFragmentManager(), "SellFragment");
+    private void startSellDialog(Group group, final BigDecimal sellAmount) {
+        final List<GroupSaleOption> saleOptions = getGroupSaleOptions(group);
+        SellDialogFragment.create(sellAmount, saleOptions, 0).show(getFragmentManager(), "SellFragment");
+    }
+
+    @NonNull
+    private List<GroupSaleOption> getGroupSaleOptions(Group group) {
+        final List<AssetNamePrice> assetNamePrices = getPrices(group);
+        final List<GroupSaleOption> saleOptions = new ArrayList<>(assetNamePrices.size());
+        final Map<String, List<AccountSaleOption>> accountSaleOptions = getAccountSaleOptions(group);
+        for (AssetNamePrice assetNamePrice : assetNamePrices) {
+            final String symbol = assetNamePrice.getName();
+            final List<AccountSaleOption> accountSaleOptionsForSymbol = accountSaleOptions.containsKey(symbol)
+                  ? accountSaleOptions.get(symbol)
+                  : Collections.<AccountSaleOption>emptyList();
+            saleOptions.add(new GroupSaleOption(symbol, assetNamePrice.getPrice(), accountSaleOptionsForSymbol));
+        }
+        return saleOptions;
+    }
+
+    @NonNull
+    private Map<String, List<AccountSaleOption>> getAccountSaleOptions(Group group) {
+        final List<AssetNamePrice> prices = getPrices(group);
+
+        final Set<String> targetAssetNames = new HashSet<>();
+        for (AssetNamePrice assetNamePrice : prices) {
+            targetAssetNames.add(assetNamePrice.getName());
+        }
+
+        final HashMap<String, List<AccountSaleOption>> accountOptions = new HashMap<>();
+        for (Asset asset : group.getAssets()) {
+            final String symbol = asset.getSymbol();
+            if (targetAssetNames.contains(symbol)) {
+                final AccountSaleOption accountSaleOption = new AccountSaleOption(asset.getAccountId(),
+                                                                                  asset.getAccountDescription(),
+                                                                                  symbol,
+                                                                                  asset.getQuantity());
+                final List<AccountSaleOption> options = accountOptions.containsKey(symbol)
+                      ? accountOptions.get(symbol)
+                      : CollectionsKt.<AccountSaleOption>mutableListOf();
+                options.add(accountSaleOption);
+                accountOptions.put(symbol, options);
+            }
+        }
+        return accountOptions;
     }
 
     private void startBuyDialog(Group group, final BigDecimal buyAmount) {
-        final List<AssetPrice> prices = getPrices(group);
+        final List<AssetNamePrice> prices = getPrices(group);
         if (prices.size() == 0) {
-            prices.add(new AssetPrice());
+            prices.add(new AssetNamePrice());
         }
         getBaseActivity().getAccountAssetsListStream().first()
               .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
@@ -162,15 +203,15 @@ public class GroupsFragment extends BaseFragment {
     }
 
     @NonNull
-    private List<AssetPrice> getPrices(Group group) {
+    private List<AssetNamePrice> getPrices(Group group) {
         final List<Asset> assets = group.getAssets();
-        List<AssetPrice> prices = new ArrayList<>();
+        List<AssetNamePrice> prices = new ArrayList<>();
         Set<String> symbols = new HashSet<>();
         for (Asset asset : assets) {
             if (symbols.contains(asset.getSymbol())) {
                 continue;
             }
-            prices.add(new AssetPrice(asset.getSymbol(), asset.getCurrentPrice()));
+            prices.add(new AssetNamePrice(asset.getSymbol(), asset.getCurrentPrice()));
             symbols.add(asset.getSymbol());
         }
         return prices;

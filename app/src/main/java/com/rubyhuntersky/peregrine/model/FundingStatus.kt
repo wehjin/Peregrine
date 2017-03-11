@@ -14,6 +14,6 @@ data class FundingStatus(val buyIntention: BuyIntention, val cashAvailable: BigD
     val isFullyFunded: Boolean get() = cashAvailable.compareTo(requiredAmount) >= 0
     val fundedAmount: BigDecimal get() = if (isFullyFunded) requiredAmount else cashAvailable
     val shortfall: BigDecimal get() = if (isFullyFunded) ZERO else requiredAmount.subtract(cashAvailable)
-    val assetPrice: BigDecimal get() = buyIntention.assetPrice.price
+    val assetPrice: BigDecimal get() = buyIntention.assetNamePrice.price
     val fundedShares: BigDecimal get() = fundedAmount.divide(assetPrice, Values.SCALE, BigDecimal.ROUND_HALF_UP)
 }
