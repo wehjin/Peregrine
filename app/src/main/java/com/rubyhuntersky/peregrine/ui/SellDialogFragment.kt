@@ -2,19 +2,19 @@ package com.rubyhuntersky.peregrine.ui
 
 import android.app.Dialog
 import android.os.Bundle
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.model.AssetPrice
-import com.rubyhuntersky.peregrine.ui.PriceSelectionModel
 import rx.Subscription
 import rx.subjects.BehaviorSubject
 import java.math.BigDecimal
 import java.util.*
 
-class SellDialogFragment : TradeDialogFragment() {
+class SellDialogFragment : BottomSheetDialogFragment() {
     private val amount: BigDecimal by lazy { arguments.getSerializable(AMOUNT_KEY) as BigDecimal }
     private val assetPriceLists = BehaviorSubject.create(emptyList<AssetPrice>())
     private val selectedPrices = BehaviorSubject.create(AssetPrice("-", BigDecimal.ZERO))
