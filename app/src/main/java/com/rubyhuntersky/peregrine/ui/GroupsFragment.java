@@ -18,7 +18,7 @@ import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.AccountAssets;
 import com.rubyhuntersky.peregrine.model.AccountSaleOption;
 import com.rubyhuntersky.peregrine.model.Asset;
-import com.rubyhuntersky.peregrine.model.AssetPrice;
+import com.rubyhuntersky.peregrine.model.AssetNamePrice;
 import com.rubyhuntersky.peregrine.model.Assignments;
 import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.Group;
@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import kotlin.collections.CollectionsKt;
@@ -133,11 +134,26 @@ public class GroupsFragment extends BaseFragment {
 
     @NonNull
     private List<GroupSaleOption> getGroupSaleOptions(Group group) {
-        final List<AssetPrice> prices = getPrices(group);
+        final List<AssetNamePrice> assetNamePrices = getPrices(group);
+        final List<GroupSaleOption> saleOptions = new ArrayList<>(assetNamePrices.size());
+        final Map<String, List<AccountSaleOption>> accountSaleOptions = getAccountSaleOptions(group);
+        for (AssetNamePrice assetNamePrice : assetNamePrices) {
+            final String symbol = assetNamePrice.getName();
+            final List<AccountSaleOption> accountSaleOptionsForSymbol = accountSaleOptions.containsKey(symbol)
+                  ? accountSaleOptions.get(symbol)
+                  : Collections.<AccountSaleOption>emptyList();
+            saleOptions.add(new GroupSaleOption(symbol, assetNamePrice.getPrice(), accountSaleOptionsForSymbol));
+        }
+        return saleOptions;
+    }
+
+    @NonNull
+    private Map<String, List<AccountSaleOption>> getAccountSaleOptions(Group group) {
+        final List<AssetNamePrice> prices = getPrices(group);
 
         final Set<String> targetAssetNames = new HashSet<>();
-        for (AssetPrice assetPrice : prices) {
-            targetAssetNames.add(assetPrice.getName());
+        for (AssetNamePrice assetNamePrice : prices) {
+            targetAssetNames.add(assetNamePrice.getName());
         }
 
         final HashMap<String, List<AccountSaleOption>> accountOptions = new HashMap<>();
@@ -155,21 +171,13 @@ public class GroupsFragment extends BaseFragment {
                 accountOptions.put(symbol, options);
             }
         }
-        final List<GroupSaleOption> saleOptions = new ArrayList<>(prices.size());
-        for (AssetPrice assetPrice : prices) {
-            final String symbol = assetPrice.getName();
-            final List<AccountSaleOption> accountSaleOptions = accountOptions.containsKey(symbol)
-                  ? accountOptions.get(symbol)
-                  : Collections.<AccountSaleOption>emptyList();
-            saleOptions.add(new GroupSaleOption(symbol, assetPrice.getPrice(), accountSaleOptions));
-        }
-        return saleOptions;
+        return accountOptions;
     }
 
     private void startBuyDialog(Group group, final BigDecimal buyAmount) {
-        final List<AssetPrice> prices = getPrices(group);
+        final List<AssetNamePrice> prices = getPrices(group);
         if (prices.size() == 0) {
-            prices.add(new AssetPrice());
+            prices.add(new AssetNamePrice());
         }
         getBaseActivity().getAccountAssetsListStream().first()
               .map(new Func1<List<AccountAssets>, List<FundingAccount>>() {
@@ -195,15 +203,15 @@ public class GroupsFragment extends BaseFragment {
     }
 
     @NonNull
-    private List<AssetPrice> getPrices(Group group) {
+    private List<AssetNamePrice> getPrices(Group group) {
         final List<Asset> assets = group.getAssets();
-        List<AssetPrice> prices = new ArrayList<>();
+        List<AssetNamePrice> prices = new ArrayList<>();
         Set<String> symbols = new HashSet<>();
         for (Asset asset : assets) {
             if (symbols.contains(asset.getSymbol())) {
                 continue;
             }
-            prices.add(new AssetPrice(asset.getSymbol(), asset.getCurrentPrice()));
+            prices.add(new AssetNamePrice(asset.getSymbol(), asset.getCurrentPrice()));
             symbols.add(asset.getSymbol());
         }
         return prices;

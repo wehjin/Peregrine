@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rubyhuntersky.peregrine.R
-import com.rubyhuntersky.peregrine.model.AssetPrice
+import com.rubyhuntersky.peregrine.model.AssetNamePrice
 import com.rubyhuntersky.peregrine.model.GroupSaleOption
 import com.rubyhuntersky.peregrine.utility.withArguments
 import rx.Subscription
@@ -43,7 +43,7 @@ class SellDialogFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val assetPrices = options.map { AssetPrice(it.assetName, it.assetPrice) }
+        val assetPrices = options.map { AssetNamePrice(it.assetName, it.assetPrice) }
 
         indexSubject.subscribe { index ->
             val model = PriceSelectionModel(amount, assetPrices, assetPrices[index], "Sell")

@@ -43,19 +43,19 @@ class BaseFundingAccountTest {
 
     @Test
     fun testHasFundsForBuyIntention_isTrue_whenCashEqualsBuyAmount() {
-        val buyIntention = BuyIntention(BigDecimal.TEN, AssetPrice("Dollar"))
+        val buyIntention = BuyIntention(BigDecimal.TEN, AssetNamePrice("Dollar"))
         assertTrue(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 
     @Test
     fun testHasFundsForBuyIntention_isTrue_whenCashExceedsBuyAmount() {
-        val buyIntention = BuyIntention(BigDecimal.ONE, AssetPrice("Dollar"))
+        val buyIntention = BuyIntention(BigDecimal.ONE, AssetNamePrice("Dollar"))
         assertTrue(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 
     @Test
     fun testHasFundsForBuyIntention_isFalse_whenBuyAmountExceedsCash() {
-        val buyIntention = BuyIntention(BigDecimal.TEN.add(BigDecimal.TEN), AssetPrice("Dollar"))
+        val buyIntention = BuyIntention(BigDecimal.TEN.add(BigDecimal.TEN), AssetNamePrice("Dollar"))
         assertFalse(baseFundingAccount.hasFundsForBuyIntention(buyIntention))
     }
 }

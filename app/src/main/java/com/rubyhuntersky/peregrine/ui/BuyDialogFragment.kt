@@ -7,7 +7,7 @@ import android.support.design.widget.BottomSheetDialogFragment
 import android.support.design.widget.CoordinatorLayout
 import android.view.View
 import com.rubyhuntersky.peregrine.R
-import com.rubyhuntersky.peregrine.model.AssetPrice
+import com.rubyhuntersky.peregrine.model.AssetNamePrice
 import com.rubyhuntersky.peregrine.model.BuyProgram
 import com.rubyhuntersky.peregrine.model.FundingAccount
 import com.rubyhuntersky.peregrine.utility.withArguments
@@ -55,8 +55,8 @@ class BuyDialogFragment : BottomSheetDialogFragment() {
 
         val priceSelectionModel = PriceSelectionModel(
                 amount = buyModel.budget,
-                prices = buyModel.products,
-                selectedPrice = buyModel.product,
+                namePrices = buyModel.products,
+                selectedNamePrice = buyModel.product,
                 label = "Buy"
         )
         PriceSelectionViewModel(view).bind(priceSelectionModel) { price, shares -> }
@@ -69,8 +69,8 @@ class BuyDialogFragment : BottomSheetDialogFragment() {
         val PROGRAM_KEY = "programKey"
 
         @JvmStatic
-        fun create(amount: BigDecimal, prices: List<AssetPrice>, selectedPrice: Int, fundingAccounts: List<FundingAccount>): BuyDialogFragment {
-            val arguments = Bundle().withParcelable(PROGRAM_KEY, BuyProgram(amount, prices, selectedPrice, fundingAccounts))
+        fun create(amount: BigDecimal, namePrices: List<AssetNamePrice>, selectedPrice: Int, fundingAccounts: List<FundingAccount>): BuyDialogFragment {
+            val arguments = Bundle().withParcelable(PROGRAM_KEY, BuyProgram(amount, namePrices, selectedPrice, fundingAccounts))
             return BuyDialogFragment().withArguments(arguments)
         }
     }
