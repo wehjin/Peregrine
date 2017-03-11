@@ -71,7 +71,7 @@ class BuyDialogFragment : BottomSheetDialogFragment() {
         @JvmStatic
         fun create(amount: BigDecimal, prices: List<AssetPrice>, selectedPrice: Int, fundingAccounts: List<FundingAccount>): BuyDialogFragment {
             val arguments = Bundle().withParcelable(PROGRAM_KEY, BuyProgram(amount, prices, selectedPrice, fundingAccounts))
-            return BuyDialogFragment().withArguments(arguments) as BuyDialogFragment
+            return BuyDialogFragment().withArguments(arguments)
         }
     }
 }

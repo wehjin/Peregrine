@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,11 +16,13 @@ import android.widget.TextView;
 
 import com.rubyhuntersky.peregrine.R;
 import com.rubyhuntersky.peregrine.model.AccountAssets;
+import com.rubyhuntersky.peregrine.model.AccountSaleOption;
 import com.rubyhuntersky.peregrine.model.Asset;
 import com.rubyhuntersky.peregrine.model.AssetPrice;
 import com.rubyhuntersky.peregrine.model.Assignments;
 import com.rubyhuntersky.peregrine.model.FundingAccount;
 import com.rubyhuntersky.peregrine.model.Group;
+import com.rubyhuntersky.peregrine.model.GroupSaleOption;
 import com.rubyhuntersky.peregrine.model.PartitionList;
 import com.rubyhuntersky.peregrine.model.PortfolioAssets;
 import com.rubyhuntersky.peregrine.utility.ExtensionsKt;
@@ -29,10 +30,12 @@ import com.rubyhuntersky.peregrine.utility.ExtensionsKt;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kotlin.collections.CollectionsKt;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -63,8 +66,7 @@ public class GroupsFragment extends BaseFragment {
         super.onResume();
         Observable.combineLatest(getBaseActivity().getPartitionListStream(),
                                  getBaseActivity().getPortfolioAssetsStream(),
-                                 getStorage()
-                                       .streamAssignments(),
+                                 getStorage().streamAssignments(),
                                  new Func3<PartitionList, PortfolioAssets, Assignments, Document>() {
                                      @Override
                                      public Document call(PartitionList partitionList, PortfolioAssets portfolioAssets, Assignments assignments) {
@@ -124,13 +126,44 @@ public class GroupsFragment extends BaseFragment {
         });
     }
 
-    private void startSellDialog(Group group, BigDecimal sellAmount) {
+    private void startSellDialog(Group group, final BigDecimal sellAmount) {
+        final List<GroupSaleOption> saleOptions = getGroupSaleOptions(group);
+        SellDialogFragment.create(sellAmount, saleOptions, 0).show(getFragmentManager(), "SellFragment");
+    }
+
+    @NonNull
+    private List<GroupSaleOption> getGroupSaleOptions(Group group) {
         final List<AssetPrice> prices = getPrices(group);
-        final AssetPrice selectedPrice = prices.size() > 0 ? prices.get(0) : null;
-        final DialogFragment fragment = SellDialogFragment.Companion.create(sellAmount,
-                                                                            prices,
-                                                                            selectedPrice);
-        fragment.show(getFragmentManager(), "SellFragment");
+
+        final Set<String> targetAssetNames = new HashSet<>();
+        for (AssetPrice assetPrice : prices) {
+            targetAssetNames.add(assetPrice.getName());
+        }
+
+        final HashMap<String, List<AccountSaleOption>> accountOptions = new HashMap<>();
+        for (Asset asset : group.getAssets()) {
+            final String symbol = asset.getSymbol();
+            if (targetAssetNames.contains(symbol)) {
+                final AccountSaleOption accountSaleOption = new AccountSaleOption(asset.getAccountId(),
+                                                                                  asset.getAccountDescription(),
+                                                                                  symbol,
+                                                                                  asset.getQuantity());
+                final List<AccountSaleOption> options = accountOptions.containsKey(symbol)
+                      ? accountOptions.get(symbol)
+                      : CollectionsKt.<AccountSaleOption>mutableListOf();
+                options.add(accountSaleOption);
+                accountOptions.put(symbol, options);
+            }
+        }
+        final List<GroupSaleOption> saleOptions = new ArrayList<>(prices.size());
+        for (AssetPrice assetPrice : prices) {
+            final String symbol = assetPrice.getName();
+            final List<AccountSaleOption> accountSaleOptions = accountOptions.containsKey(symbol)
+                  ? accountOptions.get(symbol)
+                  : Collections.<AccountSaleOption>emptyList();
+            saleOptions.add(new GroupSaleOption(symbol, assetPrice.getPrice(), accountSaleOptions));
+        }
+        return saleOptions;
     }
 
     private void startBuyDialog(Group group, final BigDecimal buyAmount) {

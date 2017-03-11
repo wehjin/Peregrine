@@ -29,8 +29,13 @@ fun Bundle.withParcelable(key: String, parcelable: Parcelable): Bundle {
     return this
 }
 
-fun Fragment.withArguments(arguments: Bundle): Fragment {
+inline fun <reified T : Fragment> T.withArguments(arguments: Bundle): T {
     this.arguments = arguments
+    return this
+}
+
+inline fun <reified T : Fragment> T.withArguments(init: Bundle.() -> Unit): T {
+    arguments = Bundle().apply(init)
     return this
 }
 
