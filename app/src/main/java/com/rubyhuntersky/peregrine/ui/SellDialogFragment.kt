@@ -6,10 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.model.AssetNamePrice
 import com.rubyhuntersky.peregrine.model.GroupSaleOption
+import com.rubyhuntersky.peregrine.utility.toSharesDisplayString
 import com.rubyhuntersky.peregrine.utility.withArguments
+import kotlinx.android.synthetic.main.cell_account_name_shares.view.*
+import kotlinx.android.synthetic.main.fragment_sell.*
 import rx.Subscription
 import rx.subjects.BehaviorSubject
 import java.math.BigDecimal
@@ -20,7 +25,8 @@ class SellDialogFragment : BottomSheetDialogFragment() {
     val TAG = SellDialogFragment::javaClass.name
 
     private val amount by lazy { arguments.getSerializable(AMOUNT_KEY) as BigDecimal }
-    private val options by lazy { arguments.getParcelableArrayList<GroupSaleOption>(OPTIONS_KEY) }
+    private val groupSaleOptions by lazy { arguments.getParcelableArrayList<GroupSaleOption>(OPTIONS_KEY) }
+    private val groupAssetPrices get() = groupSaleOptions.map { AssetNamePrice(it.assetName, it.assetPrice) }
     private val viewModel by lazy { PriceSelectionViewModel(view!!) }
 
     private val indexSubject = BehaviorSubject.create(0)
@@ -43,12 +49,22 @@ class SellDialogFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val assetPrices = options.map { AssetNamePrice(it.assetName, it.assetPrice) }
 
         indexSubject.subscribe { index ->
-            val model = PriceSelectionModel(amount, assetPrices, assetPrices[index], "Sell")
+            val model = PriceSelectionModel(amount, groupAssetPrices, groupAssetPrices[index], "Sell")
             viewModel.bind(model, { _, _ -> })
-            Log.i(TAG, "Account options: ${options[index].accountSaleOptions}")
+
+            val groupSaleOption = groupSaleOptions[index]
+            val accountSaleOptions = groupSaleOption.accountSaleOptions
+            Log.i(TAG, "AccountSaleOptions: $accountSaleOptions")
+            accounts_list.removeAllViews()
+            accountSaleOptions.forEach {
+                Log.i(TAG, "AccountSaleOption: $it")
+                val cell = View.inflate(context, R.layout.cell_account_name_shares, null)
+                cell.account_name.text = it.accountTitle
+                cell.account_shares.text = it.sharesAvailable.toSharesDisplayString()
+                accounts_list.addView(cell, MATCH_PARENT, WRAP_CONTENT)
+            }
         }
     }
 
