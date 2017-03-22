@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.Pair
+import android.widget.Toast
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.exception.NotStoredException
 import com.rubyhuntersky.peregrine.exception.ProductionStorage
 import com.rubyhuntersky.peregrine.lib.oauth.model.OauthToken
 import com.rubyhuntersky.peregrine.lib.oauth.ui.OauthUi.promptForVerifier
 import com.rubyhuntersky.peregrine.model.*
+import com.rubyhuntersky.peregrine.utility.toCurrencyDisplayString
 import org.json.JSONException
 import org.json.JSONObject
 import rx.Observable
@@ -81,9 +83,16 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun refresh() {
         refreshSubscription?.unsubscribe()
-        refreshSubscription = fetchAndStoreAccountsList().flatMap { allAccounts ->
-            fetchAndStoreAccountAssetsList(allAccounts)
-        }.subscribe({ logDebug("Refresh completed") }, { alertError("Refresh error", it) })
+        refreshSubscription = fetchAndStoreAccountsList()
+                .doOnNext {
+                    Toast.makeText(
+                            this,
+                            it.netWorth.toCurrencyDisplayString(),
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+                .flatMap { allAccounts -> fetchAndStoreAccountAssetsList(allAccounts) }
+                .subscribe({ logDebug("Refresh completed") }, { alertError("Refresh error", it) })
     }
 
     override fun onBackPressed() {
