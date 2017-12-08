@@ -5,7 +5,8 @@ Peregrine
 Setup
 -----
 
-In local.properties, we must add properties containing our E*Trade API keys and secrets.
+In ~/.gradle/gradle.properties, we must add lines defining our E*Trade API Oauth
+consumer keys and secrets.
 
     EtradeSandboxKeyProp=?????
     EtradeSandboxSecretProp=?????
