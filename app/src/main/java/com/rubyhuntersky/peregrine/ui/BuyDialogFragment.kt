@@ -21,8 +21,8 @@ class BuyDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val inState = savedInstanceState ?: arguments
-        buyModel = inState.getParcelable<BuyProgram>(PROGRAM_KEY)
+        val inState = savedInstanceState ?: arguments!!
+        buyModel = inState.getParcelable(PROGRAM_KEY)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

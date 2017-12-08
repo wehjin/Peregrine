@@ -41,8 +41,8 @@ class AssetsFragment : BaseFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_assets, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_assets, container, false)
         textView = view.findViewById(R.id.text) as TextView
         listView = view.findViewById(R.id.list) as ListView
         return view
@@ -64,7 +64,7 @@ class AssetsFragment : BaseFragment() {
 
     private fun display(model: Model) {
         val myListAdapter = MyListAdapter(
-                activity = activity,
+                activity = activity!!,
                 partitions = model.partitionList,
                 assets = model.portfolioAssets.assets,
                 assignments = model.assignments
@@ -73,7 +73,7 @@ class AssetsFragment : BaseFragment() {
             showText("No data")
         } else {
             listView.adapter = myListAdapter
-            listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            listView.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
                 val item = (parent.adapter as MyListAdapter).getItem(position)
                 showAssignmentDialog(item.symbol, model.partitionList, model.assignments)
             }
@@ -86,13 +86,13 @@ class AssetsFragment : BaseFragment() {
 
         val startingIndex = 1 + symbol.toPartitionId(assignments).toPartitionIndex(partitionList)
         var selectedIndex = startingIndex
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(activity!!)
                 .setTitle("Assign Group - $symbol")
-                .setSingleChoiceItems(partitionList.toNamesArray("None"), startingIndex) { dialog, which ->
+                .setSingleChoiceItems(partitionList.toNamesArray("None"), startingIndex) { _, which ->
                     selectedIndex = which
                 }
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Assign", DialogInterface.OnClickListener { dialog, which ->
+                .setPositiveButton("Assign", DialogInterface.OnClickListener { _, _ ->
                     if (selectedIndex == startingIndex) {
                         return@OnClickListener
                     }
@@ -120,12 +120,12 @@ class AssetsFragment : BaseFragment() {
 
         data class ItemModel(val symbol: String, val marketValue: BigDecimal, val groupName: String?)
 
-        val List<Asset>.totalMarketValue: BigDecimal get() = map { it.marketValue!! }.reduce { a, b -> a + b }
-        val String.toGroupName: String? get() = partitions.getName(assignments.getPartitionId(this))
-        val BigDecimal.asCurrencyDisplayString: String get() = UiHelper.getCurrencyDisplayString(this)
-        val ItemModel.groupTextColor: Int get() = ContextCompat.getColor(activity, if (groupName == null) R.color.colorAccent else R.color.darkTextSecondary)
+        private val List<Asset>.totalMarketValue: BigDecimal get() = map { it.marketValue }.reduce { a, b -> a + b }
+        private val String.toGroupName: String? get() = partitions.getName(assignments.getPartitionId(this))
+        private val BigDecimal.asCurrencyDisplayString: String get() = UiHelper.getCurrencyDisplayString(this)
+        private val ItemModel.groupTextColor: Int get() = ContextCompat.getColor(activity, if (groupName == null) R.color.colorAccent else R.color.darkTextSecondary)
 
-        val itemModels: List<ItemModel> by lazy {
+        private val itemModels: List<ItemModel> by lazy {
             assets.groupBy { it.symbol }
                     .map {
                         val (symbol, assetList) = it
