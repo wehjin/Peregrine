@@ -24,8 +24,8 @@ class SellDialogFragment : BottomSheetDialogFragment() {
 
     val TAG = SellDialogFragment::javaClass.name
 
-    private val amount by lazy { arguments.getSerializable(AMOUNT_KEY) as BigDecimal }
-    private val groupSaleOptions by lazy { arguments.getParcelableArrayList<GroupSaleOption>(OPTIONS_KEY) }
+    private val amount by lazy { arguments!!.getSerializable(AMOUNT_KEY) as BigDecimal }
+    private val groupSaleOptions by lazy { arguments!!.getParcelableArrayList<GroupSaleOption>(OPTIONS_KEY) }
     private val groupAssetPrices get() = groupSaleOptions.map { AssetNamePrice(it.assetName, it.assetPrice) }
     private val viewModel by lazy { PriceSelectionViewModel(view!!) }
 
@@ -34,7 +34,7 @@ class SellDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val data = savedInstanceState ?: arguments
+        val data = savedInstanceState ?: arguments!!
         indexSubject.onNext(data.getInt(SELECTED_INDEX_KEY))
     }
 
