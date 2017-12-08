@@ -24,4 +24,7 @@ android:
 
 script: ./gradlew test
 
+before_install:
+- bash .travis-android-license-bugfix.sh
+
 after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
