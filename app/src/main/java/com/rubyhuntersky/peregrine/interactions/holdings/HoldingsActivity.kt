@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.data.Databook
+import com.rubyhuntersky.peregrine.data.OfflineLot
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import kotlinx.android.synthetic.main.listitem_offlineholding.view.*
@@ -23,23 +24,15 @@ class HoldingsActivity : AppCompatActivity() {
     private val reactor = HoldingsReactor(databook, newHoldingCatalyst).apply { start() }
     private var reactorSubscription: Subscription? = null
 
-
-    enum class ItemState {
-        AWAITING_SWIPE,
-        SWIPED,
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_holdings)
         setSupportActionBar(toolbar)
 
         holdingsRecyclerView.layoutManager = LinearLayoutManager(this)
-        ItemTouchHelper(object : ItemTouchHelper.Callback() {
+        holdingsRecyclerView.adapter = HoldingsRecyclerViewAdapter()
 
-            private val buttonWidth = 300f
-            private var itemState = ItemState.AWAITING_SWIPE
-            private var swipedViewHolder: RecyclerView.ViewHolder? = null
+        ItemTouchHelper(object : ItemTouchHelper.Callback() {
 
             override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
                 return makeMovementFlags(0, ItemTouchHelper.START)
@@ -49,37 +42,43 @@ class HoldingsActivity : AppCompatActivity() {
                 return false
             }
 
-            override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = 2.0f
-
-            override fun getSwipeVelocityThreshold(defaultValue: Float): Float = 0f
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
-
-            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && viewHolder != swipedViewHolder) {
-                    itemState = ItemState.AWAITING_SWIPE
-                    swipedViewHolder?.itemView?.translationX = 0f
-                    swipedViewHolder = null
-                }
-                super.onSelectedChanged(viewHolder, actionState)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.itemView.tag as Int
+                val newPortfolio = databook.portfolio.removeOfflineLot(position)
+                databook.portfolio = newPortfolio
             }
 
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-                when (itemState) {
-                    ItemState.AWAITING_SWIPE -> {
-                        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX < -buttonWidth) {
-                            itemState = ItemState.SWIPED
-                            swipedViewHolder = viewHolder
-                        }
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    }
-                    ItemState.SWIPED -> {
-                        val revisedDx = Math.min(dX, -buttonWidth)
-                        super.onChildDraw(c, recyclerView, viewHolder, revisedDx, dY, actionState, isCurrentlyActive)
-                    }
-                }
+                viewHolder.itemView.nearLinearLayout.translationX = dX
             }
         }).attachToRecyclerView(holdingsRecyclerView)
+    }
+
+    class HoldingsRecyclerViewAdapter : RecyclerView.Adapter<HoldingsRecyclerViewAdapter.HoldingViewHolder>() {
+
+        class HoldingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+        private var lots = emptyList<OfflineLot>()
+
+        fun setLots(lots: List<OfflineLot>) {
+            this.lots = lots
+            notifyDataSetChanged()
+        }
+
+        override fun getItemCount(): Int = lots.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoldingViewHolder {
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.listitem_offlineholding, parent, false)
+            return HoldingViewHolder(itemView)
+        }
+
+        override fun onBindViewHolder(viewHolder: HoldingViewHolder, position: Int) {
+            val lot = lots[position]
+            viewHolder.itemView.tag = position
+            viewHolder.itemView.line1TextView.text = lot.symbol.toString()
+            viewHolder.itemView.line2TextView.text = "${lot.shareCount} shares"
+            viewHolder.itemView.nearLinearLayout.translationX = 0f
+        }
     }
 
     override fun onStart() {
@@ -101,25 +100,7 @@ class HoldingsActivity : AppCompatActivity() {
             }
 
             is HoldingsReactor.State.Loaded -> holdingsRecyclerView.apply {
-
-                class HoldingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
-                adapter = object : RecyclerView.Adapter<HoldingViewHolder>() {
-                    private val lots = state.offlineInventory.lots
-
-                    override fun getItemCount(): Int = lots.size
-
-                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoldingViewHolder {
-                        val itemView = LayoutInflater.from(context).inflate(R.layout.listitem_offlineholding, parent, false)
-                        return HoldingViewHolder(itemView)
-                    }
-
-                    override fun onBindViewHolder(viewHolder: HoldingViewHolder, position: Int) {
-                        val lot = lots[position]
-                        viewHolder.itemView.line1TextView.text = lot.symbol.toString()
-                        viewHolder.itemView.line2TextView.text = "${lot.shareCount} shares"
-                    }
-                }
+                (adapter as HoldingsRecyclerViewAdapter).setLots(state.offlineInventory.lots)
             }
         }
         setVisibleView(visibleView)

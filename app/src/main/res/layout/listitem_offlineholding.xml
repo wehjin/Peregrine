@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="64dp"
-              android:background="#80ff0000"
-              android:orientation="vertical"
-              android:paddingBottom="12dp"
-              android:paddingEnd="16dp"
-              android:paddingStart="16dp"
-              android:paddingTop="4dp">
 
-    <TextView
-        android:id="@+id/line1TextView"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="64dp">
+
+    <LinearLayout
+        android:id="@+id/farLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:gravity="bottom"
-        android:textColor="@color/darkTextListItemPrimary"
-        android:textSize="@dimen/listItemTwoLineTopLineTextHeight"
-        tools:text="TSLA"/>
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/line2TextView"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_delete_white_24dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nearLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:gravity="bottom"
-        android:textColor="@color/darkTextListItemSecondary"
-        android:textSize="@dimen/listItemTwoLineBottomLineTextHeight"
-        tools:text="3 shares"/>
+        android:layout_height="match_parent"
+        android:background="@color/pageBackgroundLight"
+        android:orientation="vertical"
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="4dp"
+        tools:visibility="invisible">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/line1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:gravity="bottom"
+            android:textColor="@color/darkTextListItemPrimary"
+            android:textSize="@dimen/listItemTwoLineTopLineTextHeight"
+            tools:text="TSLA"/>
+
+        <TextView
+            android:id="@+id/line2TextView"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="bottom"
+            android:textColor="@color/darkTextListItemSecondary"
+            android:textSize="@dimen/listItemTwoLineBottomLineTextHeight"
+            tools:text="3 shares"/>
+
+    </LinearLayout>
+</FrameLayout>

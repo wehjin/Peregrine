@@ -5,9 +5,14 @@ data class Portfolio(val offlineInventory: OfflineInventory = OfflineInventory()
     fun isEmpty(): Boolean =
             offlineInventory.lots.isEmpty()
 
-    fun addOfflineHolding(offlineLot: OfflineLot): Portfolio {
+    fun addOfflineLot(offlineLot: OfflineLot): Portfolio {
 
-        val newOfflineInventory = offlineInventory.addHolding(offlineLot)
+        val newOfflineInventory = offlineInventory.addLot(offlineLot)
+        return Portfolio(newOfflineInventory)
+    }
+
+    fun removeOfflineLot(position: Int): Portfolio {
+        val newOfflineInventory = offlineInventory.removeLot(position)
         return Portfolio(newOfflineInventory)
     }
 }

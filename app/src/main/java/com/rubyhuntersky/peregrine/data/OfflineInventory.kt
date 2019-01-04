@@ -2,10 +2,17 @@ package com.rubyhuntersky.peregrine.data
 
 class OfflineInventory(val lots: List<OfflineLot> = emptyList()) {
 
-    fun addHolding(offlineLot: OfflineLot): OfflineInventory {
-        val newHoldings = lots.toMutableList().apply {
+    fun addLot(offlineLot: OfflineLot): OfflineInventory {
+        val newLots = lots.toMutableList().apply {
             add(offlineLot)
         }
-        return OfflineInventory(newHoldings)
+        return OfflineInventory(newLots)
+    }
+
+    fun removeLot(position: Int): OfflineInventory {
+        val newLots = lots.toMutableList().apply {
+            removeAt(position)
+        }
+        return OfflineInventory(newLots)
     }
 }

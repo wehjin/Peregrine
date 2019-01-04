@@ -14,7 +14,7 @@ class NewHoldingCatalyst(private val context: Context, private val databook: Dat
                 .setMessage("TSLA Stock, 1 share, $300 per share")
                 .setPositiveButton(R.string.save) { _, _ ->
                     val newOfflineHolding = OfflineLot("TSLA", 1)
-                    val newPortfolio = databook.portfolio.addOfflineHolding(newOfflineHolding)
+                    val newPortfolio = databook.portfolio.addOfflineLot(newOfflineHolding)
                     databook.portfolio = newPortfolio
                 }
                 .setNegativeButton(R.string.cancel) { _, _ -> }
