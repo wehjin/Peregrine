@@ -2,6 +2,7 @@ package com.rubyhuntersky.peregrine.interactions.holdings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
@@ -10,6 +11,7 @@ import com.rubyhuntersky.peregrine.data.Databook
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import rx.Subscription
+
 
 class HoldingsActivity : AppCompatActivity() {
 
@@ -25,6 +27,7 @@ class HoldingsActivity : AppCompatActivity() {
 
         holdingsRecyclerView.layoutManager = LinearLayoutManager(this)
         holdingsRecyclerView.adapter = HoldingsRecyclerViewAdapter()
+        holdingsRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         ItemTouchHelper(HoldingsItemTouchHelperCallback(databook)).attachToRecyclerView(holdingsRecyclerView)
     }
 
