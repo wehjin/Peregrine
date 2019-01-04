@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.rubyhuntersky.peregrine.R
+import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import rx.Subscription
 
 class HoldingsActivity : AppCompatActivity() {
 
-    private val reactor = HoldingsReactor()
+    private val reactor = HoldingsReactor(NewHoldingCatalyst(this))
     private var reactorStates: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,16 +22,20 @@ class HoldingsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         reactorStates = reactor.states.subscribe { state ->
-            when (state) {
+            val visibleView = when (state) {
                 is HoldingsReactor.State.Loading -> {
-                    setVisibleView(loadingTextView)
+                    loadingTextView
                 }
                 is HoldingsReactor.State.Empty -> {
-                    setVisibleView(addHoldingFrameLayout)
+                    addHoldingButton.visibility = View.VISIBLE
                     addHoldingButton.setOnClickListener {
+                        reactor.perform(HoldingsReactor.Action.AddHolding)
                     }
+                    addHoldingFrameLayout
                 }
             }
+
+            setVisibleView(visibleView)
         }
     }
 

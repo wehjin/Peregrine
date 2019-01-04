@@ -11,7 +11,11 @@
     <string name="no_data">No data</string>
     <string name="holdings">Holdings</string>
     <string name="add_holding">Add Holding</string>
+    <string name="save">Save</string>
     <string name="loading">Loading…</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_holding">New Holding</string>
+    <string name="enter_details">Enter details</string>
     <string-array name="price_symbols">
         <item>TSLA $300.00</item>
     </string-array>
