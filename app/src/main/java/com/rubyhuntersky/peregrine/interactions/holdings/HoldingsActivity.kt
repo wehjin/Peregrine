@@ -1,17 +1,14 @@
 package com.rubyhuntersky.peregrine.interactions.holdings
 
-import android.graphics.Canvas
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.data.Databook
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
-import kotlinx.android.synthetic.main.listitem_offlineholding.view.*
 import rx.Subscription
 
 class HoldingsActivity : AppCompatActivity() {
@@ -28,27 +25,7 @@ class HoldingsActivity : AppCompatActivity() {
 
         holdingsRecyclerView.layoutManager = LinearLayoutManager(this)
         holdingsRecyclerView.adapter = HoldingsRecyclerViewAdapter()
-
-        ItemTouchHelper(object : ItemTouchHelper.Callback() {
-
-            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return makeMovementFlags(0, ItemTouchHelper.START)
-            }
-
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.itemView.tag as Int
-                val newPortfolio = databook.portfolio.removeOfflineLot(position)
-                databook.portfolio = newPortfolio
-            }
-
-            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-                viewHolder.itemView.nearLinearLayout.translationX = dX
-            }
-        }).attachToRecyclerView(holdingsRecyclerView)
+        ItemTouchHelper(HoldingsItemTouchHelperCallback(databook)).attachToRecyclerView(holdingsRecyclerView)
     }
 
     override fun onStart() {
