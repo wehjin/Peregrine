@@ -2,12 +2,13 @@ package com.rubyhuntersky.peregrine.interactions.holdings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.data.Databook
-import com.rubyhuntersky.peregrine.data.OfflineLot
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import kotlinx.android.synthetic.main.activity_holdings.view.*
@@ -25,6 +26,7 @@ class HoldingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_holdings)
         setSupportActionBar(toolbar)
+        holdingsRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onStart() {
@@ -34,7 +36,9 @@ class HoldingsActivity : AppCompatActivity() {
 
     private fun render(state: HoldingsReactor.State) {
         val visibleView = when (state) {
+
             is HoldingsReactor.State.Loading -> loadingTextView
+
             is HoldingsReactor.State.Empty -> {
                 addHoldingFrameLayout.apply {
                     addHoldingButton.setOnClickListener {
@@ -42,21 +46,25 @@ class HoldingsActivity : AppCompatActivity() {
                     }
                 }
             }
-            is HoldingsReactor.State.Loaded -> holdingsListView.apply {
-                adapter = object : BaseAdapter() {
 
-                    private val holdings = state.offlineInventory.lots
-                    override fun getCount(): Int = holdings.size
-                    override fun getItem(position: Int): OfflineLot = holdings[position]
-                    override fun getItemId(position: Int): Long = position.toLong()
+            is HoldingsReactor.State.Loaded -> holdingsRecyclerView.apply {
 
-                    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                        val itemView = convertView ?: View.inflate(context, R.layout.listitem_offlineholding, null)
-                        return itemView.apply {
-                            val holding = getItem(position)
-                            itemView.line1TextView.text = holding.symbol.toString()
-                            itemView.line2TextView.text = "${holding.shareCount} shares"
-                        }
+                class HoldingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+                adapter = object : RecyclerView.Adapter<HoldingViewHolder>() {
+                    private val lots = state.offlineInventory.lots
+
+                    override fun getItemCount(): Int = lots.size
+
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoldingViewHolder {
+                        val itemView = LayoutInflater.from(context).inflate(R.layout.listitem_offlineholding, parent, false)
+                        return HoldingViewHolder(itemView)
+                    }
+
+                    override fun onBindViewHolder(viewHolder: HoldingViewHolder, position: Int) {
+                        val lot = lots[position]
+                        viewHolder.itemView.line1TextView.text = lot.symbol.toString()
+                        viewHolder.itemView.line2TextView.text = "${lot.shareCount} shares"
                     }
                 }
             }
@@ -65,10 +73,19 @@ class HoldingsActivity : AppCompatActivity() {
     }
 
     private fun setVisibleView(visibleView: View) {
-        listOf(loadingTextView, addHoldingFrameLayout, holdingsListView)
+        listOf(loadingTextView, addHoldingFrameLayout, holdingsRecyclerView)
                 .forEach { view ->
                     view.visibility = if (view == visibleView) View.VISIBLE else View.GONE
                 }
+
+        if (visibleView == holdingsRecyclerView) {
+            plusFab.setOnClickListener {
+                reactor.perform(HoldingsReactor.Action.AddHolding)
+            }
+            plusFab.show()
+        } else {
+            plusFab.hide()
+        }
     }
 
     override fun onStop() {
