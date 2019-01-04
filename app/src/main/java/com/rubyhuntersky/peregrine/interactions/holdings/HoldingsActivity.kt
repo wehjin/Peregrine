@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.data.Databook
-import com.rubyhuntersky.peregrine.data.OfflineHolding
+import com.rubyhuntersky.peregrine.data.OfflineLot
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import kotlinx.android.synthetic.main.activity_holdings.view.*
@@ -45,9 +45,9 @@ class HoldingsActivity : AppCompatActivity() {
             is HoldingsReactor.State.Loaded -> holdingsListView.apply {
                 adapter = object : BaseAdapter() {
 
-                    private val holdings = state.offlineInventory.holdings
+                    private val holdings = state.offlineInventory.lots
                     override fun getCount(): Int = holdings.size
-                    override fun getItem(position: Int): OfflineHolding = holdings[position]
+                    override fun getItem(position: Int): OfflineLot = holdings[position]
                     override fun getItemId(position: Int): Long = position.toLong()
 
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

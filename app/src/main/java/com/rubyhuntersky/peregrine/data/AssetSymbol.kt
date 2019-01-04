@@ -1,6 +1,6 @@
 package com.rubyhuntersky.peregrine.data
 
-class HoldingSymbol(string: String) {
+class AssetSymbol(string: String) {
 
     val value = string.toUpperCase()
 

@@ -3,11 +3,11 @@ package com.rubyhuntersky.peregrine.data
 data class Portfolio(val offlineInventory: OfflineInventory = OfflineInventory()) {
 
     fun isEmpty(): Boolean =
-            offlineInventory.holdings.isEmpty()
+            offlineInventory.lots.isEmpty()
 
-    fun addOfflineHolding(offlineHolding: OfflineHolding): Portfolio {
+    fun addOfflineHolding(offlineLot: OfflineLot): Portfolio {
 
-        val newOfflineInventory = offlineInventory.addHolding(offlineHolding)
+        val newOfflineInventory = offlineInventory.addHolding(offlineLot)
         return Portfolio(newOfflineInventory)
     }
 }

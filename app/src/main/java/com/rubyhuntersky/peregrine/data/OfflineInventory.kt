@@ -1,10 +1,10 @@
 package com.rubyhuntersky.peregrine.data
 
-class OfflineInventory(val holdings: List<OfflineHolding> = emptyList()) {
+class OfflineInventory(val lots: List<OfflineLot> = emptyList()) {
 
-    fun addHolding(offlineHolding: OfflineHolding): OfflineInventory {
-        val newHoldings = holdings.toMutableList().apply {
-            add(offlineHolding)
+    fun addHolding(offlineLot: OfflineLot): OfflineInventory {
+        val newHoldings = lots.toMutableList().apply {
+            add(offlineLot)
         }
         return OfflineInventory(newHoldings)
     }
