@@ -1,16 +1,18 @@
 package com.rubyhuntersky.peregrine.interactions.holdings
 
+import com.rubyhuntersky.peregrine.data.Databook
+import com.rubyhuntersky.peregrine.data.OfflineInventory
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
-import java.util.concurrent.TimeUnit
 
-class HoldingsReactor(private val newHoldingCatalyst: NewHoldingCatalyst) {
+class HoldingsReactor(private val databook: Databook, private val newHoldingCatalyst: NewHoldingCatalyst) {
 
     sealed class State {
         object Loading : State()
         object Empty : State()
+        data class Loaded(val offlineInventory: OfflineInventory) : State()
     }
 
     sealed class Action {
@@ -20,16 +22,20 @@ class HoldingsReactor(private val newHoldingCatalyst: NewHoldingCatalyst) {
 
     private val stateSubject = BehaviorSubject.create(State.Loading as State)
 
-    init {
-        Observable.timer(2, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    perform(Action.Load)
-                }
-    }
-
     val states: Observable<State>
         get() = stateSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
+
+    fun start() {
+        databook.portfolioSubject
+                .subscribe { portfolio ->
+                    val newState = if (portfolio.isEmpty()) {
+                        State.Empty
+                    } else {
+                        State.Loaded(portfolio.offlineInventory)
+                    }
+                    stateSubject.onNext(newState)
+                }
+    }
 
     fun perform(action: Action) {
         when (action) {
