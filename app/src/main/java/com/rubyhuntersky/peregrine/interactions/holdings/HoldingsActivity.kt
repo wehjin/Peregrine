@@ -5,8 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.rubyhuntersky.peregrine.R
 import kotlinx.android.synthetic.main.activity_holdings.*
+import rx.Subscription
 
 class HoldingsActivity : AppCompatActivity() {
+
+    private val reactor = HoldingsReactor()
+    private var reactorStates: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,10 +20,29 @@ class HoldingsActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        loadingTextView.visibility = View.VISIBLE
-        addHoldingFrameLayout.visibility = View.GONE
-        addHoldingButton.setOnClickListener {
-            addHoldingFrameLayout.visibility = View.GONE
+        reactorStates = reactor.states.subscribe { state ->
+            when (state) {
+                is HoldingsReactor.State.Loading -> {
+                    setVisibleView(loadingTextView)
+                }
+                is HoldingsReactor.State.Empty -> {
+                    setVisibleView(addHoldingFrameLayout)
+                    addHoldingButton.setOnClickListener {
+                    }
+                }
+            }
         }
+    }
+
+    private fun setVisibleView(visibleView: View) {
+        listOf(loadingTextView, addHoldingFrameLayout)
+                .forEach { view ->
+                    view.visibility = if (view == visibleView) View.VISIBLE else View.GONE
+                }
+    }
+
+    override fun onStop() {
+        reactorStates?.unsubscribe()
+        super.onStop()
     }
 }
