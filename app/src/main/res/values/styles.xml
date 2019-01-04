@@ -24,4 +24,16 @@
     <style name="Toolbar.SubtitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textColor">@color/lightTextSecondary</item>
     </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="subtitleTextAppearance">@style/Toolbar.SubtitleText</item>
+        <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
+    </style>
+
+    <style name="FillerTextAppearance">
+        <item name="android:textColor">@color/darkTextDividers</item>
+        <item name="android:textSize">@dimen/textsize_page_primary</item>
+    </style>
 </resources>

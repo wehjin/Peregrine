@@ -15,13 +15,10 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:layout_gravity="top"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:subtitleTextAppearance="@style/Toolbar.SubtitleText"
-            app:titleTextAppearance="@style/Toolbar.TitleText"/>
+            android:layout_gravity="top"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
