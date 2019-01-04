@@ -12,6 +12,8 @@
     <color name="darkTextSecondary">#8A000000</color>
     <color name="darkTextDisabledHintIcons">#61000000</color>
     <color name="darkTextDividers">#1F000000</color>
+    <color name="darkTextListItemPrimary">#de000000</color>
+    <color name="darkTextListItemSecondary">#99000000</color>
 
     <color name="pageBackgroundLight">#fafafa</color>
     <color name="cardBackgroundLight">#ffffff</color>

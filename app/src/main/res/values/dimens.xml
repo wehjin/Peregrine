@@ -6,4 +6,6 @@
     <dimen name="textsize_doubleline_cell_title">16sp</dimen>
     <dimen name="textsize_doubleline_cell_detail">16sp</dimen>
     <dimen name="textsize_page_primary">24sp</dimen>
+    <dimen name="listItemTwoLineTopLineTextHeight">16sp</dimen>
+    <dimen name="listItemTwoLineBottomLineTextHeight">14sp</dimen>
 </resources>

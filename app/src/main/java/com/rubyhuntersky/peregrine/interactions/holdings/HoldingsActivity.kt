@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 import com.rubyhuntersky.peregrine.R
 import com.rubyhuntersky.peregrine.data.Databook
 import com.rubyhuntersky.peregrine.data.OfflineLot
 import com.rubyhuntersky.peregrine.interactions.newholding.NewHoldingCatalyst
 import kotlinx.android.synthetic.main.activity_holdings.*
 import kotlinx.android.synthetic.main.activity_holdings.view.*
+import kotlinx.android.synthetic.main.listitem_offlineholding.view.*
 import rx.Subscription
 
 class HoldingsActivity : AppCompatActivity() {
@@ -51,10 +51,11 @@ class HoldingsActivity : AppCompatActivity() {
                     override fun getItemId(position: Int): Long = position.toLong()
 
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                        val view = convertView ?: View.inflate(context, android.R.layout.simple_list_item_1, null)
-                        return view.apply {
+                        val itemView = convertView ?: View.inflate(context, R.layout.listitem_offlineholding, null)
+                        return itemView.apply {
                             val holding = getItem(position)
-                            findViewById<TextView>(android.R.id.text1).text = holding.toString()
+                            itemView.line1TextView.text = holding.symbol.toString()
+                            itemView.line2TextView.text = "${holding.shareCount} shares"
                         }
                     }
                 }
