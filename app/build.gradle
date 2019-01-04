@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.rubyhuntersky.peregrine"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -41,22 +41,22 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'io.reactivex:rxjava:1.0.15'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:support-v4:27.0.2'
-    compile 'com.android.support:design:27.0.2'
-    compile 'com.android.support:cardview-v7:27.0.2'
-    compile('com.github.wehjin:GxAndroid:3333eb16c42e984839ae65263e28d50e0243fcb2') {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api 'io.reactivex:rxjava:1.1.8'
+    api 'io.reactivex:rxandroid:1.2.0'
+    api 'com.squareup.okhttp3:okhttp:3.8.0'
+    api 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
+    api 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:support-v4:28.0.0'
+    api 'com.android.support:design:28.0.0'
+    api 'com.android.support:cardview-v7:28.0.0'
+    api('com.github.wehjin:GxAndroid:3333eb16c42e984839ae65263e28d50e0243fcb2') {
         transitive = true
     }
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.8.9"
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.8.9"
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
